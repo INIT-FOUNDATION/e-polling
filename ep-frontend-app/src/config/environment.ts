@@ -6,6 +6,10 @@ export const environment = {
     authApiBaseUrl: process.env.REACT_APP_AUTH_API_URL || 'http://localhost:5001',
     userApiBaseUrl: process.env.REACT_APP_USER_API_URL || 'http://localhost:5002',
     adminApiBaseUrl: process.env.REACT_APP_ADMIN_API_URL || 'http://localhost:5003',
-    pollingApiBaseUrl: process.env.REACT_APP_POLLING_API_URL || 'http://localhost:5004'
+    pollingApiBaseUrl: process.env.REACT_APP_POLLING_API_URL || 'http://localhost:5004',
+    encDecSecretKey: process.env.REACT_APP_ENC_DEC_SECRET_KEY || 'EP@$#&*(!@%^&',
+    skipLoaderRoutes: [
+        '/api/v1/auth/health'
+    ]
 };
   

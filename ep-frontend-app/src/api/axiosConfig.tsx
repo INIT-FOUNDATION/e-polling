@@ -12,7 +12,11 @@ const api: AxiosInstance = axios.create({
 const setupInterceptors = (showLoader: () => void, hideLoader: () => void, showToast: (message: string) => void) => {
     api.interceptors.request.use(
         (config) => {
-            showLoader();
+            const shouldIgnoreLoader = environment.skipLoaderRoutes.some(route => config.url?.startsWith(route));           
+            if (!shouldIgnoreLoader) {
+                showLoader(); 
+            }
+
             switch (config.url) {
                 case '/api/v1/auth':
                     config.baseURL = environment.authApiBaseUrl;

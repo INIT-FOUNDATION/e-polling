@@ -9,11 +9,12 @@ interface ToastContextType {
 export const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const showToast = (message: string, title?: string, type: 'default' | 'success' | 'error' | 'warning' = 'default') => {
+  const showToast = (message: string, title?: string, type: 'default' | 'success' | 'error' | 'warning' = 'default', autoClose = 3000) => {
     showNotification({
       title,
       message,
       color: type,
+      autoClose,
     });
   };
 
