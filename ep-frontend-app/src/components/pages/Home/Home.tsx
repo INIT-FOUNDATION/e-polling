@@ -10,8 +10,8 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         try {
-            const response = homeService.getHealthCheck();
-            log('info', 'Home', response);
+            // const response = homeService.getHealthCheck();
+            // log('info', 'Home', response);
             showToast('Success', 'Success', 'success');
             showLoader();
         } catch (error) {
