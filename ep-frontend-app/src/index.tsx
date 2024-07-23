@@ -1,14 +1,29 @@
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { MantineProvider, Container } from "@mantine/core";
+import { AuthProvider, LoaderProvider, ToastProvider } from './contexts';
+import { BrowserRouter as Router } from "react-router-dom";
+import App from './App';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
-    <App />
+  <MantineProvider>
+    <ToastProvider>
+      <LoaderProvider>
+        <AuthProvider>
+          <Container size={"xs"}>
+            <Router>
+              <App />
+            </Router>
+          </Container>
+        </AuthProvider>
+      </LoaderProvider>
+    </ToastProvider>
+  </MantineProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
