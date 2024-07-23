@@ -3,9 +3,8 @@ import React, { Suspense, lazy } from 'react';
 import { useLoader } from './hooks/useLoader';
 import { useToast } from './hooks/useToast';
 import { setupInterceptors } from './api/axiosConfig';
-import { AuthProvider, LoaderProvider, ToastProvider } from './contexts';
 import { Route, Routes } from 'react-router-dom';
-import { useAuth } from './hooks';
+import { useAuth, useLogger } from './hooks';
 import LoadingFallback from './components/common/LoadingFallback/LoadingFallback';
 
 // Lazy load components
@@ -19,7 +18,9 @@ const App = () => {
   const { showLoader, hideLoader } = useLoader();
   const { showToast } = useToast();
   const { isAuthenticated } = useAuth();
+  const { setLogLevel } = useLogger();
 
+  setLogLevel('info');
   setupInterceptors(showLoader, hideLoader, showToast);
 
   return (
@@ -30,7 +31,6 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        {/* Catch-all route */}
         <Route path="*" element={<Home />} />
       </Routes>
     </Suspense>

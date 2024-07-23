@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { MantineProvider, Container } from "@mantine/core";
-import { AuthProvider, LoaderProvider, ToastProvider } from './contexts';
+import { AuthProvider, LoaderProvider, LoggerProvider, ToastProvider } from './contexts';
 import { BrowserRouter as Router } from "react-router-dom";
 import App from './App';
 
@@ -12,17 +12,19 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <MantineProvider>
-    <ToastProvider>
-      <LoaderProvider>
-        <AuthProvider>
-          <Container size={"xs"}>
-            <Router>
-              <App />
-            </Router>
-          </Container>
-        </AuthProvider>
-      </LoaderProvider>
-    </ToastProvider>
+    <LoggerProvider>
+      <ToastProvider>
+        <LoaderProvider>
+          <AuthProvider>
+            <Container size={"xs"}>
+              <Router>
+                <App />
+              </Router>
+            </Container>
+          </AuthProvider>
+        </LoaderProvider>
+      </ToastProvider>
+    </LoggerProvider>
   </MantineProvider>
 );
 
