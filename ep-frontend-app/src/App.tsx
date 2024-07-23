@@ -18,10 +18,10 @@ const App = () => {
   const { showLoader, hideLoader } = useLoader();
   const { showToast } = useToast();
   const { isAuthenticated } = useAuth();
-  const { setLogLevel } = useLogger();
+  const { setLogLevel, log } = useLogger();
 
   setLogLevel('info');
-  setupInterceptors(showLoader, hideLoader, showToast);
+  setupInterceptors(showLoader, hideLoader, showToast, log);
 
   return (
     <Suspense fallback={<LoadingFallback />}>
