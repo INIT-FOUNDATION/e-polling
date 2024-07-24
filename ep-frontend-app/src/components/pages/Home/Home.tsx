@@ -24,11 +24,11 @@ const Home: React.FC = () => {
     // }, []);
 
     return (
-        <h1>
+        <div>
             <LastYearWinners />
             <ContactUs />
             <Footer/>
-        </h1>
+            </div>
     );
 }
 
