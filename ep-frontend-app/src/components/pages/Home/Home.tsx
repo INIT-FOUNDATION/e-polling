@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { homeService } from "./homeService";
 import { useLoader, useLogger, useToast } from "../../../hooks";
 import Footer from "../../common/Footer/Footer";
+import ContactUs from "../../common/ContactUs/ContactUs";
 
 const Home: React.FC = () => {
 
@@ -23,7 +24,7 @@ const Home: React.FC = () => {
 
     return (
         <h1>
-            Hello world!
+            <ContactUs />
             <Footer/>
         </h1>
     );
