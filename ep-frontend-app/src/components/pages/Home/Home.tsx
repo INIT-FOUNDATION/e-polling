@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { homeService } from "./homeService";
 import { useLoader, useLogger, useToast } from "../../../hooks";
+import Footer from "../../common/Footer/Footer";
 
 const Home: React.FC = () => {
 
@@ -21,8 +22,9 @@ const Home: React.FC = () => {
     }, []);
 
     return (
-        <h1 className="text-3xl font-bold underline">
+        <h1>
             Hello world!
+            <Footer/>
         </h1>
     );
 }
