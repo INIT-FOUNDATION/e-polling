@@ -1,9 +1,10 @@
 import React from "react";
 
+import "./LastYearWinners.scss";
 const LastYearWinners: React.FC = () => {
     return (
-        <div>
-            Last Year Winners
+        <div className="bg-image">
+        
         </div>
     );
 }
