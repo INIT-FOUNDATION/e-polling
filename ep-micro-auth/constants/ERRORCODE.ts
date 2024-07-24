@@ -1,4 +1,4 @@
-export const AUTH_ERROR_RESPONSES = {
+export const AUTH = {
     AUTH00000: {
         errorCode: "AUTH00000",
         errorMessage: "Internal Server Error",

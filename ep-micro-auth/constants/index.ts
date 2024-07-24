@@ -1,4 +1,5 @@
 export * from "./AUTH";
-export * from "./COMMUNICATION";
+export * as COMMUNICATION from "./COMMUNICATION";
 export * from "./CONST";
-export * from "./ERRORCODE";
+export * as ERRORCODE from "./ERRORCODE";
+export * as QUERY from "./QUERY";

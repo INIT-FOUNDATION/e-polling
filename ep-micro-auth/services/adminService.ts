@@ -1,11 +1,11 @@
 import { IUser } from "../types/custom";
-import { redis, logger, pg, nodemailerUtils, ejsUtils, commonCommunication } from "ep-micro-common";
-import { USERS } from "../constants/QUERY";
+import { redis, logger, nodemailerUtils, ejsUtils, commonCommunication } from "ep-micro-common";
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from "bcryptjs";
 import { CONFIG } from "../constants/CONST";
 import { SMS, WHATSAPP } from "../constants/COMMUNICATION";
 import { CacheTTL } from "../enums/cacheTTL";
+import { adminRepository } from "../repositories";
 
 
 export const adminService = {
@@ -30,65 +30,9 @@ export const adminService = {
             throw new Error(error.message);
         }
     },
-    getInvalidLoginAttempts: async (user_name: string): Promise<number> => {
-        try {
-            const _query = {
-                text: USERS.getInvalidAttempts,
-                values: [user_name]
-            };
-            logger.debug(`adminService :: getInvalidLoginAttempts :: query :: ${JSON.stringify(_query)}`)
-
-            const result = await pg.executeQueryPromise(_query);
-            logger.debug(`adminService :: getInvalidLoginAttempts :: db result :: ${JSON.stringify(result)}`)
-
-            if (result && result.length > 0) return result[0].invalid_attempts;
-        } catch (error) {
-            logger.error(`adminService :: getInvalidLoginAttempts :: ${error.message} :: ${error}`);
-            throw new Error(error.message);
-        }
-    },
-    getMaxInvalidLoginAttempts: async (): Promise<number> => {
-        try {
-            const _query = {
-                text: USERS.getMaxInvalidLoginAttempts
-            };
-            logger.debug(`adminService :: getMaxInvalidLoginAttempts :: query :: ${JSON.stringify(_query)}`)
-
-            const result = await pg.executeQueryPromise(_query);
-            logger.debug(`adminService :: getMaxInvalidLoginAttempts :: db result :: ${JSON.stringify(result)}`)
-
-            if (result && result.length > 0) return result[0].maximum_invalid_attempts;
-        } catch (error) {
-            logger.error(`adminService :: getMaxInvalidLoginAttempts :: ${error.message} :: ${error}`);
-            throw new Error(error.message);
-        }
-    },
-    incrementInvalidLoginAttempts: async (userName: string) => {
-        try {
-            const _query = {
-                text: USERS.incrementInvalidAttempts,
-                values: [userName]
-            };
-            logger.debug(`adminService :: incrementInvalidLoginAttempts :: query :: ${JSON.stringify(_query)}`)
-
-            const result = await pg.executeQueryPromise(_query);
-            logger.debug(`adminService :: incrementInvalidLoginAttempts :: db result :: ${JSON.stringify(result)}`)
-        } catch (error) {
-            logger.error(`adminService :: incrementInvalidLoginAttempts :: ${error.message} :: ${error}`);
-            throw new Error(error.message);
-        }
-    },
     setUserInActive: async (userName: string) => {
         try {
-            const _query = {
-                text: USERS.setUserInActive,
-                values: [userName]
-            };
-            logger.debug(`adminService :: setUserInActive :: query :: ${JSON.stringify(_query)}`);
-
-            const result = await pg.executeQueryPromise(_query);
-            logger.debug(`adminService :: setUserInActive :: db result :: ${JSON.stringify(result)}`);
-
+            await adminRepository.setUserInActive(userName);
             redis.deleteRedis(`USERS|OFFSET:0|LIMIT:50`);
             redis.deleteRedis(`USERS_COUNT`);
         } catch (error) {
@@ -102,18 +46,12 @@ export const adminService = {
             if (cachedResult) {
                 return JSON.parse(cachedResult);
             } else {
-                const _query = {
-                    text: USERS.getUserByUsername,
-                    values: [userName]
-                };
-                logger.debug(`adminService :: getUserByUserName :: query :: ${JSON.stringify(_query)}`);
+                const user = await adminRepository.getUserByUserName(userName);
+                logger.debug(`adminService :: getUserByUserName :: user :: ${JSON.stringify(user)}`);
 
-                const result = await pg.executeQueryPromise(_query);
-                logger.debug(`adminService :: getUserByUserName :: db result :: ${JSON.stringify(result)}`);
-
-                if (result && result.length > 0) {
-                    redis.SetRedis(`User|Username:${userName}`, result[0], CONFIG.REDIS_EXPIRE_TIME_PWD);
-                    return result[0];
+                if (user) {
+                    redis.SetRedis(`User|Username:${userName}`, user, CONFIG.REDIS_EXPIRE_TIME_PWD);
+                    return user;
                 };
             }
         } catch (error) {
@@ -123,35 +61,10 @@ export const adminService = {
     },
     updateUserLoginStatus: async (loginStatus: number, userName: string) => {
         try {
-            const _query = {
-                text: USERS.updateUserLoggedInStatus,
-                values: [userName, loginStatus]
-            };
-            logger.debug(`adminService :: updateUserLoginStatus :: query :: ${JSON.stringify(_query)}`);
-
-            const result = await pg.executeQueryPromise(_query);
-            logger.debug(`adminService :: updateUserLoginStatus :: db result :: ${JSON.stringify(result)}`);
-
+            await adminRepository.updateUserLoginStatus(loginStatus, userName);
             redis.deleteRedis(`User|Username:${userName}`);
         } catch (error) {
             logger.error(`adminService :: updateUserLoginStatus :: ${error.message} :: ${error}`);
-            throw new Error(error.message);
-        }
-    },
-    resetPassword: async (newPassword: string, mobileNumber: number): Promise<boolean> => {
-        try {
-            const _query = {
-                text: USERS.resetPasswordQuery,
-                values: [newPassword, mobileNumber]
-            };
-            logger.debug(`adminService :: resetPassword :: query :: ${JSON.stringify(_query)}`);
-
-            const result = await pg.executeQueryPromise(_query);
-            logger.debug(`adminService :: resetPassword :: db result :: ${JSON.stringify(result)}`);
-
-            return true;
-        } catch (error) {
-            logger.error(`adminService :: resetPassword :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
@@ -201,15 +114,15 @@ export const adminService = {
         try {
             if (otpDetails.emailId) {
                 const emailTemplateHtml = await ejsUtils.generateHtml('views/forgotPasswordOtpEmailTemplate.ejs', otpDetails);
-                await nodemailerUtils.sendEmail('OLL WORKFLOW AUTOMATION | FORGOT PASSWORD OTP', emailTemplateHtml, otpDetails.emailId);
+                await nodemailerUtils.sendEmail('E-POLLING | FORGOT PASSWORD OTP', emailTemplateHtml, otpDetails.emailId);
             }
             if (otpDetails.mobileNumber) {
                 const smsBodyTemplate = SMS.USER_LOGIN_WITH_OTP.body;
                 const smsBodyCompiled = smsBodyTemplate.replace("<otp>", otpDetails.otp)
-                  .replace("<module>", "OLL Workflow Automation")
+                  .replace("<module>", "E-Polling")
                   .replace("<time>", "3 min");
                 await commonCommunication.sendSms(smsBodyCompiled, otpDetails.mobileNumber, SMS.USER_LOGIN_WITH_OTP.template_id);
-                await commonCommunication.sendWhatsapp(WHATSAPP.USER_LOGIN_WITH_OTP.template_id, otpDetails.mobileNumber, ["OLL Workflow Automation", otpDetails.otp, "3 mins"])
+                await commonCommunication.sendWhatsapp(WHATSAPP.USER_LOGIN_WITH_OTP.template_id, otpDetails.mobileNumber, ["E-Polling", otpDetails.otp, "3 mins"])
               }
         } catch (error) {
             logger.error(`adminService :: shareForgotOTPUserDetails :: ${error.message} :: ${error}`)
@@ -244,7 +157,7 @@ export const adminService = {
     resetForgetPassword: async (reqData: any, userName: string) => {
         try {
             const hashedPassword = await bcrypt.hash(reqData.newPassword, 10);
-            const passwordUpdated = await adminService.resetPassword(hashedPassword, parseInt(userName));
+            const passwordUpdated = await adminRepository.resetPassword(hashedPassword, parseInt(userName));
 
             if (passwordUpdated) {
                 await redis.deleteRedis(`FORGOT_PASSWORD_CHANGE_${reqData.txnId}`);
@@ -258,40 +171,6 @@ export const adminService = {
         } catch (error) {
             logger.error(`adminService :: resetForgetPassword :: ${error.message} :: ${error}`)
             throw new Error(error)
-        }
-    },
-    existsByUsername: async (userName: string): Promise<boolean> => {
-        try {
-            const _query = {
-                text: USERS.existsByUserName,
-                values: [userName]
-            };
-            logger.debug(`adminService :: existsByUsername :: query :: ${JSON.stringify(_query)}`)
-
-            const result = await pg.executeQueryPromise(_query);
-            logger.debug(`adminService :: existsByUsername :: db result :: ${JSON.stringify(result)}`)
-
-            return (result && result.length > 0) ? result[0].exists : false;
-        } catch (error) {
-            logger.error(`adminService :: existsByUsername :: ${error.message} :: ${error}`)
-            throw new Error(error.message);
-        }
-    },
-    existsByMobileNumber: async (mobileNumber: number): Promise<boolean> => {
-        try {
-            const _query = {
-                text: USERS.existsByMobileNumber,
-                values: [mobileNumber]
-            };
-            logger.debug(`adminService :: existsByMobileNumber :: query :: ${JSON.stringify(_query)}`)
-
-            const result = await pg.executeQueryPromise(_query);
-            logger.debug(`adminService :: existsByMobileNumber :: db result :: ${JSON.stringify(result)}`)
-
-            return (result && result.length > 0) ? result[0].exists : false;
-        } catch (error) {
-            logger.error(`adminService :: existsByMobileNumber :: ${error.message} :: ${error}`)
-            throw new Error(error.message);
         }
     },
 }
