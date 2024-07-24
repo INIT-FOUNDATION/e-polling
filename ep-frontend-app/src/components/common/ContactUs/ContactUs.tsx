@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "./ContactUs.scss"
 const ContactUs: React.FC = () => {
   return (
     <div className="p-10"style={{backgroundColor:'#F9F3FD'}}>
@@ -37,8 +37,7 @@ const ContactUs: React.FC = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-200"
-            >
+           className='submit-button' >
               Send message
             </button>
           </div>
