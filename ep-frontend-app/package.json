@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.2.2",
-    "@types/tailwindcss": "^3.1.0"
+    "@types/tailwindcss": "^3.1.0",
+    "sass": "^1.77.8"
   }
 }
