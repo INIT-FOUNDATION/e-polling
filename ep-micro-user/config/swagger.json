@@ -1,0 +1,52 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "ep-micro-user",
+    "description": "API Swagger for ep-micro-user",
+    "version": "1.0.0"
+  },
+  "host": "localhost:9003",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/v1/user/admin/loggedUserInfo": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get Logged In User Info",
+        "description": "Endpoint to retrieve information about the currently logged-in user.",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/user/health": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Health Check API",
+        "description": "Endpoint for health check of User Micro Service",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    }
+  }
+}

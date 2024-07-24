@@ -1,0 +1,1073 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "ep-micro-admin",
+    "description": "API Swagger for ep-micro-admin",
+    "version": "1.0.0"
+  },
+  "host": "localhost:9002",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/v1/admin/roles/list": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "List Roles",
+        "description": "Endpoint to retrieve Roles List",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/add": {
+      "post": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Add Role",
+        "description": "Endpoint to create Role",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "role_name": {
+                  "type": "string",
+                  "example": "Department Head"
+                },
+                "role_description": {
+                  "type": "string",
+                  "example": "Head of the Department"
+                },
+                "level": {
+                  "type": "string",
+                  "example": "Level of Role"
+                },
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "menu_id": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "permission_id": {
+                        "type": "number",
+                        "example": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/update": {
+      "post": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Update Role",
+        "description": "Endpoint to update Role",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "role_id": {
+                  "type": "number",
+                  "example": 2
+                },
+                "role_name": {
+                  "type": "string",
+                  "example": "Department Head"
+                },
+                "role_description": {
+                  "type": "string",
+                  "example": "Head of the Department"
+                },
+                "level": {
+                  "type": "string",
+                  "example": "Level of Role"
+                },
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "menu_id": {
+                        "type": "number",
+                        "example": 1
+                      },
+                      "permission_id": {
+                        "type": "number",
+                        "example": 2
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/listLevels": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "List Levels",
+        "description": "Endpoint to retrieve List Levels",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/menusList": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Get Menu List",
+        "description": "Endpoint to retrieve Menu List",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/defaultAccessList": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Get Default Access List",
+        "description": "Endpoint to retrieve Default Access List",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/{roleId}": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Get Role",
+        "description": "Endpoint to retrieve Role Information",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/updateStatus": {
+      "post": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Update Role Status",
+        "description": "Endpoint to update Role Status",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "role_id": {
+                  "type": "number",
+                  "example": 2
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/accessList/{roleId}": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Get Access List By Role Id",
+        "description": "Endpoint to retrieve Access List with Role Id",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/roles/listBylevel/{level}": {
+      "get": {
+        "tags": [
+          "Roles"
+        ],
+        "summary": "Get Roles by Level",
+        "description": "Endpoint to retrieve Roles List by level",
+        "parameters": [
+          {
+            "name": "level",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/departments/list": {
+      "get": {
+        "tags": [
+          "Departments"
+        ],
+        "summary": "List Departments",
+        "description": "Endpoint to retrieve Department List",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/departments/add": {
+      "post": {
+        "tags": [
+          "Departments"
+        ],
+        "summary": "Add Department",
+        "description": "Endpoint to Add Department",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "department_name": {
+                  "type": "string",
+                  "example": "Accounts"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/departments/update": {
+      "post": {
+        "tags": [
+          "Departments"
+        ],
+        "summary": "Update Department",
+        "description": "Endpoint to Update Department",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "department_id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "department_name": {
+                  "type": "string",
+                  "example": "Accounts"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/departments/{departmentId}": {
+      "get": {
+        "tags": [
+          "Departments"
+        ],
+        "summary": "Get Department",
+        "description": "Endpoint to retrieve Department Information",
+        "parameters": [
+          {
+            "name": "departmentId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/departments/updateStatus": {
+      "post": {
+        "tags": [
+          "Departments"
+        ],
+        "summary": "Update Department Status",
+        "description": "Endpoint to Update Department Status",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "department_id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/passwordPolicies/list": {
+      "get": {
+        "tags": [
+          "Password Policies"
+        ],
+        "summary": "List Password Policies",
+        "description": "Endpoint to List Password Policies",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/passwordPolicies/add": {
+      "post": {
+        "tags": [
+          "Password Policies"
+        ],
+        "summary": "Add Password Policy",
+        "description": "Endpoint to Add Password Policy",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "password_expiry": {
+                  "type": "number",
+                  "example": 10
+                },
+                "password_history": {
+                  "type": "number",
+                  "example": 10
+                },
+                "minimum_password_length": {
+                  "type": "number",
+                  "example": 8
+                },
+                "complexity": {
+                  "type": "number",
+                  "example": 3
+                },
+                "alphabetical": {
+                  "type": "number",
+                  "example": 1
+                },
+                "numeric": {
+                  "type": "number",
+                  "example": 1
+                },
+                "special_characters": {
+                  "type": "number",
+                  "example": 1
+                },
+                "allowed_special_characters": {
+                  "type": "string",
+                  "example": "!@#$%^&*()"
+                },
+                "maximum_invalid_attempts": {
+                  "type": "number",
+                  "example": 5
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/passwordPolicies/update": {
+      "post": {
+        "tags": [
+          "Password Policies"
+        ],
+        "summary": "Update Password Policy",
+        "description": "Endpoint to Update Password Policy",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "password_expiry": {
+                  "type": "number",
+                  "example": 10
+                },
+                "password_history": {
+                  "type": "number",
+                  "example": 10
+                },
+                "minimum_password_length": {
+                  "type": "number",
+                  "example": 8
+                },
+                "complexity": {
+                  "type": "number",
+                  "example": 3
+                },
+                "alphabetical": {
+                  "type": "number",
+                  "example": 1
+                },
+                "numeric": {
+                  "type": "number",
+                  "example": 1
+                },
+                "special_characters": {
+                  "type": "number",
+                  "example": 1
+                },
+                "allowed_special_characters": {
+                  "type": "string",
+                  "example": "!@#$%^&*()"
+                },
+                "maximum_invalid_attempts": {
+                  "type": "number",
+                  "example": 5
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/passwordPolicies/{passwordPolicyId}": {
+      "get": {
+        "tags": [
+          "Password Policies"
+        ],
+        "summary": "Get Password Policy",
+        "description": "Endpoint to Get Password Policy",
+        "parameters": [
+          {
+            "name": "passwordPolicyId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/create": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Add User",
+        "description": "Endpoint to Add User",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "example": "Narsima"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Chilkuri"
+                },
+                "email_id": {
+                  "type": "string",
+                  "example": "narsimachilkuri237@gmail.com"
+                },
+                "mobile_number": {
+                  "type": "string",
+                  "example": "8169104556"
+                },
+                "dob": {
+                  "type": "string",
+                  "example": "1997-08-16"
+                },
+                "gender": {
+                  "type": "number",
+                  "example": 1
+                },
+                "role_id": {
+                  "type": "number",
+                  "example": 2
+                },
+                "department_id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "reporting_to_users": {
+                  "type": "array",
+                  "example": [
+                    1,
+                    2
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/update": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update User",
+        "description": "Endpoint to Update User",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "string",
+                  "example": "encryptedHash"
+                },
+                "first_name": {
+                  "type": "string",
+                  "example": "Narsima"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Chilkuri"
+                },
+                "email_id": {
+                  "type": "string",
+                  "example": "narsimachilkuri237@gmail.com"
+                },
+                "mobile_number": {
+                  "type": "string",
+                  "example": "8169104556"
+                },
+                "dob": {
+                  "type": "string",
+                  "example": "1997-08-16"
+                },
+                "gender": {
+                  "type": "number",
+                  "example": 1
+                },
+                "role_id": {
+                  "type": "number",
+                  "example": 2
+                },
+                "department_id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "reporting_to_users": {
+                  "type": "array",
+                  "example": [
+                    1,
+                    2
+                  ],
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{userId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get User",
+        "description": "Endpoint to Retrieve User Information By User Id",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/updateProfilePic": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update Profile Pic",
+        "description": "Endpoint to Update Profile Pic",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "Profile picture file to upload"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/list/{roleId}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "List Users",
+        "description": "Endpoint to Retrieve Users List By Role Id",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/list": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "List Users",
+        "description": "Endpoint to Retrieve Users List",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "page_size": {
+                  "type": "number",
+                  "example": 50
+                },
+                "current_page": {
+                  "type": "number",
+                  "example": 1
+                },
+                "search_query": {
+                  "type": "string",
+                  "example": "8169104556"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/resetPassword/{userId}": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Reset User Password",
+        "description": "Endpoint to Reset User Password",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/reportingUsers/{roleId}/{type}": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Reporting Users List",
+        "description": "Get Reporting Users based on Role Id and Type",
+        "parameters": [
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "description": "Role Id"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Type"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/deleteUser": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Delete User",
+        "description": "Delete User by User Id",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user_id": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/health": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Health Check API",
+        "description": "Endpoint to health check Admin Service",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    }
+  }
+}

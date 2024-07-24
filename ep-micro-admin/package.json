@@ -1,0 +1,76 @@
+{
+  "name": "ep-micro-admin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --exec ts-node app.ts",
+    "prestart": "npx ts-node config/swagger.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "@types/node": "^20.14.2",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/express-fileupload": "^1.4.4",
+    "dotenv": "^16.4.1",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
+    "helmet": "^7.1.0",
+    "https": "^1.0.0",
+    "joi": "^17.12.1",
+    "moment": "^2.30.1",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^3.0.3",
+    "randexp": "^0.5.3",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1",
+    "ts-node": "^10.9.2",
+    "uuid": "^9.0.1",
+    "ep-micro-common": "git+https://letslinkai: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@github.com/TechknowkraftAI/init-micro-commons.git#v1.0.15"
+  },
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": [
+      "node_modules/**/node_modules",
+      "config/swagger.json"
+    ],
+    "delay": "2000",
+    "env": {
+      "PORT": 9002,
+      "HOST": "localhost",
+      "MODULE": "ep-micro-admin",
+      "INIT_COMMON_NOSQL_DB_REQUIRED": false,
+      "INIT_COMMON_REDIS_REQUIRED": true,
+      "INIT_COMMON_REDIS_HOST": "dev.orrizonte.in",
+      "INIT_COMMON_REDIS_PORT": 6379,
+      "INIT_COMMON_REDIS_KEY_PREFIX": "DEV|OWA",
+      "INIT_COMMON_PG_DB_REQUIRED": true,
+      "INIT_COMMON_MASTER_HOST": "dev.orrizonte.in",
+      "INIT_COMMON_MASTER_USER": "dev",
+      "INIT_COMMON_MASTER_DATABASE": "owa",
+      "INIT_COMMON_MASTER_PASSWORD": "zQrBoxTNZffPZLak",
+      "INIT_COMMON_MASTER_PORT": 5432,
+      "INIT_COMMON_USE_MINIO": true,
+      "INIT_COMMON_MINIO_ENDPOINT": "apiminio.dev.orrizonte.in",
+      "INIT_COMMON_MINIO_ENABLE_SSL": true,
+      "INIT_COMMON_MINIO_ACCESS_KEY": "dev",
+      "INIT_COMMON_MINIO_SECRET_KEY": "by20Kife3vceCIJ",
+      "EP_OBJECT_STORAGE_BUCKET": "ep-dev",
+      "INIT_COMMON_NODEMAILER_USER": "info@orrizonte.in",
+      "INIT_COMMON_NODEMAILER_PASSWORD": "a1TXJbvXeLpy",
+      "INIT_COMMON_NODEMAILER_HOST": "smtppro.zoho.in",
+      "INIT_COMMON_NODEMAILER_SERVICE": "ZOHO PRO",
+      "INIT_COMMON_NODEMAILER_PORT": 465,
+      "INIT_COMMON_COMMUNICATION_ENDPOINT": "http://localhost:8081/api/v1/communication",
+      "INIT_COMMON_COMMUNICATION_CLIENT_ID": "OLL_Workflow_Automation_93304",
+      "INIT_COMMON_COMMUNICATION_CLIENT_SECRET": "88feae55-c108-4c10-8d89-da5a22ee08b1",
+      "EP_WORKFLOW_ADMIN_MODULE_URL": "https://flowautomation.orrizonte.in"
+    }
+  }
+}

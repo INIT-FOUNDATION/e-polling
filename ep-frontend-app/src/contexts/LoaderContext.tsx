@@ -18,7 +18,7 @@ export const LoaderProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   return (
     <LoaderContext.Provider value={{ isLoading, showLoader, hideLoader }}>
       {children}
-      {isLoading && <Loader />}
+      {isLoading && <Loader color='blue' size={30} />}
     </LoaderContext.Provider>
   );
 };
