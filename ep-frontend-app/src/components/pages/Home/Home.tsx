@@ -4,6 +4,7 @@ import { useLoader, useLogger, useToast } from "../../../hooks";
 import Footer from "../../common/Footer/Footer";
 import ContactUs from "../../common/ContactUs/ContactUs";
 import LastYearWinners from "../LastYearWinners/LastYearWinners";
+import Dates from "../Dates/Dates";
 
 const Home: React.FC = () => {
 
@@ -25,6 +26,7 @@ const Home: React.FC = () => {
 
     return (
         <div>
+            <Dates />
             <LastYearWinners />
             <ContactUs />
             <Footer/>
