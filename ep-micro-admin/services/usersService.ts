@@ -118,26 +118,7 @@ export const usersService = {
       user.password = encryptedPassword;
       user.display_name = JSONUTIL.capitalize(user.display_name.trim());
 
-      const _query = {
-        text: USERS.createUser,
-        values: [user.user_name,
-        user.first_name,
-        user.last_name,
-        user.display_name,
-        user.dob,
-        user.gender,
-        user.mobile_number,
-        user.password,
-        user.role_id,
-        user.email_id,
-        user.created_by,
-        user.updated_by
-        ]
-      };
-      logger.debug(`usersService :: createUser :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: createUser :: db result :: ${JSON.stringify(result)}`)
+      await usersRepository.createUser(user);
 
       await usersService.sharePasswordToUser({
         emailId: user.email_id,
@@ -156,17 +137,7 @@ export const usersService = {
   },
   updateUser: async (user: IUser) => {
     try {
-      const _query = {
-        text: USERS.updateUser,
-        values: [user.user_id, user.first_name, user.last_name,
-        user.dob, user.gender,
-        user.email_id, user.updated_by, user.role_id, user.status, `${user.first_name} ${user.last_name}`
-        ]
-      };
-      logger.debug(`usersService :: updateUser :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: updateUser :: db result :: ${JSON.stringify(result)}`)
+      await usersRepository.updateUser(user);
 
       await redis.deleteRedis(`users|user:1|limit:50`);
       await redis.deleteRedis(`users_count|user:1`);
@@ -186,19 +157,12 @@ export const usersService = {
         return JSON.parse(cachedResult)
       }
 
-      const _query = {
-        text: USERS.getUser,
-        values: [userId]
-      };
-      logger.debug(`usersService :: getUserById :: query :: ${JSON.stringify(_query)}`)
+      const user = await usersRepository.getUserById(userId);
 
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: getUserById :: db result :: ${JSON.stringify(result)}`)
-
-      if (result.length > 0) {
-        if (result[0].profile_pic_url) result[0].profile_pic_url = await usersService.generatePublicURLFromObjectStoragePrivateURL(result[0].profile_pic_url, 3600);
-        redis.SetRedis(key, result[0], CacheTTL.LONG)
-        return result[0]
+      if (user) {
+        if (user) user.profile_pic_url = await usersService.generatePublicURLFromObjectStoragePrivateURL(user.profile_pic_url, 3600);
+        redis.SetRedis(key, user, CacheTTL.LONG)
+        return user;
       }
     } catch (error) {
       logger.error(`usersService :: getUserById :: userId :: ${userId} :: ${error.message} :: ${error}`)
@@ -250,17 +214,10 @@ export const usersService = {
         return JSON.parse(cachedResult)
       }
 
-      const _query = {
-        text: USERS.getUsersByRoleId,
-        values: [roleId]
-      };
-      logger.debug(`usersService :: getUsersByRoleId :: query :: ${JSON.stringify(_query)}`);
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: getUsersByRoleId :: db result :: ${JSON.stringify(result)}`);
-
-      if (result && result.length > 0) redis.SetRedis(key, result, CacheTTL.LONG);
-      return result;
+      const users = await usersRepository.getUsersByRoleId(roleId);
+      
+      if (users && users.length > 0) redis.SetRedis(key, users, CacheTTL.LONG);
+      return users;
     } catch (error) {
       logger.error(`usersService :: getUsersByRoleId :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -271,14 +228,7 @@ export const usersService = {
       const salt = await bcrypt.genSalt(10);
       const password = await bcrypt.hash(DEFAULT_PASSWORD, salt);
 
-      const _query = {
-        text: USERS.resetPasswordForUserId,
-        values: [userId, password]
-      };
-      logger.debug(`usersService :: resetPasswordForUserId :: query :: ${JSON.stringify(_query)}`);
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: resetPasswordForUserId :: db result :: ${JSON.stringify(result)}`);
+      await usersRepository.resetPasswordForUserId(password, userId);
     } catch (error) {
       logger.error(`usersService :: resetPasswordForUserId :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -359,14 +309,7 @@ export const usersService = {
   },
   updateUserStatus: async (user: IUser, status: number, updatedBy: number) => {
     try {
-      const _query = {
-        text: USERS.updateUserStatus,
-        values: [user.user_id, status, updatedBy]
-      };
-      logger.debug(`usersService :: updateUserStatus :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: updateUserStatus :: db result :: ${JSON.stringify(result)}`)
+      await usersRepository.updateUserStatus(user, status, updatedBy);
 
       await redis.deleteRedis(`user:${user.user_id}`);
       await redis.deleteRedis(`user|username:${user.user_name}`);
