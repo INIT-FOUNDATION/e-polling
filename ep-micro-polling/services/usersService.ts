@@ -206,7 +206,7 @@ export const usersService = {
       await redis.deleteRedis(`USERS|USER:1|LIMIT:50`);
       await redis.deleteRedis(`USERS_COUNT|USER:1`);
       await redis.deleteRedis(`USER:${user.user_id}`);
-      await redis.deleteRedis(`User|Username:${user.user_name}`);
+      await redis.deleteRedis(`user|username:${user.user_name}`);
     } catch (error) {
       logger.error(`usersService :: updateUser :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -540,7 +540,7 @@ export const usersService = {
       logger.debug(`usersService :: updateUserStatus :: db result :: ${JSON.stringify(result)}`)
 
       await redis.deleteRedis(`USER:${user.user_id}`);
-      await redis.deleteRedis(`User|Username:${user.user_name}`);
+      await redis.deleteRedis(`user|username:${user.user_name}`);
       await redis.deleteRedis(`USERS|USER:1|LIMIT:50`);
       await redis.deleteRedis(`USERS_COUNT|USER:1`);
 

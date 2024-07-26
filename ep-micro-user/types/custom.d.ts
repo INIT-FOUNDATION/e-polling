@@ -1,3 +1,5 @@
+import { UserStatus } from "../enums/status";
+
 export interface IUser {
     user_id: number;
     user_name: string;
@@ -12,7 +14,7 @@ export interface IUser {
     department_id: number;
     password: string;
     invalid_attempts: string;
-    status: number;
+    status: UserStatus;
     profile_pic_url: string;
     last_logged_in: string;
     date_created: string | undefined;

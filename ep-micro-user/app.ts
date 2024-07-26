@@ -62,7 +62,7 @@ routes(app);
 
 process.on("uncaughtException", function (err) {});
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5002;
 const server = app.listen(port, () => {
   logger.info(`[SERVER STARTED] Listening to port [${port}]`);
 });

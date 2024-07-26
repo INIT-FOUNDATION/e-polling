@@ -1,6 +1,5 @@
 import { QUERY } from "../constants";
 import { logger, pg } from "ep-micro-common";
-import { adminService } from "../services";
 import { IUser } from "../types/custom";
  
 export const adminRepository = {

@@ -1,5 +1,5 @@
 {
-  "name": "owa-micro-admin",
+  "name": "ep-micro-admin",
   "version": "1.0.0",
   "description": "",
   "main": "app.ts",
@@ -32,7 +32,7 @@
     "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.2",
     "uuid": "^9.0.1",
-    "owa-micro-common": "git+https://letslinkai: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@github.com/TechknowkraftAI/init-micro-commons.git#v1.0.15"
+    "ep-micro-common": "git+https://letslinkai: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@github.com/TechknowkraftAI/init-micro-commons.git#v1.0.15"
   },
   "nodemonConfig": {
     "restartable": "rs",
