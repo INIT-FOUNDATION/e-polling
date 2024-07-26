@@ -17,13 +17,12 @@ const Categories: React.FC = () => {
             alt="Influencer"
             className="h-full w-full object-cover"
           />
-          <div className="absolute bottom-0 w-full p-4 rounded-b-[40px] bg-[rgba(27,27,27,.5)] text-white transition-all duration-500 ease-in-out flex flex-col justify-end h-[80px] group-hover:h-[160px]">
-            <div className="flex flex-col justify-end h-full transition-transform duration-500 ease-in-out transform group-hover:translate-y-[-100px]">
-              <h1 className="text-4xl text-center mb-2">
-                Influencer
-              </h1>
-              <p className="text-xl text-center opacity-0 translate-y-4 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-y-0">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis dolore adipisci placeat.
+          <div className="absolute bottom-0 w-full p-4 rounded-b-[40px] bg-[rgba(27,27,27,.5)] text-white transition-all duration-500 ease-in-out flex flex-col justify-end group-hover:h-[160px]">
+            <div className="flex flex-col justify-end h-full transition-transform duration-500 ease-in-out transform group-hover:translate-y-[-10px]">
+              <h1 className="text-4xl text-center mb-2">Influencer</h1>
+              <p className="hidden group-hover:block text-xl text-center opacity-0 translate-y-4 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-y-0">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis
+                dolore adipisci placeat.
               </p>
             </div>
           </div>
@@ -34,13 +33,12 @@ const Categories: React.FC = () => {
             alt="Agency"
             className="h-full w-full object-cover"
           />
-          <div className="absolute bottom-0 w-full p-4 rounded-b-[40px] bg-[rgba(27,27,27,.5)] text-white transition-all duration-500 ease-in-out flex flex-col justify-end h-[80px] group-hover:h-[160px]">
-            <div className="flex flex-col justify-end h-full transition-transform duration-500 ease-in-out transform group-hover:translate-y-[-100px]">
-              <h1 className="text-4xl text-center mb-2">
-                Agency
-              </h1>
-              <p className="text-xl text-center opacity-0 translate-y-4 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-y-0">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis dolore adipisci placeat.
+          <div className="absolute bottom-0 w-full p-4 rounded-b-[40px] bg-[rgba(27,27,27,.5)] text-white transition-all duration-500 ease-in-out flex flex-col justify-end group-hover:h-[160px]">
+            <div className="flex flex-col justify-end h-full transition-transform duration-500 ease-in-out transform group-hover:translate-y-[-10px]">
+              <h1 className="text-4xl text-center mb-2">Agency</h1>
+              <p className="hidden group-hover:block text-xl text-center opacity-0 translate-y-4 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-y-0">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis
+                dolore adipisci placeat.
               </p>
             </div>
           </div>
@@ -51,13 +49,12 @@ const Categories: React.FC = () => {
             alt="Campaign"
             className="h-full w-full object-cover"
           />
-          <div className="absolute bottom-0 w-full p-4 rounded-b-[40px] bg-[rgba(27,27,27,.5)] text-white transition-all duration-500 ease-in-out flex flex-col justify-end h-[140px] group-hover:h-[160px]">
-            <div className="flex flex-col justify-end h-full transition-transform duration-500 ease-in-out transform group-hover:translate-y-[-100px]">
-              <h1 className="text-4xl text-center mb-2">
-                Campaign
-              </h1>
-              <p className="text-xl text-center opacity-0 translate-y-4 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-y-0">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis dolore adipisci placeat.
+          <div className="absolute bottom-0 w-full p-4 rounded-b-[40px] bg-[rgba(27,27,27,.5)] text-white transition-all duration-500 ease-in-out flex flex-col justify-end group-hover:h-[160px]">
+            <div className="flex flex-col justify-end h-full transition-transform duration-500 ease-in-out transform group-hover:translate-y-[-10px]">
+              <h1 className="text-4xl text-center mb-2">Campaign</h1>
+              <p className="hidden group-hover:block text-xl text-center opacity-0 translate-y-4 transition-opacity duration-500 ease-in-out group-hover:opacity-100 group-hover:translate-y-0">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis
+                dolore adipisci placeat.
               </p>
             </div>
           </div>
