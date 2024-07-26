@@ -7,27 +7,9 @@ import bcrypt from "bcryptjs";
 import RandExp from "randexp";
 import { SMS, WHATSAPP } from "../constants/COMMUNICATION";
 import { CacheTTL } from "../enums";
+import { usersRepository } from "../repositories";
 
 export const usersService = {
-  usersUpdatedWithinFiveMints: async (): Promise<boolean> => {
-    try {
-      logger.info("usersService :: Inside usersUpdatedWithinFiveMints");
-
-      const _queryToCheckLatestUpdated = {
-        text: USERS.latestUpdatedCheck
-      };
-
-      logger.debug(`usersService :: latestUpdated :: query :: ${JSON.stringify(_queryToCheckLatestUpdated)}`)
-      const latestUpdatedInForm = await pg.executeQueryPromise(_queryToCheckLatestUpdated);
-      const isUserUpdatedWithin5mins = (latestUpdatedInForm[0].count > 0);
-      logger.info(`usersService :: latestUpdated :: result :: ${JSON.stringify(latestUpdatedInForm)} :: isUserUpdatedWithin5mins :: ${isUserUpdatedWithin5mins}`);
-
-      return isUserUpdatedWithin5mins;
-    } catch (error) {
-      logger.error(`usersService :: usersUpdatedWithinFiveMints :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
   listUsers: async (userId: number, pageSize: number, currentPage: number, searchQuery: string): Promise<IUser[]> => {
     try {
       let key = `users|user:${userId}`;
@@ -56,7 +38,7 @@ export const usersService = {
         _query.text += ` OFFSET ${currentPage}`;
       }
 
-      const isUserUpdatedWithin5min = await usersService.usersUpdatedWithinFiveMints();
+      const isUserUpdatedWithin5min = await usersRepository.usersUpdatedWithinFiveMints();
 
       if (!isUserUpdatedWithin5min) {
         const cachedResult = await redis.GetKeyRedis(key);
@@ -102,7 +84,7 @@ export const usersService = {
         }
       }
 
-      const isUserUpdatedWithin5min = await usersService.usersUpdatedWithinFiveMints();
+      const isUserUpdatedWithin5min = await usersRepository.usersUpdatedWithinFiveMints();
 
       if (!isUserUpdatedWithin5min) {
         const cachedResult = await redis.GetKeyRedis(key);
@@ -220,40 +202,6 @@ export const usersService = {
       }
     } catch (error) {
       logger.error(`usersService :: getUserById :: userId :: ${userId} :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  existsByMobileNumber: async (mobileNumber: number): Promise<boolean> => {
-    try {
-      const _query = {
-        text: USERS.existsByMobileNumber,
-        values: [mobileNumber]
-      };
-      logger.debug(`usersService :: existsByMobileNumber :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: existsByMobileNumber :: db result :: ${JSON.stringify(result)}`)
-
-      return (result && result.length > 0) ? result[0].exists : false;
-    } catch (error) {
-      logger.error(`usersService :: existsByMobileNumber :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  existsByUserId: async (userId: number): Promise<boolean> => {
-    try {
-      const _query = {
-        text: USERS.existsByUserId,
-        values: [userId]
-      };
-      logger.debug(`usersService :: existsByUserId :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: existsByUserId :: db result :: ${JSON.stringify(result)}`)
-
-      return (result && result.length > 0) ? result[0].exists : false;
-    } catch (error) {
-      logger.error(`usersService :: existsByUserId :: ${error.message} :: ${error}`)
       throw new Error(error.message);
     }
   },
@@ -406,30 +354,6 @@ export const usersService = {
       }
     } catch (error) {
       logger.error(`adminService :: sharePasswordToUser :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  getReportingUsersList: async (levels: string[], user_id: number): Promise<{ user_id: number, display_name: string }[]> => {
-    try {
-      const placeholders = levels.map((_, i) => `$${i + 1}`).join(', ');
-      let query = `${USERS.getReportingUsersList} IN (${placeholders}) AND VU.role_id <> 1`;
-
-      if (user_id) {
-        query += ` AND VU.user_id <> ${user_id}`
-      }
-
-      const _query = {
-        text: query,
-        values: levels
-      };
-      logger.debug(`usersService :: getReportingUsersList :: query :: ${JSON.stringify(_query)}`);
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: getReportingUsersList :: db result :: ${JSON.stringify(result)}`);
-
-      return result;
-    } catch (error) {
-      logger.error(`usersService :: getReportingUsersList :: ${error.message} :: ${error}`)
       throw new Error(error.message);
     }
   },

@@ -5,9 +5,9 @@ import { usersService } from "../services/usersService";
 import { IUser } from "../types/custom";
 import { User, validateCreateUser, validateUpdateUser } from "../models/usersModel";
 import { ROLES, USERS } from "../constants/ERRORCODE";
-import { rolesService } from "../services/rolesService";
 import { encDecHelper } from "../helpers";
 import { GridDefaultOptions } from "../enums";
+import { rolesRepository, usersRepository } from "../repositories";
 
 export const usersController = {
     listUsers: async (req: Request, res: Response): Promise<Response> => {
@@ -92,10 +92,10 @@ export const usersController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: USERS.USER00000.errorCode, errorMessage: error.message });
             }
 
-            const roleExists = await rolesService.existsByRoleId(user.role_id);
+            const roleExists = await rolesRepository.existsByRoleId(user.role_id);
             if (!roleExists) return res.status(STATUS.BAD_REQUEST).send(ROLES.ROLE00006);
 
-            const userExists = await usersService.existsByMobileNumber(user.mobile_number);
+            const userExists = await usersRepository.existsByMobileNumber(user.mobile_number);
             if (userExists) return res.status(STATUS.BAD_REQUEST).send(USERS.USER00005);
 
             user.created_by = plainToken.user_id;
@@ -157,10 +157,10 @@ export const usersController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: USERS.USER00000.errorCode, errorMessage: error.message });
             }
 
-            const roleExists = await rolesService.existsByRoleId(user.role_id);
+            const roleExists = await rolesRepository.existsByRoleId(user.role_id);
             if (!roleExists) return res.status(STATUS.BAD_REQUEST).send(ROLES.ROLE00006);
 
-            const userExists = await usersService.existsByUserId(user.user_id);
+            const userExists = await usersRepository.existsByUserId(user.user_id);
             if (!userExists) return res.status(STATUS.BAD_REQUEST).send(USERS.USER000011);
 
             user.updated_by = plainToken.user_id;
@@ -246,7 +246,7 @@ export const usersController = {
             const userId = req.params.userId;
             if (!userId) return res.status(STATUS.BAD_REQUEST).send(USERS.USER00006);
 
-            const userExists = await usersService.existsByUserId(parseInt(userId));
+            const userExists = await usersRepository.existsByUserId(parseInt(userId));
             if (!userExists) return res.status(STATUS.BAD_REQUEST).send(USERS.USER000011);
 
             await usersService.resetPasswordForUserId(parseInt(userId));

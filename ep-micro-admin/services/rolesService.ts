@@ -2,6 +2,7 @@ import { pg, logger, redis } from "ep-micro-common";
 import { ROLES } from "../constants/QUERY";
 import { IRole } from "../types/custom";
 import { CacheTTL } from "../enums";
+import { rolesRepository } from "../repositories";
 
 export const rolesService = {
   listRoles: async (isActive: boolean, pageSize: number, currentPage: number): Promise<IRole[]> => {
@@ -85,20 +86,12 @@ export const rolesService = {
   },
   addRole: async (role: IRole) => {
     try {
-      const _query = {
-        text: ROLES.addRole,
-        values: [role.role_name, role.role_description, role.level, role.created_by, role.updated_by]
-      };
-      logger.debug(`rolesService :: addRole :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: addRole :: db result :: ${JSON.stringify(result)}`)
-
-      const createRoleId = result[0].role_id;
+      const createdRole = await rolesRepository.addRole(role);
+      const createRoleId = createdRole[0].role_id;
 
       if (role.permissions && role.permissions.length > 0) {
         for (const permission of role.permissions) {
-          await rolesService.addPermissions(createRoleId, permission.menu_id, permission.permission_id, role.updated_by);
+          await rolesRepository.addPermissions(createRoleId, permission.menu_id, permission.permission_id, role.updated_by);
         }
       }
 
@@ -113,19 +106,12 @@ export const rolesService = {
   },
   updateRole: async (role: IRole) => {
     try {
-      const _query = {
-        text: ROLES.updateRole,
-        values: [role.role_id, role.role_name, role.role_description, role.level, role.updated_by, role.status]
-      };
-      logger.debug(`rolesService :: updateRole :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: updateRole :: db result :: ${JSON.stringify(result)}`)
+      await rolesRepository.updateRole(role);
 
       if (role.permissions && role.permissions.length > 0) {
-        await rolesService.deleteExistingPermissions(role.role_id);
+        await rolesRepository.deleteExistingPermissions(role.role_id);
         for (const permission of role.permissions) {
-          await rolesService.addPermissions(role.role_id, permission.menu_id, permission.permission_id, role.updated_by);
+          await rolesRepository.addPermissions(role.role_id, permission.menu_id, permission.permission_id, role.updated_by);
         }
       }
 
@@ -148,17 +134,9 @@ export const rolesService = {
         return JSON.parse(cachedResult)
       }
 
-      const _query = {
-        text: ROLES.getRole,
-        values: [roleId]
-      };
-      logger.debug(`rolesService :: getRoleById :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: getRoleById :: db result :: ${JSON.stringify(result)}`)
-
-      if (result && result.length > 0) redis.SetRedis(key, result[0], CacheTTL.LONG);
-      return result && result.length > 0 ? result[0] : [];
+      const role = await rolesRepository.getRole(roleId);
+      if (role) redis.SetRedis(key, role, CacheTTL.LONG);
+      return role;
     } catch (error) {
       logger.error(`rolesService :: getRoleById :: roleId :: ${roleId} :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -166,14 +144,7 @@ export const rolesService = {
   },
   updateRoleStatus: async (roleId: number, status: number, updatedBy: number) => {
     try {
-      const _query = {
-        text: ROLES.updateRoleStatus,
-        values: [roleId, status, updatedBy]
-      };
-      logger.debug(`rolesService :: updateRoleStatus :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: updateRoleStatus :: db result :: ${JSON.stringify(result)}`)
+      await rolesRepository.updateRoleStatus(roleId, status, updatedBy);
 
       redis.deleteRedis(`role:${roleId}`);
       redis.deleteRedis(`roles`);
@@ -193,136 +164,11 @@ export const rolesService = {
         return JSON.parse(cachedResult)
       }
 
-      const _query = {
-        text: ROLES.getAccessListByRoleId,
-        values: [roleId]
-      };
-      logger.debug(`rolesService :: getAccessListByRoleId :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: getAccessListByRoleId :: db result :: ${JSON.stringify(result)}`)
-
-      redis.SetRedis(key, result, CacheTTL.LONG);
+      const result = await rolesRepository.getAccessListByRoleId(roleId);
+      if (result) redis.SetRedis(key, result, CacheTTL.LONG);
       return result;
     } catch (error) {
       logger.error(`rolesService :: getAccessListByRoleId :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  getMenusList: async (isActive: boolean): Promise<any> => {
-    try {
-      const _query = {
-        text: ROLES.getMenusList + ` ${isActive ? 'WHERE status = 1 ORDER BY menu_order ASC' : 'ORDER BY menu_order ASC'}`
-      };
-
-      logger.debug(`rolesService :: getMenusList :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: getMenusList :: db result :: ${JSON.stringify(result)}`)
-
-      return result;
-    } catch (error) {
-      logger.error(`rolesService :: getMenusList :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  getDefaultAccessList: async (): Promise<any> => {
-    try {
-      const _query = {
-        text: ROLES.getDefaultAccessList
-      };
-      logger.debug(`rolesService :: getDefaultAccessList :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: getDefaultAccessList :: db result :: ${JSON.stringify(result)}`)
-
-      return result;
-    } catch (error) {
-      logger.error(`rolesService :: getDefaultAccessList :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  existsByRoleId: async (roleId: number): Promise<boolean> => {
-    try {
-      const _query = {
-        text: ROLES.existsByRoleId,
-        values: [roleId]
-      };
-      logger.debug(`rolesService :: existsByRoleId :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: existsByRoleId :: db result :: ${JSON.stringify(result)}`)
-
-      return (result && result.length > 0) ? result[0].exists : false;
-    } catch (error) {
-      logger.error(`rolesService :: existsByRoleId :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  existsByRoleName: async (roleName: string, roleId: number | undefined): Promise<boolean> => {
-    try {
-      const _query = {
-        text: ROLES.existsByRoleName,
-        values: [roleName]
-      };
-      if (roleId) _query.text = _query.text.replace(`status = 1`, `status = 1 AND role_id <> ${roleId}`);
-      logger.debug(`rolesService :: existsByRoleName :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: existsByRoleName :: db result :: ${JSON.stringify(result)}`)
-
-      return (result && result.length > 0) ? result[0].exists : false;
-    } catch (error) {
-      logger.error(`rolesService :: existsByRoleName :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  deleteExistingPermissions: async (roleId: number) => {
-    try {
-      const _query = {
-        text: ROLES.deleteExistingPermissions,
-        values: [roleId]
-      };
-      logger.debug(`rolesService :: deleteExistingPermissions :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: deleteExistingPermissions :: db result :: ${JSON.stringify(result)}`)
-
-      return (result && result.length > 0) ? result[0].exists : false;
-    } catch (error) {
-      logger.error(`rolesService :: deleteExistingPermissions :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  addPermissions: async (roleId: number, menu_id: number, permission_id: number, updated_by: number) => {
-    try {
-      const _query = {
-        text: ROLES.addPermissions,
-        values: [roleId, menu_id, permission_id, updated_by]
-      };
-      logger.debug(`rolesService :: addPermissions :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: addPermissions :: db result :: ${JSON.stringify(result)}`)
-    } catch (error) {
-      logger.error(`rolesService :: addPermissions :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  getRolesByLevel: async (level: string): Promise<IRole[]> => {
-    try {
-      const _query = {
-        text: ROLES.getRolesByLevel,
-        values: [level]
-      };
-      logger.debug(`rolesService :: getRolesByLevel :: query :: ${JSON.stringify(_query)}`)
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`rolesService :: getRolesByLevel :: db result :: ${JSON.stringify(result)}`)
-
-      return result
-    } catch (error) {
-      logger.error(`rolesService :: getRolesByLevel :: ${error.message} :: ${error}`)
       throw new Error(error.message);
     }
   },
