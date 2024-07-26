@@ -3,9 +3,11 @@ import { homeService } from "./homeService";
 import { useLoader, useLogger, useToast } from "../../../hooks";
 import Footer from "../../common/Footer/Footer";
 import ContactUs from "../../common/ContactUs/ContactUs";
-import LastYearWinners from "../LastYearWinners/LastYearWinners";
-import Dates from "../Dates/Dates";
+import LastYearWinner from "../Home/Components/LastYearWinner/LastYearWinner";
+import Dates from "../Home/Components/Dates/Dates";
 import Categories from "../Categories/Categories";
+import WhoCanEnter from "./Components/WhoCanEnter/WhoCanEnter";
+import StarInfluenceAwards from "./Components/StarInfluencerAwards/StarInfluencerAwards";
 
 const Home: React.FC = () => {
 
@@ -27,9 +29,11 @@ const Home: React.FC = () => {
 
     return (
         <div>
+            <StarInfluenceAwards />
             <Categories />
+            <WhoCanEnter />
             <Dates />
-            <LastYearWinners />
+            <LastYearWinner />
             <ContactUs />
             <Footer/>
             </div>
