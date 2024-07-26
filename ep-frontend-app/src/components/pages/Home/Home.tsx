@@ -7,6 +7,7 @@ import LastYearWinner from "../Home/Components/LastYearWinner/LastYearWinner";
 import Dates from "../Home/Components/Dates/Dates";
 import Categories from "../Categories/Categories";
 import WhoCanEnter from "./Components/WhoCanEnter/WhoCanEnter";
+import StarInfluenceAwards from "./Components/StarInfluencerAwards/StarInfluencerAwards";
 
 const Home: React.FC = () => {
 
@@ -28,6 +29,7 @@ const Home: React.FC = () => {
 
     return (
         <div>
+            <StarInfluenceAwards />
             <Categories />
             <WhoCanEnter />
             <Dates />
