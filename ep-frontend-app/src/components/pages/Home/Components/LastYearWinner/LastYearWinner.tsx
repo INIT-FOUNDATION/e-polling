@@ -12,7 +12,7 @@ const LastYearWinner: React.FC = () => {
     <div className="bg-image flex flex-col md:flex-row items-center">
       <div className="flex flex-col md:flex-row items-center w-full">
         <div className="md:w-7/12 flex flex-col items-start p-5 md:p-0 mt-4 md:mt-0">
-          <div className="text-center px-12">
+          <div className="px-12 text-left">
             <h1 className="text-4xl md:text-6xl text-gray-700">
               Last Year's
               <br />

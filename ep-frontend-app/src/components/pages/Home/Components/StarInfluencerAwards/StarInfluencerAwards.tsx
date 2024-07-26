@@ -12,7 +12,7 @@ const StarInfluenceAwards: React.FC = () => {
     <div className="bg-image flex flex-col md:flex-row items-center">
       <div className="flex flex-col md:flex-row items-center w-full">
         <div className="md:w-7/12 flex flex-col items-start p-5 md:p-0 mt-4 md:mt-0">
-          <div className="text-left px-10">
+          <div className="text-left px-12">
             <h1 className="text-2xl md:text-5xl text-gray-700">
               What Are Star
               <br />
@@ -35,7 +35,7 @@ const StarInfluenceAwards: React.FC = () => {
               </p>
             </div>
           </div>
-          <div className="mt-6 px-10">
+          <div className="mt-6 px-12">
             <button type="submit" className="submit-button">
               View Last Year's Winners
             </button>
