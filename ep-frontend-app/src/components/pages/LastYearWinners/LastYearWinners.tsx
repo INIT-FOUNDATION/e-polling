@@ -13,11 +13,11 @@ const LastYearWinners: React.FC = () => {
       <div className="flex flex-col md:flex-row items-center w-full">
         <div className="md:w-7/12 flex flex-col items-start p-5 md:p-0 mt-4 md:mt-0">
           <div className="text-center px-12">
-            <span className="text-6xl md:text-7xl text-gray-700">
+            <h1 className="text-4xl md:text-6xl text-gray-700">
               Last Year's
               <br />
               Winners
-            </span>
+            </h1>
           </div>
           <div className="mt-6 px-12">
             <button type="submit" className="submit-button">

@@ -7,9 +7,9 @@ import CampaignImage from "../../../assets/images/Categories/Campaign.svg";
 const Categories: React.FC = () => {
   return (
     <div className="p-10 bg-[#F9F3FD]">
-      <div className="flex justify-center items-center text-[39.2px] text-[#333333] mb-8">
+      <h1 className="flex justify-center items-center text-[39.2px] text-[#333333] mb-8">
         Categories
-      </div>
+      </h1>
       <div className="flex justify-center flex-wrap">
         <div className="relative m-6 overflow-hidden group cursor-pointer">
           <img

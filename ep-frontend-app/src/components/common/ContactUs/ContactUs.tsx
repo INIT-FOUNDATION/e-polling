@@ -4,9 +4,9 @@ const ContactUs: React.FC = () => {
   return (
     <div className="p-10"style={{backgroundColor:'#F9F3FD'}}>
       <div className="border-2 border-gray-200 p-6 rounded-lg">
-        <div className="flex justify-center items-center text-[39.2px]" style={{ color: '#454849' }}>
+        <h1 className="flex justify-center items-center text-[39.2px]" style={{ color: '#454849' }}>
           Reach out to us in case you have any doubts
-        </div>
+        </h1>
         <form className="mt-6 space-y-4 px-10">
           <div className="flex flex-col">
             <label htmlFor="firstName" className="text-gray-700">First Name</label>
