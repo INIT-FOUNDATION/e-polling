@@ -6,6 +6,7 @@ import ContactUs from "../../common/ContactUs/ContactUs";
 import LastYearWinner from "../Home/Components/LastYearWinner/LastYearWinner";
 import Dates from "../Home/Components/Dates/Dates";
 import Categories from "../Categories/Categories";
+import WhoCanEnter from "./Components/WhoCanEnter/WhoCanEnter";
 
 const Home: React.FC = () => {
 
@@ -28,6 +29,7 @@ const Home: React.FC = () => {
     return (
         <div>
             <Categories />
+            <WhoCanEnter />
             <Dates />
             <LastYearWinner />
             <ContactUs />
