@@ -1,8 +1,8 @@
 import { pg, logger, redis, objectStorageUtility, envUtils } from "ep-micro-common";
 import { IUser } from "../types/custom";
 import { USERS } from "../constants/QUERY";
-import { CACHE_TTL } from "../constants/CONST";
 import { UploadedFile } from "express-fileupload";
+import { CacheTTL } from "../enums/cacheTTL";
 
 export const adminService = {
     getLoggedInUserInfo: async (user_id: number): Promise<IUser> => {
@@ -24,7 +24,7 @@ export const adminService = {
 
             if (result.length > 0) {
                 if (result[0].profile_pic_url) result[0].profile_pic_url = await adminService.generatePublicURLFromObjectStoragePrivateURL(result[0].profile_pic_url, 3600);
-                redis.SetRedis(key, result[0], CACHE_TTL.LONG)
+                redis.SetRedis(key, result[0], CacheTTL.LONG)
                 return result[0]
             }
         } catch (error) {

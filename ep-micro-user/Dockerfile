@@ -1,4 +1,4 @@
-FROM ghcr.io/techknowkraftai/node AS build
+FROM ghcr.io/techknowkraftai/node
 
 WORKDIR /usr/src/app
 
@@ -11,6 +11,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 9003
+EXPOSE 5002
 
 CMD [ "npm", "start" ]

@@ -1,4 +1,4 @@
-FROM ghcr.io/techknowkraftai/node AS build
+FROM ghcr.io/techknowkraftai/node
 
 WORKDIR /usr/src/app
 

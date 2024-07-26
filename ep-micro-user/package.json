@@ -40,7 +40,7 @@
     ],
     "delay": "2000",
     "env": {
-      "PORT": 9003,
+      "PORT": 5002,
       "HOST": "localhost",
       "MODULE": "ep-micro-user",
       "INIT_COMMON_NOSQL_DB_REQUIRED": false,
