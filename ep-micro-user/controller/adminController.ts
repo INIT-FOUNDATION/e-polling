@@ -2,9 +2,9 @@ import { Response } from "express";
 import { STATUS, logger, envUtils } from "ep-micro-common";
 import { ADMIN } from "../constants/ERRORCODE";
 import { Request } from "../types/express";
-import { adminService } from "../services/adminService";
+import { adminService } from "../services";
 import { UploadedFile } from "express-fileupload";
-import { validateUpdateUser } from "../model/adminModel";
+import { adminModel } from "../models";
 import { IUser } from "../types/custom";
 
 export const adminController = {
@@ -97,7 +97,7 @@ export const adminController = {
                 }  
             */
             const user: IUser = req.body;
-            const { error } = validateUpdateUser(user);
+            const { error } = adminModel.validateUpdateUser(user);
 
             if (error) {
                     if (error.details != null)
