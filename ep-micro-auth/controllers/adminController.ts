@@ -1,11 +1,11 @@
 import { Response } from "express";
 import { Request } from "../types/express";
-import { validateLoginDetails, validateResetPassword, validateVerifyForgotPassword } from "../models/adminModel";
+import { adminModel } from "../models";
 import { STATUS, redis, logger, generateToken, envUtils } from "ep-micro-common";
 import { AUTH } from "../constants";
 import { ERRORCODE } from "../constants";
 import { DEFAULT_PASSWORD } from "../constants/CONST";
-import { adminService } from "../services/adminService";
+import { adminService } from "../services";
 import jwt from "jsonwebtoken";
 import { IUser } from "../types/custom";
 import bcrypt from "bcryptjs";
@@ -52,7 +52,7 @@ export const adminController = {
                 }    
             */
             const user: IUser = req.body;
-            const { error } = await validateLoginDetails(req.body);
+            const { error } = await adminModel.validateLoginDetails(req.body);
 
             if (error) {
                 if (error.details)
@@ -185,7 +185,7 @@ export const adminController = {
                 }    
             */
             const otpDetails = req.body;
-            const { error } = await validateVerifyForgotPassword(otpDetails);
+            const { error } = await adminModel.validateVerifyForgotPassword(otpDetails);
             if (error) {
                 if (error.details)
                     return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.AUTH.AUTH00000, errorMessage: error.details[0].message });
@@ -231,7 +231,7 @@ export const adminController = {
                 }    
             */
             const resetForgetPasswordDetails = req.body;
-            const { error } = await validateResetPassword(resetForgetPasswordDetails);
+            const { error } = await adminModel.validateResetPassword(resetForgetPasswordDetails);
             if (error) {
                 if (error.details)
                     return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.AUTH.AUTH00000, errorMessage: error.details[0].message });
