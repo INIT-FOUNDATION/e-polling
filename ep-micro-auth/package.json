@@ -52,7 +52,7 @@
       "INIT_COMMON_PG_DB_REQUIRED": true,
       "INIT_COMMON_MASTER_HOST": "dev.orrizonte.in",
       "INIT_COMMON_MASTER_USER": "dev",
-      "INIT_COMMON_MASTER_DATABASE": "e-polling",
+      "INIT_COMMON_MASTER_DATABASE": "e_polling",
       "INIT_COMMON_MASTER_PASSWORD": "zQrBoxTNZffPZLak",
       "INIT_COMMON_MASTER_PORT": 5432,
       "INIT_COMMON_NODEMAILER_USER": "info@orrizonte.in",
