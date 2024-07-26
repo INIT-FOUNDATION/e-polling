@@ -5,26 +5,12 @@
     "description": "API Swagger for ep-micro-auth",
     "version": "1.0.0"
   },
-  "host": "localhost:9001",
+  "host": "localhost:5001",
   "basePath": "/",
   "schemes": [
     "http"
   ],
   "paths": {
-    "/api/v1/auth/health": {
-      "get": {
-        "tags": [
-          "Auth"
-        ],
-        "summary": "Health Check API",
-        "description": "Endpoint for health check of Auth Micro Service",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/api/v1/auth/admin/validateToken": {
       "get": {
         "tags": [
@@ -156,8 +142,8 @@
               "type": "object",
               "properties": {
                 "otp": {
-                  "type": "number",
-                  "example": 123456
+                  "type": "string",
+                  "example": "encryptedOtp"
                 },
                 "txnId": {
                   "type": "string",
@@ -205,6 +191,16 @@
             }
           }
         ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/auth/health": {
+      "get": {
+        "description": "",
         "responses": {
           "default": {
             "description": ""

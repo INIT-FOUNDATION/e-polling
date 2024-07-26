@@ -1,0 +1,20 @@
+// _buttons.scss or styles.scss
+
+.submit-button {
+    background: linear-gradient(to right, #47B9EE, #BB45EA);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 500px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  
+    &:hover {
+      background: linear-gradient(to right, #36a5d8, #a93fbf); // Slightly different gradient for hover
+    }
+    
+    &:active {
+      background: linear-gradient(to right, #1a7bbf, #8a2c9c); // Slightly darker gradient for active state
+    }
+  }
+  

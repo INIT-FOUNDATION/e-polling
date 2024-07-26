@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const LastYearWinners: React.FC = () => {
-    return (
-        <div>
-            Last Year Winners
-        </div>
-    );
-}
+
+  return (
+   <div>
+
+   </div>
+  );
+};
 
 export default LastYearWinners;

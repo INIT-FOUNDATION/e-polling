@@ -1,7 +1,8 @@
 import express, {  Request, Response, Express, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import * as CONSTANT from '../constants/CONST';
-import { adminRouter, authRouter } from '../routes';
+import { adminRouter } from '../routes/adminRouter';
+import { authRouter } from '../routes/authRouter';
 
 export default function (app: Express): void {
   app.use(express.json());
@@ -30,6 +31,6 @@ export default function (app: Express): void {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
-  app.use('/api/v1/auth', authRouter);
   app.use('/api/v1/auth/admin', adminRouter);
+  app.use('/api/v1/auth', authRouter);
 }
