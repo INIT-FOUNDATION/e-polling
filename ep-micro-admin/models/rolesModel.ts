@@ -1,5 +1,5 @@
-import { ROLES_STATUS } from "../constants/CONST";
 import { ROLES } from "../constants/ERRORCODE";
+import { RoleStatus } from "../enums";
 import { IRole } from "../types/custom";
 import Joi from "joi";
 
@@ -47,7 +47,7 @@ const validateCreateRole = (role: IRole): Joi.ValidationResult => {
       new Error(ROLES.ROLE00010.errorMessage)
     ),
     level: Joi.string().required(),
-    status: Joi.number().valid(...Object.values(ROLES_STATUS)),
+    status: Joi.number().valid(...Object.values(RoleStatus)),
     date_created: Joi.string().allow("", null),
     date_updated: Joi.string().allow("", null),
     created_by: Joi.number(),
@@ -74,7 +74,7 @@ const validateUpdateRole = (role: IRole): Joi.ValidationResult => {
     ).required().error(
       new Error(ROLES.ROLE00010.errorMessage)
     ),
-    status: Joi.number().valid(...Object.values(ROLES_STATUS)),
+    status: Joi.number().valid(...Object.values(RoleStatus)),
   });
   return roleSchema.validate(role);
 };
@@ -82,7 +82,7 @@ const validateUpdateRole = (role: IRole): Joi.ValidationResult => {
 const validateUpdateRoleStatus = (role: IRole): Joi.ValidationResult => {
   const roleSchema = Joi.object({
     role_id: Joi.number().required(),
-    status: Joi.number().valid(...Object.values(ROLES_STATUS)).required().error(
+    status: Joi.number().valid(...Object.values(RoleStatus)).required().error(
       new Error(ROLES.ROLE00004.errorMessage)
     )
   });

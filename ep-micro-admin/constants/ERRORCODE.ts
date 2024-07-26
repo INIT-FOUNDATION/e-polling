@@ -96,33 +96,6 @@ export const USERS = {
   },
 };
 
-export const DEPARTMENTS = {
-  DEPARTMENT000: {
-    errorCode: "DEPARTMENT000",
-    errorMessage: "Internal Server Error",
-  },
-  DEPARTMENT001:  {
-    errorCode: "DEPARTMENT001",
-    errorMessage: "Invalid Department name length, It must be within 3 and 20",
-  },
-  DEPARTMENT002:  {
-    errorCode: "DEPARTMENT002",
-    errorMessage: "Department Id Required!",
-  },
-  DEPARTMENT003:  {
-    errorCode: "DEPARTMENT003",
-    errorMessage: "Requested Department does not exists!",
-  },
-  DEPARTMENT004:  {
-    errorCode: "DEPARTMENT004",
-    errorMessage: "Invalid Department Status!",
-  },
-  DEPARTMENT005:  {
-    errorCode: "DEPARTMENT005",
-    errorMessage: "Department with Requested Name already exists!",
-  },
-};
-
 export const PASSWORDPOLICIES = {
   PASSWORDPOLICIES000: {
     errorCode: "PASSWORDPOLICIES000",

@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { IUser } from "../types/custom";
 import { USERS } from "../constants/ERRORCODE";
-import { GENDER, USERS_STATUS } from "../constants/CONST";
+import { GenderStatus, UserStatus } from "../enums";
 
 class User implements IUser {
   user_id: number;
@@ -69,7 +69,7 @@ const validateCreateUser = (user: IUser): Joi.ValidationResult => {
     mobile_number: Joi.number().integer().min(6000000000).max(9999999999).required(),
     dob: Joi.date().iso(),
     email_id: Joi.string().email().required(),
-    gender: Joi.number().valid(...Object.values(GENDER)).required(),
+    gender: Joi.number().valid(...Object.values(GenderStatus)).required(),
     role_id: Joi.number().required(),
     department_id: Joi.number().required(),
     password: Joi.string().allow("", null),
@@ -102,11 +102,11 @@ const validateUpdateUser = (user: IUser): Joi.ValidationResult => {
     dob: Joi.date().iso(),
     mobile_number: Joi.number().integer().min(6000000000).max(9999999999).required(),
     email_id: Joi.string().email().required(),
-    gender: Joi.number().valid(...Object.values(GENDER)).required(),
+    gender: Joi.number().valid(...Object.values(GenderStatus)).required(),
     role_id: Joi.number().required(),
     department_id: Joi.number().required(),
     reporting_to_users: Joi.array().items(Joi.number()).optional(),
-    status: Joi.number().valid(...Object.values(USERS_STATUS)).required(),
+    status: Joi.number().valid(...Object.values(UserStatus)).required(),
   });
   return userSchema.validate(user);
 };

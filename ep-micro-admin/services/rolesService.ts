@@ -1,28 +1,28 @@
 import { pg, logger, redis } from "ep-micro-common";
 import { ROLES } from "../constants/QUERY";
 import { IRole } from "../types/custom";
-import { CACHE_TTL } from "../constants/CONST";
+import { CacheTTL } from "../enums";
 
 export const rolesService = {
   listRoles: async (isActive: boolean, pageSize: number, currentPage: number): Promise<IRole[]> => {
     try {
-      let key = `ROLES`;
+      let key = `roles`;
       let whereQuery = `WHERE`;
 
       if (isActive) {
-        key += '|ACTIVE';
+        key += '|active';
         whereQuery += ' status = 1 AND role_id <> 1'
       } else {
         whereQuery += ' status IN (0,1) AND role_id <> 1'
       }
 
       if (pageSize) {
-        key += `|LIMIT:${pageSize}`
+        key += `|limit:${pageSize}`
         whereQuery += ` LIMIT ${pageSize}`
       }
 
       if (currentPage) {
-        key += `|OFFSET:${currentPage}`
+        key += `|offset:${currentPage}`
         whereQuery += ` OFFSET ${currentPage}`
       }
 
@@ -40,7 +40,7 @@ export const rolesService = {
       const result = await pg.executeQueryPromise(_query);
       logger.debug(`rolesService :: listRoles :: db result :: ${JSON.stringify(result)}`)
 
-      if (result && result.length > 0) redis.SetRedis(key, result, CACHE_TTL.LONG);
+      if (result && result.length > 0) redis.SetRedis(key, result, CacheTTL.LONG);
       return result;
     } catch (error) {
       logger.error(`rolesService :: listRoles :: ${error.message} :: ${error}`)
@@ -49,7 +49,7 @@ export const rolesService = {
   },
   listRolesCount: async (isActive: boolean): Promise<number> => {
     try {
-      let key = `ROLES_COUNT`;
+      let key = `roles|count`;
       let whereQuery = `WHERE`;
 
       if (isActive) {
@@ -75,7 +75,7 @@ export const rolesService = {
 
       if (result.length > 0) {
         const count = parseInt(result[0].count);
-        if (count > 0) redis.SetRedis(key, count, CACHE_TTL.LONG);
+        if (count > 0) redis.SetRedis(key, count, CacheTTL.LONG);
         return count
       };
     } catch (error) {
@@ -102,9 +102,10 @@ export const rolesService = {
         }
       }
 
-      redis.deleteRedis(`ROLES`);
-      redis.deleteRedis(`ROLES|ACTIVE`);
-      redis.deleteRedis(`ROLES|LIMIT:50`);
+      redis.deleteRedis(`roles`);
+      redis.deleteRedis(`roles|active`);
+      redis.deleteRedis(`roles|limit:50`);
+      redis.deleteRedis(`roles|count`);
     } catch (error) {
       logger.error(`rolesService :: addRole :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -128,11 +129,11 @@ export const rolesService = {
         }
       }
 
-      redis.deleteRedis(`ROLE:${role.role_id}`);
-      redis.deleteRedis(`ROLES`);
-      redis.deleteRedis(`ROLES|ACTIVE`);
-      redis.deleteRedis(`ROLES|LIMIT:50`);
-      redis.deleteRedis(`ACCESS_LIST|ROLE:${role.role_id}`);
+      redis.deleteRedis(`role:${role.role_id}`);
+      redis.deleteRedis(`roles`);
+      redis.deleteRedis(`roles|active`);
+      redis.deleteRedis(`roles|limit:50`);
+      redis.deleteRedis(`access_list|role:${role.role_id}`);
     } catch (error) {
       logger.error(`rolesService :: updateRole :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -140,7 +141,7 @@ export const rolesService = {
   },
   getRoleById: async (roleId: number): Promise<IRole> => {
     try {
-      const key = `ROLE:${roleId}`
+      const key = `role:${roleId}`
       const cachedResult = await redis.GetKeyRedis(key);
       if (cachedResult) {
         logger.debug(`rolesService :: getRoleById :: roleId :: ${roleId} :: cached result :: ${cachedResult}`)
@@ -156,7 +157,7 @@ export const rolesService = {
       const result = await pg.executeQueryPromise(_query);
       logger.debug(`rolesService :: getRoleById :: db result :: ${JSON.stringify(result)}`)
 
-      if (result && result.length > 0) redis.SetRedis(key, result[0], CACHE_TTL.LONG);
+      if (result && result.length > 0) redis.SetRedis(key, result[0], CacheTTL.LONG);
       return result && result.length > 0 ? result[0] : [];
     } catch (error) {
       logger.error(`rolesService :: getRoleById :: roleId :: ${roleId} :: ${error.message} :: ${error}`)
@@ -174,10 +175,10 @@ export const rolesService = {
       const result = await pg.executeQueryPromise(_query);
       logger.debug(`rolesService :: updateRoleStatus :: db result :: ${JSON.stringify(result)}`)
 
-      redis.deleteRedis(`ROLE:${roleId}`);
-      redis.deleteRedis(`ROLES`);
-      redis.deleteRedis(`ROLES|ACTIVE`);
-      redis.deleteRedis(`ROLES|LIMIT:50`);
+      redis.deleteRedis(`role:${roleId}`);
+      redis.deleteRedis(`roles`);
+      redis.deleteRedis(`roles|active`);
+      redis.deleteRedis(`roles|limit:50`);
     } catch (error) {
       logger.error(`rolesService :: updateRoleStatus :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -185,7 +186,7 @@ export const rolesService = {
   },
   getAccessListByRoleId: async (roleId: number): Promise<any> => {
     try {
-      const key = `ACCESS_LIST|ROLE:${roleId}`
+      const key = `access_list|role:${roleId}`
       const cachedResult = await redis.GetKeyRedis(key);
       if (cachedResult) {
         logger.debug(`rolesService :: getAccessListByRoleId :: roleId :: ${roleId} :: cached result :: ${cachedResult}`)
@@ -201,7 +202,7 @@ export const rolesService = {
       const result = await pg.executeQueryPromise(_query);
       logger.debug(`rolesService :: getAccessListByRoleId :: db result :: ${JSON.stringify(result)}`)
 
-      redis.SetRedis(key, result, CACHE_TTL.LONG);
+      redis.SetRedis(key, result, CacheTTL.LONG);
       return result;
     } catch (error) {
       logger.error(`rolesService :: getAccessListByRoleId :: ${error.message} :: ${error}`)

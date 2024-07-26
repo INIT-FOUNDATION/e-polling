@@ -1,12 +1,12 @@
 import { pg, logger, redis } from "ep-micro-common";
 import { PASSWORD_POLICY } from "../constants/QUERY";
 import { IPasswordPolicy } from "../types/custom";
-import { CACHE_TTL } from "../constants/CONST";
+import { CacheTTL } from "../enums";
 
 export const passwordPoliciesService = {
     createPasswordPolicy: async (passwordPolicy: IPasswordPolicy) => {
         try {
-            const key = 'PASSWORD_POLICIES';
+            const key = 'password_policies';
             const _query = {
                 text: PASSWORD_POLICY.addPasswordPolicy,
                 values: [passwordPolicy.password_expiry, passwordPolicy.password_history, passwordPolicy.minimum_password_length,
@@ -40,8 +40,8 @@ export const passwordPoliciesService = {
             const result = await pg.executeQueryPromise(_query);
             logger.debug(`passwordPoliciesService :: createPasswordPolicy :: db result :: ${JSON.stringify(result)}`)
 
-            redis.deleteRedis('PASSWORD_POLICIES');
-            redis.deleteRedis(`PASSWORD_POLICY:${passwordPolicy.id}`);
+            redis.deleteRedis('password_policies');
+            redis.deleteRedis(`password_policy:${passwordPolicy.id}`);
             return result;
         } catch (error) {
             logger.error(`passwordPoliciesService :: createPasswordPolicy :: ${error.message} :: ${error}`)
@@ -50,7 +50,7 @@ export const passwordPoliciesService = {
     },
     listPasswordPolicies: async () => {
         try {
-            const key = `PASSWORD_POLICIES`;
+            const key = `password_policies`;
             const cachedResult = await redis.GetKeyRedis(key);
 
             if (cachedResult) {
@@ -66,7 +66,7 @@ export const passwordPoliciesService = {
             const result = await pg.executeQueryPromise(_query);
             logger.debug(`passwordPoliciesService :: listPasswordPolicies :: db result :: ${JSON.stringify(result)}`)
 
-            if (result && result.length > 0) redis.SetRedis(key, result, CACHE_TTL.LONG);
+            if (result && result.length > 0) redis.SetRedis(key, result, CacheTTL.LONG);
             return result;
         } catch (error) {
             logger.error(`passwordPoliciesService :: listPasswordPolicies :: ${error.message} :: ${error}`)
@@ -92,7 +92,7 @@ export const passwordPoliciesService = {
       },
       getPasswordPolicyById: async (passwordPolicyId: number): Promise<IPasswordPolicy> => {
         try {
-          const key = `PASSWORD_POLICY:${passwordPolicyId}`
+          const key = `password_policy:${passwordPolicyId}`
           const cachedResult = await redis.GetKeyRedis(key);
           if (cachedResult) {
             logger.debug(`passwordPoliciesService :: getPasswordPolicyById :: passwordPolicyId :: ${passwordPolicyId} :: cached result :: ${cachedResult}`)
@@ -108,7 +108,7 @@ export const passwordPoliciesService = {
           const result = await pg.executeQueryPromise(_query);
           logger.debug(`passwordPoliciesService :: getPasswordPolicyById :: db result :: ${JSON.stringify(result)}`)
     
-          if (result && result.length > 0) redis.SetRedis(key, result[0], CACHE_TTL.LONG);
+          if (result && result.length > 0) redis.SetRedis(key, result[0], CacheTTL.LONG);
           return result && result.length > 0 ? result[0] : [];
         } catch (error) {
           logger.error(`passwordPoliciesService :: getPasswordPolicyById :: passwordPolicyId :: ${passwordPolicyId} :: ${error.message} :: ${error}`)

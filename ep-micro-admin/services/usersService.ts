@@ -1,12 +1,12 @@
-import { pg, logger, redis, JSONUTIL, objectStorageUtility, envUtils, ejsUtils, nodemailerUtils, commonCommunication } from "ep-micro-common";
-import { USERS, USER_DEPARTMENT_MAPPING, USER_REPORTING_MAPPING } from "../constants/QUERY";
+import { pg, logger, redis, JSONUTIL, objectStorageUtility, envUtils, ejsUtils, commonCommunication } from "ep-micro-common";
+import { USERS } from "../constants/QUERY";
 import { IPasswordPolicy, IUser } from "../types/custom";
-import { CACHE_TTL, DEFAULT_PASSWORD } from "../constants/CONST";
+import { DEFAULT_PASSWORD } from "../constants/CONST";
 import { passwordPoliciesService } from "./passwordPoliciesService";
 import bcrypt from "bcryptjs";
 import RandExp from "randexp";
-import { UploadedFile } from "express-fileupload";
-import { SMS, WHATSAPP } from "../constants/Communication";
+import { SMS, WHATSAPP } from "../constants/COMMUNICATION";
+import { CacheTTL } from "../enums";
 
 export const usersService = {
   usersUpdatedWithinFiveMints: async (): Promise<boolean> => {
@@ -30,21 +30,19 @@ export const usersService = {
   },
   listUsers: async (userId: number, pageSize: number, currentPage: number, searchQuery: string): Promise<IUser[]> => {
     try {
-      let key = `USERS|USER:${userId}`;
+      let key = `users|user:${userId}`;
       const _query = {
         text: USERS.usersList
       };
 
-      if (userId != 1) _query.text += ` AND ${userId} = ANY(reporting_to_users)`;
-
       if (searchQuery) {
         const isSearchStringAMobileNumber = /^\d{10}$/.test(searchQuery);
         if (isSearchStringAMobileNumber) {
-          key += `|SEARCH:MOBILE_NUMBER:${searchQuery}`;
+          key += `|search|mobile_number:${searchQuery}`;
           _query.text += ` AND mobile_number = ${searchQuery}`;
         } else {
           _query.text += ` AND display_name ILIKE '%${searchQuery}%'`;
-          key += `|SEARCH:DISPLAY_NAME:${searchQuery}`;
+          key += `|search|display_name:${searchQuery}`;
         }
       }
 
@@ -77,7 +75,7 @@ export const usersService = {
         if (user.profile_pic_url) user.profile_pic_url = await usersService.generatePublicURLFromObjectStoragePrivateURL(user.profile_pic_url, 3600);
       }
 
-      if (usersResult && usersResult.length > 0) redis.SetRedis(key, usersResult, CACHE_TTL.LONG);
+      if (usersResult && usersResult.length > 0) redis.SetRedis(key, usersResult, CacheTTL.LONG);
       return usersResult;
     } catch (error) {
       logger.error(`usersService :: listUsers :: ${error.message} :: ${error}`)
@@ -86,7 +84,7 @@ export const usersService = {
   },
   listUsersCount: async (userId: number, searchQuery: string): Promise<number> => {
     try {
-      let key = `USERS_COUNT|USER:${userId}`;
+      let key = `users_count|user:${userId}`;
       const _query = {
         text: USERS.usersListCount
       };
@@ -96,11 +94,11 @@ export const usersService = {
       if (searchQuery) {
         const isSearchStringAMobileNumber = /^\d{10}$/.test(searchQuery);
         if (isSearchStringAMobileNumber) {
-          key += `|SEARCH:MOBILE_NUMBER:${searchQuery}`;
+          key += `|search|mobile_number:${searchQuery}`;
           _query.text += ` AND mobile_number = ${searchQuery}`;
         } else {
           _query.text += ` AND display_name ILIKE '%${searchQuery}%'`;
-          key += `|SEARCH:DISPLAY_NAME:${searchQuery}`;
+          key += `|search|display_name:${searchQuery}`;
         }
       }
 
@@ -121,7 +119,7 @@ export const usersService = {
 
       if (result.length > 0) {
         const count = parseInt(result[0].count);
-        if (count > 0) redis.SetRedis(key, count, CACHE_TTL.LONG);
+        if (count > 0) redis.SetRedis(key, count, CacheTTL.LONG);
         return count
       };
     } catch (error) {
@@ -159,13 +157,6 @@ export const usersService = {
       const result = await pg.executeQueryPromise(_query);
       logger.debug(`usersService :: createUser :: db result :: ${JSON.stringify(result)}`)
 
-      const createdUserId = result[0].user_id;
-      await usersService.createUserDepartmentMapping(createdUserId, user.department_id);
-
-      if (user.reporting_to_users && user.reporting_to_users.length > 0) {
-        await usersService.createUserReportingMapping(createdUserId, user.reporting_to_users);
-      }
-
       await usersService.sharePasswordToUser({
         emailId: user.email_id,
         password: plainPassword,
@@ -174,10 +165,8 @@ export const usersService = {
         communicationType: "CREATE_USER"
       });
 
-      await redis.deleteRedis(`USERS|USER:1|LIMIT:50`);
-      await redis.deleteRedis(`USERS_COUNT|USER:1`);
-
-      if (user.reporting_to_users && user.reporting_to_users.length > 0 ) await usersService.clearGridCache(user.reporting_to_users);
+      await redis.deleteRedis(`users|user:1|limit:50`);
+      await redis.deleteRedis(`users_count|user:1`);
     } catch (error) {
       logger.error(`usersService :: createUser :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -197,16 +186,10 @@ export const usersService = {
       const result = await pg.executeQueryPromise(_query);
       logger.debug(`usersService :: updateUser :: db result :: ${JSON.stringify(result)}`)
 
-      await usersService.updateUserDepartmentMapping(user.user_id, user.department_id);
-
-      if (user.reporting_to_users && user.reporting_to_users.length > 0) {
-        await usersService.updateUserReportingMapping(user.user_id, user.reporting_to_users);
-      }
-
-      await redis.deleteRedis(`USERS|USER:1|LIMIT:50`);
-      await redis.deleteRedis(`USERS_COUNT|USER:1`);
-      await redis.deleteRedis(`USER:${user.user_id}`);
-      await redis.deleteRedis(`User|Username:${user.user_name}`);
+      await redis.deleteRedis(`users|user:1|limit:50`);
+      await redis.deleteRedis(`users_count|user:1`);
+      await redis.deleteRedis(`user:${user.user_id}`);
+      await redis.deleteRedis(`user|username:${user.user_name}`);
     } catch (error) {
       logger.error(`usersService :: updateUser :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -232,7 +215,7 @@ export const usersService = {
 
       if (result.length > 0) {
         if (result[0].profile_pic_url) result[0].profile_pic_url = await usersService.generatePublicURLFromObjectStoragePrivateURL(result[0].profile_pic_url, 3600);
-        redis.SetRedis(key, result[0], CACHE_TTL.LONG)
+        redis.SetRedis(key, result[0], CacheTTL.LONG)
         return result[0]
       }
     } catch (error) {
@@ -310,41 +293,9 @@ export const usersService = {
       throw new Error(error.message);
     }
   },
-  createUserDepartmentMapping: async (userId: number, departmentId: number) => {
-    try {
-      const _query = {
-        text: USER_DEPARTMENT_MAPPING.createUserDepartmentMapping,
-        values: [userId, departmentId]
-      };
-      logger.debug(`usersService :: createUserDepartmentMapping :: query :: ${JSON.stringify(_query)}`);
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: createUserDepartmentMapping :: db result :: ${JSON.stringify(result)}`);
-
-    } catch (error) {
-      logger.error(`usersService :: createUserDepartmentMapping :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  updateUserDepartmentMapping: async (userId: number, departmentId: number) => {
-    try {
-      const _query = {
-        text: USER_DEPARTMENT_MAPPING.updateUserUpdateMapping,
-        values: [userId, departmentId]
-      };
-      logger.debug(`usersService :: updateUserDepartmentMapping :: query :: ${JSON.stringify(_query)}`);
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: updateUserDepartmentMapping :: db result :: ${JSON.stringify(result)}`);
-
-    } catch (error) {
-      logger.error(`usersService :: updateUserDepartmentMapping :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
   getUsersByRoleId: async (roleId: number): Promise<IUser[]> => {
     try {
-      const key = `USERS|ROLE:${roleId}`;
+      const key = `users|role:${roleId}`;
       const cachedResult = await redis.GetKeyRedis(key);
       if (cachedResult) {
         logger.debug(`usersService :: getUsersByRoleId :: roleId :: ${roleId} :: cached result :: ${cachedResult}`)
@@ -360,7 +311,7 @@ export const usersService = {
       const result = await pg.executeQueryPromise(_query);
       logger.debug(`usersService :: getUsersByRoleId :: db result :: ${JSON.stringify(result)}`);
 
-      if (result && result.length > 0) redis.SetRedis(key, result, CACHE_TTL.LONG);
+      if (result && result.length > 0) redis.SetRedis(key, result, CacheTTL.LONG);
       return result;
     } catch (error) {
       logger.error(`usersService :: getUsersByRoleId :: ${error.message} :: ${error}`)
@@ -402,8 +353,7 @@ export const usersService = {
           if (passwordDetails.emailId) {
             const emailTemplateHtml = await ejsUtils.generateHtml('views/sharePasswordEmailTemplate.ejs', passwordDetails);
             const emailBodyBase64 = Buffer.from(emailTemplateHtml).toString('base64');
-            await commonCommunication.sendEmail(emailBodyBase64, 'OLL WORKFLOW AUTOMATION | LOGIN DETAILS', [passwordDetails.emailId]);
-            // await nodemailerUtils.sendEmail('OLL WORKFLOW AUTOMATION | LOGIN DETAILS', emailTemplateHtml, passwordDetails.emailId);
+            await commonCommunication.sendEmail(emailBodyBase64, 'E-POLLING | LOGIN DETAILS', [passwordDetails.emailId]);
           }
 
           if (passwordDetails.mobileNumber) {
@@ -421,8 +371,7 @@ export const usersService = {
           if (passwordDetails.emailId) {
             const emailTemplateHtml = await ejsUtils.generateHtml('views/sharePasswordEmailTemplate.ejs', passwordDetails);
             const emailBodyBase64 = Buffer.from(emailTemplateHtml).toString('base64');
-            await commonCommunication.sendEmail(emailBodyBase64, 'OLL WORKFLOW AUTOMATION | LOGIN DETAILS', [passwordDetails.emailId]);
-            // await nodemailerUtils.sendEmail('OLL WORKFLOW AUTOMATION | LOGIN DETAILS', emailTemplateHtml, passwordDetails.emailId);
+            await commonCommunication.sendEmail(emailBodyBase64, 'E-POLLING | LOGIN DETAILS', [passwordDetails.emailId]);
           }
 
           if (passwordDetails.mobileNumber) {
@@ -431,7 +380,6 @@ export const usersService = {
             const smsBodyCompiled = smsBodyTemplate.replace("<name>", passwordDetails.displayName)
               .replace("<password>", passwordDetails.password)
             await commonCommunication.sendSms(smsBodyCompiled, passwordDetails.mobileNumber, SMS.ADMIN_RESET_PASSWORD.template_id);
-
             await commonCommunication.sendWhatsapp(WHATSAPP.ADMIN_RESET_PASSWORD.template_id, passwordDetails.mobileNumber, [passwordDetails.displayName, passwordDetails.password])
           }
           break;
@@ -439,18 +387,17 @@ export const usersService = {
           if (passwordDetails.emailId) {
             const emailTemplateHtml = await ejsUtils.generateHtml('views/sharePasswordEmailTemplate.ejs', passwordDetails);
             const emailBodyBase64 = Buffer.from(emailTemplateHtml).toString('base64');
-            await commonCommunication.sendEmail(emailBodyBase64, 'OLL WORKFLOW AUTOMATION | LOGIN DETAILS', [passwordDetails.emailId]);
-            // await nodemailerUtils.sendEmail('OLL WORKFLOW AUTOMATION | LOGIN DETAILS', emailTemplateHtml, passwordDetails.emailId);
+            await commonCommunication.sendEmail(emailBodyBase64, 'E-POLLING | LOGIN DETAILS', [passwordDetails.emailId]);
           }
 
           if (passwordDetails.mobileNumber) {
             const smsBodyTemplate = SMS.USER_LOGIN_WITH_OTP.body;
             const smsBodyCompiled = smsBodyTemplate.replace("<otp>", passwordDetails.otp)
-              .replace("<module>", "OLL Workflow Automation")
+              .replace("<module>", "E-Polling")
               .replace("<time>", "3 min");
             await commonCommunication.sendSms(smsBodyCompiled, passwordDetails.mobileNumber, SMS.USER_LOGIN_WITH_OTP.template_id);
 
-            await commonCommunication.sendWhatsapp(WHATSAPP.USER_LOGIN_WITH_OTP.template_id, passwordDetails.mobileNumber, ["OLL Workflow Automation", passwordDetails.otp, "3 mins"])
+            await commonCommunication.sendWhatsapp(WHATSAPP.USER_LOGIN_WITH_OTP.template_id, passwordDetails.mobileNumber, ["E-Polling", passwordDetails.otp, "3 mins"])
           }
           break;
 
@@ -459,48 +406,6 @@ export const usersService = {
       }
     } catch (error) {
       logger.error(`adminService :: sharePasswordToUser :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  createUserReportingMapping: async (userId: number, reportingToUsers: number[]) => {
-    try {
-      for (const reportingToUser of reportingToUsers) {
-        const _query = {
-          text: USER_REPORTING_MAPPING.createUserReportingMapping,
-          values: [userId, reportingToUser]
-        };
-        logger.debug(`usersService :: createUserReportingMapping :: query :: ${JSON.stringify(_query)}`);
-
-        const result =  await pg.executeQueryPromise(_query);
-        logger.debug(`usersService :: createUserReportingMapping :: db result :: ${JSON.stringify(result)}`);
-
-        await redis.deleteRedis(`USERS|USER:${reportingToUser}|LIMIT:50`);
-        await redis.deleteRedis(`USERS_COUNT|USER:${reportingToUser}`);
-      }
-    } catch (error) {
-      logger.error(`usersService :: createUserReportingMapping :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  updateUserReportingMapping: async (userId: number, reportingToUsers: number[]) => {
-    try {
-      const _query = {
-        text: USER_REPORTING_MAPPING.updateInActiveReportingMapping,
-        values: [userId]
-      };
-      logger.debug(`usersService :: updateUserDepartmentMapping :: query :: ${JSON.stringify(_query)}`);
-
-      const result = await pg.executeQueryPromise(_query);
-      logger.debug(`usersService :: updateUserDepartmentMapping :: db result :: ${JSON.stringify(result)}`);
-
-      if (result.length > 0) {
-        const oldReportingUsers = result.map(record => record.reporting_to);
-        await usersService.clearGridCache(oldReportingUsers)
-      }
-
-      await usersService.createUserReportingMapping(userId, reportingToUsers);
-    } catch (error) {
-      logger.error(`usersService :: updateUserDepartmentMapping :: ${error.message} :: ${error}`)
       throw new Error(error.message);
     }
   },
@@ -539,25 +444,12 @@ export const usersService = {
       const result = await pg.executeQueryPromise(_query);
       logger.debug(`usersService :: updateUserStatus :: db result :: ${JSON.stringify(result)}`)
 
-      await redis.deleteRedis(`USER:${user.user_id}`);
-      await redis.deleteRedis(`User|Username:${user.user_name}`);
-      await redis.deleteRedis(`USERS|USER:1|LIMIT:50`);
-      await redis.deleteRedis(`USERS_COUNT|USER:1`);
-
-      if (user.reporting_to_users && user.reporting_to_users.length > 0 ) await usersService.clearGridCache(user.reporting_to_users);
+      await redis.deleteRedis(`user:${user.user_id}`);
+      await redis.deleteRedis(`user|username:${user.user_name}`);
+      await redis.deleteRedis(`users|user:1|limit:50`);
+      await redis.deleteRedis(`users_count|user:1`);
     } catch (error) {
       logger.error(`usersService :: updateUserStatus :: ${error.message} :: ${error}`)
-      throw new Error(error.message);
-    }
-  },
-  clearGridCache: async (reportingToUsers: number[]) => {
-    try {
-      for (const reportingUser of reportingToUsers) {
-        await redis.deleteRedis(`USERS|USER:${reportingUser}|LIMIT:50`);
-        await redis.deleteRedis(`USERS_COUNT|USER:${reportingUser}`);
-      }
-    } catch (error) {
-      logger.error(`usersService :: clearGridCache :: ${error.message} :: ${error}`)
       throw new Error(error.message);
     }
   }
