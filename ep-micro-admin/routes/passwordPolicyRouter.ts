@@ -1,5 +1,5 @@
 import express from "express";
-import { passwordPoliciesController } from "../controllers/passwordPoliciesController";
+import { passwordPoliciesController } from "../controllers";
 
 export const passwordPolicyRouter = express.Router();
 

@@ -3,8 +3,8 @@ import { Response } from "express";
 import { Request } from "../types/express";
 import { IPasswordPolicy } from "../types/custom";
 import { PASSWORDPOLICIES } from "../constants/ERRORCODE";
-import { passwordPoliciesService } from "../services/passwordPoliciesService";
-import { PasswordPolicy, validateCreatePasswordPolicy, validateUpdatePasswordPolicy } from "../models/passwordPoliciesModel";
+import { passwordPoliciesService } from "../services";
+import { passwordPoliciesModel } from "../models";
 import { passwordPoliciesRepository } from "../repositories";
 
 export const passwordPoliciesController = {
@@ -47,8 +47,8 @@ export const passwordPoliciesController = {
                     }
                 }    
             */
-            const passwordPolicy: IPasswordPolicy = new PasswordPolicy(req.body)
-            const { error } = validateCreatePasswordPolicy(passwordPolicy);
+            const passwordPolicy: IPasswordPolicy = new passwordPoliciesModel.PasswordPolicy(req.body)
+            const { error } = passwordPoliciesModel.validateCreatePasswordPolicy(passwordPolicy);
 
             if (error) {
                 if (error.details != null)
@@ -91,7 +91,7 @@ export const passwordPoliciesController = {
                 }    
             */
             const passwordPolicy: IPasswordPolicy = req.body
-            const { error } = validateUpdatePasswordPolicy(passwordPolicy);
+            const { error } = passwordPoliciesModel.validateUpdatePasswordPolicy(passwordPolicy);
 
             if (error) {
                 if (error.details != null)

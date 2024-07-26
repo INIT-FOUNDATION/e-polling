@@ -1,5 +1,4 @@
-import { pg, logger, redis } from "ep-micro-common";
-import { PASSWORD_POLICY } from "../constants/QUERY";
+import { logger, redis } from "ep-micro-common";
 import { IPasswordPolicy } from "../types/custom";
 import { CacheTTL } from "../enums";
 import { passwordPoliciesRepository } from "../repositories";

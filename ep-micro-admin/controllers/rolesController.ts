@@ -1,8 +1,8 @@
 import { logger, STATUS } from "ep-micro-common";
-import { rolesService } from "../services/rolesService";
+import { rolesService } from "../services";
 import { Response } from "express";
 import { Request } from "../types/express";
-import { validateCreateRole, validateUpdateRole, Role, validateUpdateRoleStatus } from "../models/rolesModel";
+import { rolesModel } from "../models";
 import { IRole } from "../types/custom";
 import { ROLES } from "../constants/ERRORCODE";
 import { rolesRepository } from "../repositories";
@@ -75,8 +75,8 @@ export const rolesController = {
              }
             */
             const plainToken = req.plainToken;
-            const role: IRole = new Role(req.body);
-            const { error } = validateCreateRole(role);
+            const role: IRole = new rolesModel.Role(req.body);
+            const { error } = rolesModel.validateCreateRole(role);
     
             if (error) {
                 if (error.details != null) {
@@ -144,7 +144,7 @@ export const rolesController = {
             */
             const plainToken = req.plainToken;
             const role: IRole = req.body
-            const { error } = validateUpdateRole(role);
+            const { error } = rolesModel.validateUpdateRole(role);
 
             if (error) {
                 if (error.details != null)
@@ -225,7 +225,7 @@ export const rolesController = {
             */
             const plainToken = req.plainToken;
             const role: IRole = req.body
-            const { error } = validateUpdateRoleStatus(role);
+            const { error } = rolesModel.validateUpdateRoleStatus(role);
 
             if (error) {
                 if (error.details != null)

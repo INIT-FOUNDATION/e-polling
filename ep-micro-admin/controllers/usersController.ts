@@ -1,9 +1,9 @@
 import { logger, STATUS } from "ep-micro-common";
 import { Response } from "express";
 import { Request } from "../types/express";
-import { usersService } from "../services/usersService";
+import { usersService } from "../services";
 import { IUser } from "../types/custom";
-import { User, validateCreateUser, validateUpdateUser } from "../models/usersModel";
+import { usersModel } from "../models";
 import { ROLES, USERS } from "../constants/ERRORCODE";
 import { encDecHelper } from "../helpers";
 import { GridDefaultOptions } from "../enums";
@@ -82,9 +82,9 @@ export const usersController = {
                 }    
             */
             const plainToken = req.plainToken;
-            const user: IUser = new User(req.body);
+            const user: IUser = new usersModel.User(req.body);
 
-            const { error } = validateCreateUser(user);
+            const { error } = usersModel.validateCreateUser(user);
 
             if (error) {
                 if (error.details != null)
@@ -149,7 +149,7 @@ export const usersController = {
                 user.user_name = user.mobile_number.toString();
             }
 
-            const { error } = validateUpdateUser(user);
+            const { error } = usersModel.validateUpdateUser(user);
 
             if (error) {
                 if (error.details != null)

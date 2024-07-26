@@ -1,3 +1,3 @@
-export * from "./passwordPoliciesModel";
-export * from "./rolesModel";
-export * from "./usersModel";
+export * as passwordPoliciesModel from "./passwordPoliciesModel";
+export * as rolesModel from "./rolesModel";
+export * as usersModel from "./usersModel";
