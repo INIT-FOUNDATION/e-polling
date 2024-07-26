@@ -12,7 +12,7 @@
   ],
   "paths": {
     "/api/v1/admin/roles/list": {
-      "get": {
+      "post": {
         "tags": [
           "Roles"
         ],
@@ -27,9 +27,26 @@
             "description": "Bearer token for authentication"
           },
           {
-            "name": "isActive",
-            "in": "query",
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "is_active": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "page_size": {
+                  "type": "number",
+                  "example": 50
+                },
+                "current_page": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -134,6 +151,10 @@
                   "type": "string",
                   "example": "Head of the Department"
                 },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                },
                 "level": {
                   "type": "string",
                   "example": "Level of Role"
@@ -156,29 +177,6 @@
                 }
               }
             }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/roles/listLevels": {
-      "get": {
-        "tags": [
-          "Roles"
-        ],
-        "summary": "List Levels",
-        "description": "Endpoint to retrieve List Levels",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": "Bearer token for authentication"
           }
         ],
         "responses": {
@@ -329,169 +327,6 @@
             "required": true,
             "type": "string",
             "description": "Bearer token for authentication"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/roles/listBylevel/{level}": {
-      "get": {
-        "tags": [
-          "Roles"
-        ],
-        "summary": "Get Roles by Level",
-        "description": "Endpoint to retrieve Roles List by level",
-        "parameters": [
-          {
-            "name": "level",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": "Bearer token for authentication"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/departments/list": {
-      "get": {
-        "tags": [
-          "Departments"
-        ],
-        "summary": "List Departments",
-        "description": "Endpoint to retrieve Department List",
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/departments/add": {
-      "post": {
-        "tags": [
-          "Departments"
-        ],
-        "summary": "Add Department",
-        "description": "Endpoint to Add Department",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "department_name": {
-                  "type": "string",
-                  "example": "Accounts"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/departments/update": {
-      "post": {
-        "tags": [
-          "Departments"
-        ],
-        "summary": "Update Department",
-        "description": "Endpoint to Update Department",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "department_id": {
-                  "type": "number",
-                  "example": 1
-                },
-                "department_name": {
-                  "type": "string",
-                  "example": "Accounts"
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/departments/{departmentId}": {
-      "get": {
-        "tags": [
-          "Departments"
-        ],
-        "summary": "Get Department",
-        "description": "Endpoint to retrieve Department Information",
-        "parameters": [
-          {
-            "name": "departmentId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/departments/updateStatus": {
-      "post": {
-        "tags": [
-          "Departments"
-        ],
-        "summary": "Update Department Status",
-        "description": "Endpoint to Update Department Status",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "department_id": {
-                  "type": "number",
-                  "example": 1
-                },
-                "status": {
-                  "type": "number",
-                  "example": 1
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -714,20 +549,6 @@
                 "role_id": {
                   "type": "number",
                   "example": 2
-                },
-                "department_id": {
-                  "type": "number",
-                  "example": 1
-                },
-                "reporting_to_users": {
-                  "type": "array",
-                  "example": [
-                    1,
-                    2
-                  ],
-                  "items": {
-                    "type": "number"
-                  }
                 }
               }
             }
@@ -794,19 +615,9 @@
                   "type": "number",
                   "example": 2
                 },
-                "department_id": {
+                "status": {
                   "type": "number",
                   "example": 1
-                },
-                "reporting_to_users": {
-                  "type": "array",
-                  "example": [
-                    1,
-                    2
-                  ],
-                  "items": {
-                    "type": "number"
-                  }
                 }
               }
             }
@@ -839,36 +650,6 @@
             "required": true,
             "type": "string",
             "description": "Bearer token for authentication"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/users/updateProfilePic": {
-      "post": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Update Profile Pic",
-        "description": "Endpoint to Update Profile Pic",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": "Bearer token for authentication"
-          },
-          {
-            "name": "file",
-            "in": "formData",
-            "required": true,
-            "type": "file",
-            "description": "Profile picture file to upload"
           }
         ],
         "responses": {
@@ -981,50 +762,13 @@
         }
       }
     },
-    "/api/v1/admin/users/reportingUsers/{roleId}/{type}": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Reporting Users List",
-        "description": "Get Reporting Users based on Role Id and Type",
-        "parameters": [
-          {
-            "name": "roleId",
-            "in": "path",
-            "required": true,
-            "type": "number",
-            "description": "Role Id"
-          },
-          {
-            "name": "type",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "description": "Type"
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": "Bearer token for authentication"
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/api/v1/admin/users/deleteUser": {
+    "/api/v1/admin/users/updateStatus": {
       "post": {
         "tags": [
           "Users"
         ],
-        "summary": "Delete User",
-        "description": "Delete User by User Id",
+        "summary": "Update User Status",
+        "description": "Update User Status by User Id and Status",
         "parameters": [
           {
             "name": "Authorization",
@@ -1041,11 +785,380 @@
               "type": "object",
               "properties": {
                 "user_id": {
+                  "type": "string",
+                  "example": "encryptedHash"
+                },
+                "status": {
                   "type": "number",
                   "example": 1
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/categories/add": {
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Create Category",
+        "description": "Endpoint to Create Category",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category_name": {
+                  "type": "string",
+                  "example": "Technology"
+                },
+                "category_description": {
+                  "type": "string",
+                  "example": "Category for tech-related content"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/categories/update": {
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Update Category",
+        "description": "Endpoint to Update Category",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category_id": {
+                  "type": "number",
+                  "example": 2
+                },
+                "category_name": {
+                  "type": "string",
+                  "example": "Technology"
+                },
+                "category_description": {
+                  "type": "string",
+                  "example": "Updated description"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/categories/updateStatus": {
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Update Category Status",
+        "description": "Endpoint to Update Category Status",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "type": "number",
+                  "example": 2
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/categories/list": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "List Categories",
+        "description": "Endpoint to List Categories with pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pageSize": {
+                  "type": "number",
+                  "example": 10
+                },
+                "currentPage": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "in",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "required",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/categories/{categoryId}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "Get Category",
+        "description": "Endpoint to Get Category",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "type": "number",
+                  "example": 2
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/menus/add": {
+      "post": {
+        "tags": [
+          "Menus"
+        ],
+        "summary": "Create Menu",
+        "description": "Endpoint to Create Menu",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "menu_name": {
+                  "type": "string",
+                  "example": "Categories"
+                },
+                "menu_description": {
+                  "type": "string",
+                  "example": "Menu to manage categories"
+                },
+                "parent_menu_id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "menu_order": {
+                  "type": "number",
+                  "example": 1
+                },
+                "route_url": {
+                  "type": "string",
+                  "example": "/categories"
+                },
+                "icon_class": {
+                  "type": "string",
+                  "example": "fa fa-menu"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/menus/update": {
+      "post": {
+        "tags": [
+          "Menus"
+        ],
+        "summary": "Update Menu",
+        "description": "Endpoint to Update Menu",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "menu_id": {
+                  "type": "number",
+                  "example": 2
+                },
+                "menu_name": {
+                  "type": "string",
+                  "example": "Categories"
+                },
+                "menu_description": {
+                  "type": "string",
+                  "example": "Menu to manage categories"
+                },
+                "parent_menu_id": {
+                  "type": "number",
+                  "example": 1
+                },
+                "menu_order": {
+                  "type": "number",
+                  "example": 1
+                },
+                "route_url": {
+                  "type": "string",
+                  "example": "/categories"
+                },
+                "icon_class": {
+                  "type": "string",
+                  "example": "fa fa-menu"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/menus/updateStatus": {
+      "post": {
+        "tags": [
+          "Menus"
+        ],
+        "summary": "Update Menu Status",
+        "description": "Endpoint to Update Menu Status",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "menu_id": {
+                  "type": "number",
+                  "example": 2
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/menus/list": {
+      "get": {
+        "tags": [
+          "Menus"
+        ],
+        "summary": "List Menus",
+        "description": "Endpoint to List Menus",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/menus/{menuId}": {
+      "get": {
+        "tags": [
+          "Menus"
+        ],
+        "summary": "Get Menu",
+        "description": "Endpoint to Get Menu",
+        "parameters": [
+          {
+            "name": "menuId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {

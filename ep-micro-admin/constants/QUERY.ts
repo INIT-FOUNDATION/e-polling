@@ -74,3 +74,54 @@ export const PASSWORD_POLICY = {
     )`,
     getPasswordPolicyById: `SELECT password_expiry, password_history, minimum_password_length, complexity, alphabetical, numeric, special_characters, allowed_special_characters, maximum_invalid_attempts FROM password_policies WHERE id = $1`
 }
+
+export const MENUS = {
+    addMenu: `INSERT INTO m_menus(menu_name, menu_description, status, parent_menu_id, menu_order, route_url, icon_class, date_created, date_updated)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())`,
+    listMenus: `SELECT menu_id, menu_name, menu_description, status, parent_menu_id, menu_order, route_url, icon_class
+                FROM m_menus WHERE status <> 2
+                ORDER BY date_updated DESC `,
+    updateMenu: `UPDATE m_menus 
+                SET menu_name = $2, menu_description = $3, status = $4, parent_menu_id = $5, menu_order = $6, route_url = $7, icon_class = $8, date_updated = NOW() 
+                WHERE menu_id = $1`,
+    existsByMenuId: `SELECT EXISTS (
+        SELECT 1
+        FROM m_menus
+        WHERE menu_id = $1 AND status <> 2
+    )`,
+    getMenuById: `SELECT menu_name, menu_description, status, parent_menu_id, menu_order, route_url, icon_class, date_created, date_updated 
+                FROM m_menus 
+                WHERE menu_id = $1 AND status <> 2`,
+    existsByMenuName: `SELECT EXISTS (
+        SELECT 1
+        FROM m_menus
+        WHERE menu_name = $1 AND status <> 2
+    )`,
+    updateMenuStatus: `UPDATE m_menus SET status = $2, date_updated = NOW() WHERE menu_id = $1`
+};
+
+export const CATEGORIES = {
+    addCategory: `INSERT INTO m_categories(category_name, category_description, status, date_created, date_updated, created_by, updated_by)
+                    VALUES ($1, $2, $3, NOW(), NOW(), $4, $5)`,
+    listCategories: `SELECT category_id, category_name, category_description, status
+                      FROM m_categories WHERE status <> 2
+                      ORDER BY date_updated DESC LIMIT $1 OFFSET $2`,
+    getCategoriesCount: `SELECT count(*) as count FROM m_categories WHERE status <> 2`,
+    updateCategory: `UPDATE m_categories 
+                      SET category_name = $2, category_description = $3, status = $4, date_updated = NOW(), created_by = $5, updated_by = $6 
+                      WHERE category_id = $1`,
+    existsByCategoryId: `SELECT EXISTS (
+        SELECT 1
+        FROM m_categories
+        WHERE category_id = $1 AND status <> 2
+    )`,
+    getCategoryById: `SELECT category_name, category_description, status, date_created, date_updated, created_by, updated_by 
+                       FROM m_categories 
+                       WHERE category_id = $1 AND status <> 2`,
+    existsByCategoryName: `SELECT EXISTS (
+        SELECT 1
+        FROM m_categories
+        WHERE category_name = $1 AND status <> 2
+    )`,
+    updateCategoryStatus: `UPDATE m_categories SET status = $2, updated_by = $3, date_updated = NOW() WHERE category_id = $1`
+};

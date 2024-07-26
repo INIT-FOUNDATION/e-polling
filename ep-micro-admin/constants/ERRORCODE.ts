@@ -110,3 +110,57 @@ export const PASSWORDPOLICIES = {
     errorMessage: "Password Policy Id Required!",
   },
 };
+
+export const CATEGORIES = {
+  CATEGORIES000: {
+    errorCode: "CATEGORIES000",
+    errorMessage: "Internal Server Error",
+  },
+  CATEGORIES001:  {
+    errorCode: "CATEGORIES001",
+    errorMessage: "Requested Category does not exists!",
+  },
+  CATEGORIES002:  {
+    errorCode: "CATEGORIES002",
+    errorMessage: "Category Id Required!",
+  },
+  CATEGORIES003:  {
+    errorCode: "CATEGORIES003",
+    errorMessage: "Invalid Category Status!",
+  },
+  CATEGORIES004:  {
+    errorCode: "CATEGORIES004",
+    errorMessage: "Invalid Category Id!",
+  },
+  CATEGORIES005:  {
+    errorCode: "CATEGORIES005",
+    errorMessage: "Requested Category name already exists!",
+  },
+}
+
+export const MENUS = {
+  MENUS000: {
+    errorCode: "MENUS000",
+    errorMessage: "Internal Server Error",
+  },
+  MENUS001:  {
+    errorCode: "MENUS001",
+    errorMessage: "Requested Menu does not exists!",
+  },
+  MENUS002:  {
+    errorCode: "MENUS002",
+    errorMessage: "Menu Id Required!",
+  },
+  MENUS003:  {
+    errorCode: "MENUS003",
+    errorMessage: "Invalid Menu Status!",
+  },
+  MENUS004:  {
+    errorCode: "MENUS004",
+    errorMessage: "Invalid Menu Id!",
+  },
+  MENUS005:  {
+    errorCode: "MENUS005",
+    errorMessage: "Requested Menu name already exists!",
+  },
+}

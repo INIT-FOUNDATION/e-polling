@@ -70,6 +70,7 @@ export interface IMenu {
     parent_menu_id: number;
     menu_order: number;
     route_url: string;
+    icon_class: string;
     date_created: string | undefined;
     date_updated: string | undefined;
 }
