@@ -24,7 +24,6 @@ export interface IUser {
     gender: number;
     dob: string;
     role_id: number;
-    department_id: number;
     password: string;
     invalid_attempts: string;
     status: UserStatus;

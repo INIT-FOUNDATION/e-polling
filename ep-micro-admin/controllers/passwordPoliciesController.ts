@@ -5,6 +5,7 @@ import { IPasswordPolicy } from "../types/custom";
 import { PASSWORDPOLICIES } from "../constants/ERRORCODE";
 import { passwordPoliciesService } from "../services/passwordPoliciesService";
 import { PasswordPolicy, validateCreatePasswordPolicy, validateUpdatePasswordPolicy } from "../models/passwordPoliciesModel";
+import { passwordPoliciesRepository } from "../repositories";
 
 export const passwordPoliciesController = {
     listPasswordPolicies: async (req: Request, res: Response): Promise<Response> => {
@@ -98,7 +99,7 @@ export const passwordPoliciesController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: PASSWORDPOLICIES.PASSWORDPOLICIES000.errorCode, errorMessage: error.message });
             }
 
-            const passwordPolicyExists = await passwordPoliciesService.existsByPasswordPolicyId(passwordPolicy.id);
+            const passwordPolicyExists = await passwordPoliciesRepository.existByPasswordPolicyId(passwordPolicy.id);
             if (!passwordPolicyExists) return res.status(STATUS.BAD_REQUEST).send(PASSWORDPOLICIES.PASSWORDPOLICIES001);
 
             await passwordPoliciesService.updatePasswordPolicy(passwordPolicy);
@@ -122,7 +123,7 @@ export const passwordPoliciesController = {
             const passwordPolicyId = req.params.passwordPolicyId;
             if (!passwordPolicyId) return res.status(STATUS.BAD_REQUEST).send(PASSWORDPOLICIES.PASSWORDPOLICIES002)
 
-            const passwordPolicyExists = await passwordPoliciesService.existsByPasswordPolicyId(parseInt(passwordPolicyId));
+            const passwordPolicyExists = await passwordPoliciesRepository.existByPasswordPolicyId(parseInt(passwordPolicyId));
             if (!passwordPolicyExists) return res.status(STATUS.BAD_REQUEST).send(PASSWORDPOLICIES.PASSWORDPOLICIES001);
 
             const passwordPolicy = await passwordPoliciesService.getPasswordPolicyById(parseInt(passwordPolicyId));

@@ -62,16 +62,15 @@ export const adminController = {
 
             const existingUser: IUser = await adminService.getUserByUserName(user.user_name);
             if (!existingUser) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.AUTH.AUTH00001);
-            
+
             user.password = encDecHelper.decryptPayload(user.password);
             if (user.password == DEFAULT_PASSWORD) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.AUTH.AUTH00002);
-            
+
             const isPasswordValid = await bcrypt.compare(user.password, existingUser.password);
             if (isPasswordValid) {
                 const expiryTime = envUtils.getNumberEnvVariableOrDefault("EP_AUTH_TOKEN_EXPIRY_TIME", 8);
                 const tokenDetails = {
                     user_id: existingUser.user_id,
-                    department_id: existingUser.department_id,
                     role_id: existingUser.role_id,
                     user_name: existingUser.user_name,
                     email_id: existingUser.email_id,
@@ -81,7 +80,7 @@ export const adminController = {
                 adminService.updateUserLoginStatus(UserStatus.LOGGED_IN, req.body.user_name);
 
                 return res.status(STATUS.OK).send({
-                    data: { token: token.encoded, expiryTime: `${expiryTime}h`},
+                    data: { token: token.encoded, expiryTime: `${expiryTime}h` },
                     message: "User Logged in Successfully"
                 })
             } else {
@@ -114,8 +113,8 @@ export const adminController = {
                     description: 'Bearer token for authentication'
                 }
             */
-           const userName = req.plainToken.user_name;
-           const user_id = req.plainToken.user_id;
+            const userName = req.plainToken.user_name;
+            const user_id = req.plainToken.user_id;
             await adminService.updateUserLoginStatus(UserStatus.LOGGED_OUT, userName);
             redis.deleteRedis(userName);
             redis.deleteRedis(`user_permissions|username:${userName}`);
@@ -153,7 +152,7 @@ export const adminController = {
             const userExists = await adminRepository.existsByMobileNumber(mobile_number);
             if (!userExists) {
                 logger.error(`adminController :: getForgetPasswordOtp :: mobile number :: ${mobile_number} :: User doesn't exist`);
-                return res.status(STATUS.OK).send({data: { txnId: uuidv4() }, message: "Generated Forget Password OTP Successfully"});
+                return res.status(STATUS.OK).send({ data: { txnId: uuidv4() }, message: "Generated Forget Password OTP Successfully" });
             }
 
             const alreadySent = await adminService.isForgotPasswordOtpAlreadySent(mobile_number);
@@ -185,7 +184,7 @@ export const adminController = {
                     }
                 }    
             */
-            const otpDetails = req.body;        
+            const otpDetails = req.body;
             const { error } = await validateVerifyForgotPassword(otpDetails);
             if (error) {
                 if (error.details)
@@ -231,7 +230,7 @@ export const adminController = {
                     }
                 }    
             */
-            const resetForgetPasswordDetails = req.body;        
+            const resetForgetPasswordDetails = req.body;
             const { error } = await validateResetPassword(resetForgetPasswordDetails);
             if (error) {
                 if (error.details)

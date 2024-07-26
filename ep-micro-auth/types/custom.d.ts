@@ -8,7 +8,6 @@ export interface IUser {
     email_id: string;
     role_id: number;
     level: string;
-    department_id: number;
     password: string;
     status: UserStatus,
     maximum_invalid_attempts: number,

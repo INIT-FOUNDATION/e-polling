@@ -1,13 +1,13 @@
 import { logger, STATUS } from "ep-micro-common";
 import { Response } from "express";
 import { Request } from "../types/express";
-import { GRID_DEFAULT_OPTIONS, decryptPayload } from "../constants/CONST";
 import { usersService } from "../services/usersService";
 import { IUser } from "../types/custom";
 import { User, validateCreateUser, validateUpdateUser } from "../models/usersModel";
-import { departmentsService } from "../services/departmentsService";
-import { DEPARTMENTS, ROLES, USERS } from "../constants/ERRORCODE";
+import { ROLES, USERS } from "../constants/ERRORCODE";
 import { rolesService } from "../services/rolesService";
+import { encDecHelper } from "../helpers";
+import { GridDefaultOptions } from "../enums";
 
 export const usersController = {
     listUsers: async (req: Request, res: Response): Promise<Response> => {
@@ -33,8 +33,8 @@ export const usersController = {
                 }    
             */
             const userId = req.plainToken.user_id;
-            const pageSize = req.body.page_size || GRID_DEFAULT_OPTIONS.PAGE_SIZE;
-            let currentPage = req.body.current_page || GRID_DEFAULT_OPTIONS.CURRENT_PAGE;
+            const pageSize = req.body.page_size || GridDefaultOptions.PAGE_SIZE;
+            let currentPage = req.body.current_page || GridDefaultOptions.CURRENT_PAGE;
             const searchQuery = req.body.search_query || "";
 
             if (currentPage > 1) {
@@ -78,8 +78,6 @@ export const usersController = {
                         dob: '1997-08-16',
                         gender: 1,
                         role_id: 2,
-                        department_id: 1,
-                        reporting_to_users: [1, 2]
                     }
                 }    
             */
@@ -96,9 +94,6 @@ export const usersController = {
 
             const roleExists = await rolesService.existsByRoleId(user.role_id);
             if (!roleExists) return res.status(STATUS.BAD_REQUEST).send(ROLES.ROLE00006);
-
-            const departmentExists = await departmentsService.existsByDepartmentId(user.department_id);
-            if (!departmentExists) return res.status(STATUS.BAD_REQUEST).send(DEPARTMENTS.DEPARTMENT003);
 
             const userExists = await usersService.existsByMobileNumber(user.mobile_number);
             if (userExists) return res.status(STATUS.BAD_REQUEST).send(USERS.USER00005);
@@ -141,14 +136,12 @@ export const usersController = {
                         dob: '1997-08-16',
                         gender: 1,
                         role_id: 2,
-                        department_id: 1,
-                        reporting_to_users: [1, 2],
                         status: 1
                     }
                 }    
             */
             const plainToken = req.plainToken;
-            if (req.body.user_id) req.body.user_id = parseInt(decryptPayload(req.body.user_id));
+            if (req.body.user_id) req.body.user_id = parseInt((req.body.user_id));
 
             const user: IUser = req.body;
 
@@ -166,9 +159,6 @@ export const usersController = {
 
             const roleExists = await rolesService.existsByRoleId(user.role_id);
             if (!roleExists) return res.status(STATUS.BAD_REQUEST).send(ROLES.ROLE00006);
-
-            const departmentExists = await departmentsService.existsByDepartmentId(user.department_id);
-            if (!departmentExists) return res.status(STATUS.BAD_REQUEST).send(DEPARTMENTS.DEPARTMENT003);
 
             const userExists = await usersService.existsByUserId(user.user_id);
             if (!userExists) return res.status(STATUS.BAD_REQUEST).send(USERS.USER000011);
@@ -358,7 +348,7 @@ export const usersController = {
 
             if (!userId) return res.status(STATUS.BAD_REQUEST).send(USERS.USER00006);
 
-            userId = parseInt(decryptPayload(userId));
+            userId = parseInt(encDecHelper.decryptPayload(userId));
 
             const user = await usersService.getUserById(userId);
             if (!user) return res.status(STATUS.BAD_REQUEST).send(USERS.USER000011);

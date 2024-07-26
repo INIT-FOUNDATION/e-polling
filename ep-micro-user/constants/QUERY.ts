@@ -11,11 +11,8 @@ export const USERS = {
                         R.role_id AS role_id,
                         R.role_name AS role_name, 
                         U.profile_pic_url,
-                        D.department_id,
                         D.department_name
-                    FROM m_users U 
-                    LEFT OUTER JOIN m_user_department_assoc UDA ON U.user_id = UDA.user_id
-                    LEFT OUTER JOIN m_departments D ON UDA.department_id = D.department_id
+                    FROM m_users U
                     LEFT OUTER JOIN m_roles R ON U.role_id = R.role_id
                     WHERE U.user_id = $1 AND U.status IN (1,4)`,
     updateProfilePic: `UPDATE m_users SET profile_pic_url = $2, updated_by = $1, date_updated = NOW() WHERE user_id = $1`,

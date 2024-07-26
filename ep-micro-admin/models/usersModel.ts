@@ -14,7 +14,6 @@ class User implements IUser {
   gender: number;
   dob: string;
   role_id: number;
-  department_id: number;
   password: string;
   invalid_attempts: string;
   status: number;
@@ -37,7 +36,6 @@ class User implements IUser {
     this.gender = user.gender;
     this.dob = user.dob;
     this.role_id = user.role_id;
-    this.department_id = user.department_id;
     this.password = user.password;
     this.invalid_attempts = user.invalid_attempts;
     this.status = user.status;
@@ -71,7 +69,6 @@ const validateCreateUser = (user: IUser): Joi.ValidationResult => {
     email_id: Joi.string().email().required(),
     gender: Joi.number().valid(...Object.values(GenderStatus)).required(),
     role_id: Joi.number().required(),
-    department_id: Joi.number().required(),
     password: Joi.string().allow("", null),
     invalid_attempts: Joi.number(),
     status: Joi.number(),
@@ -104,7 +101,6 @@ const validateUpdateUser = (user: IUser): Joi.ValidationResult => {
     email_id: Joi.string().email().required(),
     gender: Joi.number().valid(...Object.values(GenderStatus)).required(),
     role_id: Joi.number().required(),
-    department_id: Joi.number().required(),
     reporting_to_users: Joi.array().items(Joi.number()).optional(),
     status: Joi.number().valid(...Object.values(UserStatus)).required(),
   });

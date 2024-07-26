@@ -1,1 +1,1 @@
-export * from "./encDecHelper";
+export * as encDecHelper from "./encDecHelper";

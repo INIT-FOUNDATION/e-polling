@@ -5,7 +5,6 @@ import { Request } from "../types/express";
 import { validateCreateRole, validateUpdateRole, Role, validateUpdateRoleStatus } from "../models/rolesModel";
 import { IRole } from "../types/custom";
 import { ROLES } from "../constants/ERRORCODE";
-import { GRID_DEFAULT_OPTIONS } from "../constants/CONST";
 
 export const rolesController = {
     listRoles: async (req: Request, res: Response): Promise<Response> => {
