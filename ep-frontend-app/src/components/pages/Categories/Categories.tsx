@@ -34,7 +34,7 @@ const Categories: React.FC = () => {
             alt="Agency"
             className="h-full w-full object-cover"
           />
-          <div className="absolute bottom-0 w-full p-4 rounded-b-[40px] bg-[rgba(27,27,27,.5)] text-white transition-all duration-500 ease-in-out flex flex-col justify-end h-[140px] group-hover:h-[160px]">
+          <div className="absolute bottom-0 w-full p-4 rounded-b-[40px] bg-[rgba(27,27,27,.5)] text-white transition-all duration-500 ease-in-out flex flex-col justify-end h-[80px] group-hover:h-[160px]">
             <div className="flex flex-col justify-end h-full transition-transform duration-500 ease-in-out transform group-hover:translate-y-[-100px]">
               <h1 className="text-4xl text-center mb-2">
                 Agency
