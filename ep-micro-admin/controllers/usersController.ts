@@ -260,65 +260,6 @@ export const usersController = {
             return res.status(STATUS.INTERNAL_SERVER_ERROR).send(USERS.USER00000);
         }
     },
-    reportingUsersList: async (req: Request, res: Response): Promise<Response> => {
-        /*  
-                #swagger.tags = ['Users']
-                #swagger.summary = 'Reporting Users List'
-                #swagger.description = 'Get Reporting Users based on Role Id and Type'
-                #swagger.parameters['Authorization'] = {
-                    in: 'header',
-                    required: true,
-                    type: 'string',
-                    description: 'Bearer token for authentication'
-                }
-                #swagger.parameters['roleId'] = {
-                    in: 'path',
-                    required: true,
-                    type: 'number',
-                    description: 'Role Id'
-                }
-                #swagger.parameters['type'] = {
-                    in: 'path',
-                    required: true,
-                    type: 'string',
-                    description: 'Type'
-                }
-        */
-        try {
-            const roleId = req.params.roleId;
-            const type = req.params.type ? req.params.type : "add";
-            const userId = (type === "edit" ? req.plainToken.user_id : null);
-
-            if (!roleId) return res.status(STATUS.BAD_REQUEST).send(USERS.USER00007);
-
-            const roleDetails = await rolesService.getRoleById(parseInt(roleId));
-
-            if (!roleDetails) return res.status(STATUS.BAD_REQUEST).send(USERS.USER00007);
-
-            const levelDB = roleDetails.level;
-            let levels = [];
-            switch (levelDB) {
-                case 'Admin':
-                    levels = ['Admin'];
-                    break;
-                case 'Department':
-                    levels = ['Admin', 'Department'];
-                    break;
-                case 'Employee':
-                    levels = ['Admin', 'Department', 'Employee'];
-                    break;
-            }
-
-            const listOfUsers = await usersService.getReportingUsersList(levels, userId);
-            return res.status(STATUS.OK).send({
-                data: listOfUsers,
-                message: "List of reporting users fetched Successfully",
-            });
-        } catch (error) {
-            logger.error(`usersController :: reportingUsersList :: ${error.message} :: ${error}`);
-            return res.status(STATUS.INTERNAL_SERVER_ERROR).send(USERS.USER00000);
-        }
-    },
     updateStatus: async (req: Request, res: Response): Promise<Response> => {
         /*  
                 #swagger.tags = ['Users']
