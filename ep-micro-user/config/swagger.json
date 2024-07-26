@@ -11,6 +11,85 @@
     "http"
   ],
   "paths": {
+    "/api/v1/user/admin/updateProfilePic": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Update Profile Pic",
+        "description": "Endpoint to Update Profile Pic",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "Profile picture file to upload"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/user/admin/updateProfile": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Update Profile",
+        "description": "Endpoint to User Profile",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "type": "string",
+                  "example": "Narsima"
+                },
+                "last_name": {
+                  "type": "string",
+                  "example": "Chilkuri"
+                },
+                "email_id": {
+                  "type": "string",
+                  "example": "narsimachilkuri237@gmail.com"
+                },
+                "dob": {
+                  "type": "string",
+                  "example": "1997-08-16"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/user/admin/loggedUserInfo": {
       "get": {
         "tags": [

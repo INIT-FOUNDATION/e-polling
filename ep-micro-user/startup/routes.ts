@@ -1,7 +1,7 @@
-import express, {  Request, Response, Express, NextFunction } from 'express';
+import express, { Request, Response, Express, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import * as CONSTANT from '../constants/CONST';
-import {userRouter} from '../routes/userRouter';
+import { userRouter } from '../routes/userRouter';
 import { adminRouter } from '../routes/adminRouter';
 
 export default function (app: Express): void {
