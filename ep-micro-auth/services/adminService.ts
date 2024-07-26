@@ -11,7 +11,7 @@ import { adminRepository } from "../repositories";
 export const adminService = {
     getUserInRedisByUserName: async (username: string): Promise<string> => {
         try {
-            let key = `User|Username:${username}`
+            let key = `user|username:${username}`
             let result = await redis.GetKeyRedis(key);
             return result;
         } catch (error) {
@@ -22,8 +22,8 @@ export const adminService = {
     setForgotPasswordOTPInRedis: async (otpDetails: any) => {
         try {
             if (otpDetails) {
-                redis.SetRedis(`Admin_Forgot_Password|User:${otpDetails.userName}`, otpDetails, 3 * 60);
-                redis.SetRedis(`Admin_Forgot_Password|TxnId:${otpDetails.txnId}`, otpDetails, 3 * 60)
+                redis.SetRedis(`forgot_password|user:${otpDetails.userName}`, otpDetails, 3 * 60);
+                redis.SetRedis(`forgot_password|txnId:${otpDetails.txnId}`, otpDetails, 3 * 60)
             };
         } catch (error) {
             logger.error(`adminService :: setForgotPasswordOTPInRedis :: ${error.message} :: ${error}`);
@@ -33,8 +33,8 @@ export const adminService = {
     setUserInActive: async (userName: string) => {
         try {
             await adminRepository.setUserInActive(userName);
-            redis.deleteRedis(`USERS|OFFSET:0|LIMIT:50`);
-            redis.deleteRedis(`USERS_COUNT`);
+            redis.deleteRedis(`users|offset:0|limit:50`);
+            redis.deleteRedis(`users_count`);
         } catch (error) {
             logger.error(`adminService :: setUserInActive :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -50,7 +50,7 @@ export const adminService = {
                 logger.debug(`adminService :: getUserByUserName :: user :: ${JSON.stringify(user)}`);
 
                 if (user) {
-                    redis.SetRedis(`User|Username:${userName}`, user, CONFIG.REDIS_EXPIRE_TIME_PWD);
+                    redis.SetRedis(`users|username:${userName}`, user, CONFIG.REDIS_EXPIRE_TIME_PWD);
                     return user;
                 };
             }
@@ -62,7 +62,7 @@ export const adminService = {
     updateUserLoginStatus: async (loginStatus: number, userName: string) => {
         try {
             await adminRepository.updateUserLoginStatus(loginStatus, userName);
-            redis.deleteRedis(`User|Username:${userName}`);
+            redis.deleteRedis(`user|username:${userName}`);
         } catch (error) {
             logger.error(`adminService :: updateUserLoginStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -70,7 +70,7 @@ export const adminService = {
     },
     isForgotPasswordOtpAlreadySent: async (mobileNumber: string): Promise<boolean> => {
         try {
-            const key = `Admin_Forgot_Password|User:${mobileNumber}`;
+            const key = `forgot_password|user:${mobileNumber}`;
             const cachedResult = await redis.GetKeyRedis(key);
             return cachedResult ? true : false;
         } catch (error) {
@@ -80,7 +80,7 @@ export const adminService = {
     },
     getForgotPasswordOtpDetails: async (txnId: string): Promise<string> => {
         try {
-            const key = `Admin_Forgot_Password|TxnId:${txnId}`;
+            const key = `forgot_password|txnId:${txnId}`;
             const cachedResult = await redis.GetKeyRedis(key);
             return cachedResult;
         } catch (error) {
@@ -132,9 +132,9 @@ export const adminService = {
     verifyForgetPasswordOtp: async (userName: string, oldTxnId: string): Promise<string> => {
         try {
             const txnId = uuidv4();
-            const forgotPasswordUserKey = `Admin_Forgot_Password|User:${userName}`;
-            const forgotPasswordChangeKey = `FORGOT_PASSWORD_CHANGE_${txnId}`;
-            const forgotPasswordTxnIdKey = `Admin_Forgot_Password|TxnId:${oldTxnId}`;
+            const forgotPasswordUserKey = `forgot_password|user:${userName}`;
+            const forgotPasswordChangeKey = `forgot_password_change|txnId:${txnId}`;
+            const forgotPasswordTxnIdKey = `forgot_password|txnId:${oldTxnId}`;
 
             await redis.deleteRedis(forgotPasswordUserKey);
             await redis.deleteRedis(forgotPasswordTxnIdKey);
@@ -147,7 +147,7 @@ export const adminService = {
     },
     getForgotPasswordChangeDetails: async (txnId: string) => {
         try {
-            const cachedResult = await redis.GetKeyRedis(`FORGOT_PASSWORD_CHANGE_${txnId}`);
+            const cachedResult = await redis.GetKeyRedis(`forgot_password_change|txnId:${txnId}`);
             return cachedResult;
         } catch (error) {
             logger.error(`adminService :: getForgotPasswordChangeDetails :: ${error.message} :: ${error}`)
@@ -160,9 +160,9 @@ export const adminService = {
             const passwordUpdated = await adminRepository.resetPassword(hashedPassword, parseInt(userName));
 
             if (passwordUpdated) {
-                await redis.deleteRedis(`FORGOT_PASSWORD_CHANGE_${reqData.txnId}`);
-                await redis.deleteRedis(`Admin_Forgot_Password|User:${userName}`);
-                await redis.deleteRedis(`User|Username:${userName}`);
+                await redis.deleteRedis(`forgot_password_change|txnId:${reqData.txnId}`);
+                await redis.deleteRedis(`forgot_password|user:${userName}`);
+                await redis.deleteRedis(`user|username:${userName}`);
                 await redis.deleteRedis(userName);
                 return true;
             } else {
