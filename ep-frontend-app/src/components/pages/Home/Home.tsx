@@ -5,6 +5,7 @@ import Footer from "../../common/Footer/Footer";
 import ContactUs from "../../common/ContactUs/ContactUs";
 import LastYearWinners from "../LastYearWinners/LastYearWinners";
 import Dates from "../Dates/Dates";
+import Categories from "../Categories/Categories";
 
 const Home: React.FC = () => {
 
@@ -26,6 +27,7 @@ const Home: React.FC = () => {
 
     return (
         <div>
+            <Categories />
             <Dates />
             <LastYearWinners />
             <ContactUs />
