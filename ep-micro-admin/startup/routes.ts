@@ -9,6 +9,8 @@ import { menusRouter } from '../routes/menusRouter';
 import { eventsRouter } from '../routes/eventsRouter';
 import { judgesRouter } from '../routes/judgesRouter';
 import { nominationsRouter } from '../routes/nominationsRouter';
+import { supportRequestsRouter } from '../routes/supportRequestsRouter';
+import { votesRouter } from '../routes/votesRouter';
 
 export default function (app: Express): void {
   app.use(express.json());
@@ -42,5 +44,7 @@ export default function (app: Express): void {
   app.use("/api/v1/admin/events", eventsRouter);
   app.use("/api/v1/admin/judges", judgesRouter);
   app.use("/api/v1/admin/nominations", nominationsRouter);
+  app.use("/api/v1/admin/votes", votesRouter);
+  app.use("/api/v1/admin/supportRequests", supportRequestsRouter)
   app.use('/api/v1/admin', adminRouter);
 }

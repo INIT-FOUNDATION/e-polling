@@ -6,3 +6,4 @@ export * as menusModel from "./menusModel";
 export * as eventsModel from "./eventsModel";
 export * as judgesModel from "./judgesModel";
 export * as nominationsModel from "./nominationsModel";
+export * as supportRequestsModel from "./supportRequestsModel";

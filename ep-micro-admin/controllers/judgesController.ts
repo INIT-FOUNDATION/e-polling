@@ -12,26 +12,24 @@ export const judgesController = {
     createJudge: async (req: Request, res: Response) => {
         try {
             /*  
-            #swagger.tags = ['Judges']
-            #swagger.summary = 'Create Judge'
-            #swagger.description = 'Endpoint to Create Judge'
-            #swagger.parameters['body'] = {
-                in: 'body',
-                required: true,
-                schema: {
-                    judgeId: 'J1',
-                    judgeName: 'John Doe',
-                    designation: 'Judge',
-                    eventId: 'E1',
-                    status: 'ACTIVE'
+                #swagger.tags = ['Judges']
+                #swagger.summary = 'Create Judge'
+                #swagger.description = 'Endpoint to Create Judge'
+                #swagger.parameters['body'] = {
+                    in: 'body',
+                    required: true,
+                    schema: {
+                        judgeName: 'John Doe',
+                        designation: 'Judge',
+                        eventId: 'E1'
+                    }
                 }
-            }
-            #swagger.parameters['file'] = {
-                in: 'formData',
-                required: true,
-                type: 'file',
-                description: 'Profile picture of the judge'
-            }
+                #swagger.parameters['file'] = {
+                    in: 'formData',
+                    required: true,
+                    type: 'file',
+                    description: 'Profile picture of the judge'
+                }
             */
             const judge = new judgesModel.Judge(req.body);
             const userId = req.plainToken.user_id;
@@ -70,6 +68,27 @@ export const judgesController = {
     },
     updateJudge: async (req: Request, res: Response) => {
         try {
+            /*  
+                #swagger.tags = ['Judges']
+                #swagger.summary = 'Create Judge'
+                #swagger.description = 'Endpoint to Create Judge'
+                #swagger.parameters['body'] = {
+                    in: 'body',
+                    required: true,
+                    schema: {
+                        judgeId: 'J1',
+                        judgeName: 'John Doe',
+                        designation: 'Judge',
+                        eventId: 'E1'
+                    }
+                }
+                #swagger.parameters['file'] = {
+                    in: 'formData',
+                    required: true,
+                    type: 'file',
+                    description: 'Profile picture of the judge'
+                }
+            */
             const judge = new judgesModel.Judge(req.body);
             const userId = req.plainToken.user_id;
             const file = req.files.file as UploadedFile;

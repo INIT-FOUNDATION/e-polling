@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { menusModel } from "../models";
 import { ERRORCODE } from "../constants";
 import { menusService } from "../services";
-import { menuRepository } from "../repositories";
+import { menusRepository } from "../repositories";
 
 export const menusController = {
     createMenu: async (req: Request, res: Response) => {
@@ -34,7 +34,7 @@ export const menusController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.MENUS.MENUS000.errorCode, errorMessage: error.message });
             }
 
-            const menuNameExists = await menuRepository.existsByMenuName(menu.menu_name, null);
+            const menuNameExists = await menusRepository.existsByMenuName(menu.menu_name, null);
             if (menuNameExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.MENUS.MENUS005);
 
             await menusService.createMenu(menu);
@@ -77,10 +77,10 @@ export const menusController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.MENUS.MENUS000.errorCode, errorMessage: error.message });
             }
 
-            const menuIdExists = await menuRepository.existsByMenuId(menu.menu_id);
+            const menuIdExists = await menusRepository.existsByMenuId(menu.menu_id);
             if (!menuIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.MENUS.MENUS001);
 
-            const menuNameExists = await menuRepository.existsByMenuName(menu.menu_name, menu.menu_id);
+            const menuNameExists = await menusRepository.existsByMenuName(menu.menu_name, menu.menu_id);
             if (menuNameExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.MENUS.MENUS005);
 
             await menusService.updateMenu(menu);
@@ -121,7 +121,7 @@ export const menusController = {
             const { menuId } = req.params;
             if (!menuId) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.MENUS.MENUS002);
 
-            const menuIdExists = await menuRepository.existsByMenuId(parseInt(menuId));
+            const menuIdExists = await menusRepository.existsByMenuId(parseInt(menuId));
             if (!menuIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.MENUS.MENUS001);
 
             const menu = await menusService.getMenuById(parseInt(menuId));
@@ -158,7 +158,7 @@ export const menusController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.MENUS.MENUS000.errorCode, errorMessage: error.message });
             }
 
-            const menuIdExists = await menuRepository.existsByMenuId(parseInt(menuId));
+            const menuIdExists = await menusRepository.existsByMenuId(parseInt(menuId));
             if (!menuIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.MENUS.MENUS001);
 
             await menusService.updateMenuStatus(parseInt(menuId), status);

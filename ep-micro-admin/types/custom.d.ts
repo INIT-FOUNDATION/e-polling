@@ -148,6 +148,7 @@ export interface ISupportRequest {
     requesterName: string;
     requesterEmail: string;
     requesterMessage: string;
+    resolvedBy: number;
     dateCreated: string;
     dateUpdated: string;
     requesterDeviceDetails: SupportRequestStatus;

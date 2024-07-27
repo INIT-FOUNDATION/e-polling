@@ -5,7 +5,7 @@
     "description": "API Swagger for ep-micro-admin",
     "version": "1.0.0"
   },
-  "host": "localhost:9002",
+  "host": "localhost:5003",
   "basePath": "/",
   "schemes": [
     "http"
@@ -1158,6 +1158,953 @@
             "name": "menuId",
             "in": "path",
             "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/events/add": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Create Event",
+        "description": "Endpoint to Create Event",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eventName": {
+                  "type": "string",
+                  "example": "Tech Conference"
+                },
+                "eventDescription": {
+                  "type": "string",
+                  "example": "Tech Conference on Cloud Native"
+                },
+                "startTime": {
+                  "type": "string",
+                  "example": "2024-09-01T09:00:00Z"
+                },
+                "endTime": {
+                  "type": "string",
+                  "example": "2024-09-01T17:00:00Z"
+                },
+                "categoryId": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/events/update": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Update Event",
+        "description": "Endpoint to Update Event",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                },
+                "eventName": {
+                  "type": "string",
+                  "example": "Updated Tech Conference"
+                },
+                "eventDescription": {
+                  "type": "string",
+                  "example": "Updated Tech Conference on Cloud Native"
+                },
+                "startTime": {
+                  "type": "string",
+                  "example": "2024-09-01T10:00:00Z"
+                },
+                "endTime": {
+                  "type": "string",
+                  "example": "2024-09-01T18:00:00Z"
+                },
+                "categoryId": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/events/updateStatus": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Update Event Status",
+        "description": "Endpoint to Update Event Status",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/events/list": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "List Events",
+        "description": "Endpoint to List Events with pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pageSize": {
+                  "type": "number",
+                  "example": 10
+                },
+                "currentPage": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "in",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "required",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/events/listByCategory/{categoryId}": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Get Event By Category Id",
+        "description": "Endpoint to Get Event By Category Id",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categoryId": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/events/{eventId}": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Get Event",
+        "description": "Endpoint to Get Event",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/judges/add": {
+      "post": {
+        "tags": [
+          "Judges"
+        ],
+        "summary": "Create Judge",
+        "description": "Endpoint to Create Judge",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "judgeName": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "designation": {
+                  "type": "string",
+                  "example": "Judge"
+                },
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                }
+              }
+            }
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "Profile picture of the judge"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/judges/update": {
+      "post": {
+        "tags": [
+          "Judges"
+        ],
+        "summary": "Create Judge",
+        "description": "Endpoint to Create Judge",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "judgeId": {
+                  "type": "string",
+                  "example": "J1"
+                },
+                "judgeName": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "designation": {
+                  "type": "string",
+                  "example": "Judge"
+                },
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                }
+              }
+            }
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "Profile picture of the judge"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/judges/updateStatus": {
+      "post": {
+        "tags": [
+          "Judges"
+        ],
+        "summary": "Update Judge Status",
+        "description": "Endpoint to Update Judge Status",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "judgeId": {
+                  "type": "string",
+                  "example": "J1"
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/judges/list": {
+      "get": {
+        "tags": [
+          "Judges"
+        ],
+        "summary": "List Judges",
+        "description": "Endpoint to List Judges with pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pageSize": {
+                  "type": "number",
+                  "example": 10
+                },
+                "currentPage": {
+                  "type": "number",
+                  "example": 1
+                },
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                }
+              }
+            }
+          },
+          {
+            "name": "in",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "required",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/judges/{judgeId}": {
+      "get": {
+        "tags": [
+          "Judges"
+        ],
+        "summary": "Get Judge",
+        "description": "Endpoint to Get Judge",
+        "parameters": [
+          {
+            "name": "judgeId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "judgeId": {
+                  "type": "string",
+                  "example": "J1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/nominations/add": {
+      "post": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Create Nomination",
+        "description": "Endpoint to Create Nomination",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nomineeId": {
+                  "type": "string",
+                  "example": "N1"
+                },
+                "nomineeName": {
+                  "type": "string",
+                  "example": "Jane Doe"
+                },
+                "selfNominee": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "requesterName": {
+                  "type": "string",
+                  "example": "John Smith"
+                },
+                "requesterEmail": {
+                  "type": "string",
+                  "example": "john.smith@example.com"
+                },
+                "profilePictureUrl": {
+                  "type": "string",
+                  "example": "http://example.com/profile.jpg"
+                },
+                "nomineePlatformLinks": {
+                  "type": "object",
+                  "properties": {
+                    "instagram": {
+                      "type": "string",
+                      "example": "http://instagram.com/example"
+                    },
+                    "tiktok": {
+                      "type": "string",
+                      "example": "http://tiktok.com/example"
+                    },
+                    "twitch": {
+                      "type": "string",
+                      "example": "http://twitch.com/example"
+                    },
+                    "youtube": {
+                      "type": "string",
+                      "example": "http://youtube.com/example"
+                    },
+                    "other": {
+                      "type": "string",
+                      "example": "http://other.com/example"
+                    }
+                  }
+                },
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                },
+                "dateCreated": {
+                  "type": "string",
+                  "example": "2024-07-25T12:00:00Z"
+                },
+                "dateUpdated": {
+                  "type": "string",
+                  "example": "2024-07-25T12:00:00Z"
+                },
+                "createdBy": {
+                  "type": "number",
+                  "example": 123
+                },
+                "updatedBy": {
+                  "type": "number",
+                  "example": 123
+                },
+                "status": {
+                  "type": "string",
+                  "example": "PENDING"
+                }
+              }
+            }
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "required": true,
+            "type": "file",
+            "description": "Supporting document for the nomination"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/nominations/update": {
+      "post": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Update Nomination",
+        "description": "Endpoint to Update Nomination",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nomineeId": {
+                  "type": "string",
+                  "example": "N1"
+                },
+                "nomineeName": {
+                  "type": "string",
+                  "example": "Jane Doe"
+                },
+                "selfNominee": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "requesterName": {
+                  "type": "string",
+                  "example": "John Smith"
+                },
+                "requesterEmail": {
+                  "type": "string",
+                  "example": "john.smith@example.com"
+                },
+                "profilePictureUrl": {
+                  "type": "string",
+                  "example": "http://example.com/profile.jpg"
+                },
+                "nomineePlatformLinks": {
+                  "type": "object",
+                  "properties": {
+                    "instagram": {
+                      "type": "string",
+                      "example": "http://instagram.com/example"
+                    },
+                    "tiktok": {
+                      "type": "string",
+                      "example": "http://tiktok.com/example"
+                    },
+                    "twitch": {
+                      "type": "string",
+                      "example": "http://twitch.com/example"
+                    },
+                    "youtube": {
+                      "type": "string",
+                      "example": "http://youtube.com/example"
+                    },
+                    "other": {
+                      "type": "string",
+                      "example": "http://other.com/example"
+                    }
+                  }
+                },
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                },
+                "dateCreated": {
+                  "type": "string",
+                  "example": "2024-07-25T12:00:00Z"
+                },
+                "dateUpdated": {
+                  "type": "string",
+                  "example": "2024-07-25T12:00:00Z"
+                },
+                "createdBy": {
+                  "type": "number",
+                  "example": 123
+                },
+                "updatedBy": {
+                  "type": "number",
+                  "example": 123
+                },
+                "status": {
+                  "type": "string",
+                  "example": "PENDING"
+                }
+              }
+            }
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "required": false,
+            "type": "file",
+            "description": "Supporting document for the nomination (optional)"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/nominations/updateStatus": {
+      "post": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Update Nomination Status",
+        "description": "Endpoint to Update Nomination Status",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nomineeId": {
+                  "type": "string",
+                  "example": "N1"
+                },
+                "status": {
+                  "type": "string",
+                  "example": "APPROVED"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/nominations/list": {
+      "get": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "List Nominations",
+        "description": "Endpoint to List Nominations with pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pageSize": {
+                  "type": "number",
+                  "example": 10
+                },
+                "currentPage": {
+                  "type": "number",
+                  "example": 1
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                },
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                }
+              }
+            }
+          },
+          {
+            "name": "in",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "required",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/nominations/{nominationId}": {
+      "get": {
+        "tags": [
+          "Nominations"
+        ],
+        "summary": "Get Nomination",
+        "description": "Endpoint to Get a Nomination",
+        "parameters": [
+          {
+            "name": "nominationId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "params",
+            "in": "params",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nomineeId": {
+                  "type": "string",
+                  "example": "N1"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/votes/list": {
+      "get": {
+        "tags": [
+          "Votes"
+        ],
+        "summary": "List Votes",
+        "description": "Endpoint to List Votes with pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pageSize": {
+                  "type": "number",
+                  "example": 10
+                },
+                "currentPage": {
+                  "type": "number",
+                  "example": 1
+                },
+                "eventId": {
+                  "type": "string",
+                  "example": "E1"
+                }
+              }
+            }
+          },
+          {
+            "name": "in",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "required",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/supportRequests/updateStatus": {
+      "post": {
+        "tags": [
+          "Support Requests"
+        ],
+        "summary": "Update Support Request Status",
+        "description": "Endpoint to Update Support Request Status",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "supportRequestId": {
+                  "type": "number",
+                  "example": 1
+                },
+                "status": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/supportRequests/list": {
+      "get": {
+        "tags": [
+          "Support Requests"
+        ],
+        "summary": "List Support Requests",
+        "description": "Endpoint to List Support Requests with pagination and filtering by period",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pageSize": {
+                  "type": "number",
+                  "example": 10
+                },
+                "currentPage": {
+                  "type": "number",
+                  "example": 1
+                },
+                "periodType": {
+                  "type": "number",
+                  "example": 1
+                }
+              }
+            }
+          },
+          {
+            "name": "in",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "required",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "query",
             "type": "string"
           }
         ],

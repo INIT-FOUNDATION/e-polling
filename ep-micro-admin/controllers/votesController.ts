@@ -5,7 +5,7 @@ import { votesService } from "../services";
 import { ERRORCODE } from "../constants";
 
 export const votesController = {
-    getJudges: async (req: Request, res: Response) => {
+    listVotes: async (req: Request, res: Response) => {
         try {
             /*  
                 #swagger.tags = ['Votes']

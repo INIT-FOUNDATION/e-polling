@@ -260,3 +260,14 @@ export const VOTES = {
     errorMessage: "Internal Server Error",
   }
 }
+
+export const SUPPORTREQUESTS = {
+  SUPPORTREQUESTS000: {
+    errorCode: "SUPPORTREQUESTS000",
+    errorMessage: "Internal Server Error",
+  },
+  SUPPORTREQUESTS001: {
+    errorCode: "SUPPORTREQUESTS001",
+    errorMessage: "Requested Support Request does not exists!",
+  },
+}

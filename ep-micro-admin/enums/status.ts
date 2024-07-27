@@ -58,7 +58,7 @@ export enum NominationStatus {
 
 export enum SupportRequestStatus {
     OPEN = 0,
-    CLOSED = 1,
+    RESOLVED = 1,
 }
 
 export enum VoteStatus {
@@ -69,4 +69,10 @@ export enum VoteStatus {
 export enum NotificationStatus {
     UNREAD = 0,
     READ = 1
+}
+
+export enum SupportRequestsPeriodTypes {
+    TODAY = 1,
+    YESTERDAY = 2,
+    PAST = 3
 }

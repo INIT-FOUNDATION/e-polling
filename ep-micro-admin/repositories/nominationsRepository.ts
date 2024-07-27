@@ -51,7 +51,6 @@ export const nominationsRepository = {
             throw new Error(error.message);
         }
     },
-
     getNominationsCount: async (createdBy: number, status: NominationStatus, eventId: string): Promise<number> => {
         try {
             logger.info(`nominationsRepository :: getNominationsCount :: status :: ${status} :: createdBy :: ${createdBy} :: eventId :: ${eventId}`);
@@ -74,7 +73,6 @@ export const nominationsRepository = {
             throw new Error(error.message);
         }
     },
-
     existsByNomineeId: async (nomineeId: string): Promise<boolean> => {
         try {
             logger.info(`nominationsRepository :: existsByNomineeId :: nomineeId :: ${nomineeId}`);
