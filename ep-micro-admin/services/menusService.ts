@@ -1,3 +1,4 @@
+import { CacheTTL } from "../enums";
 import { menusRepository } from "../repositories";
 import { IMenu } from "../types/custom";
 import { logger, redis } from "ep-micro-common";
@@ -42,7 +43,7 @@ export const menusService = {
 
             const menus = await menusRepository.listMenus();
             if (menus && menus.length > 0) {
-                await redis.setRedis(key, JSON.stringify(menus));
+                redis.SetRedis(key, menus, CacheTTL.LONG);
                 return menus;
             }
         } catch (error) {
@@ -60,7 +61,7 @@ export const menusService = {
 
             const menu = await menusRepository.getMenuById(menuId);
             if (menu) {
-                await redis.setRedis(key, JSON.stringify(menu));
+                redis.SetRedis(key, menu, CacheTTL.LONG);
                 return menu;
             }
         } catch (error) {

@@ -53,7 +53,7 @@ export const eventsService = {
 
             const events = await eventsRepository.getEvents(currentPage, pageSize, createdBy);
             if (events && events.length > 0) {
-                redis.setRedis(key, JSON.stringify(events), CacheTTL.LONG);
+                redis.SetRedis(key, events, CacheTTL.LONG);
                 return events;
             }
         } catch (error) {
@@ -68,7 +68,7 @@ export const eventsService = {
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await eventsRepository.getEventsCount(createdBy);
-            if (count > 0) redis.setRedis(key, JSON.stringify(count), CacheTTL.LONG);
+            if (count > 0) redis.SetRedis(key, count, CacheTTL.LONG);
             return count;
         } catch (error) {
             logger.error(`eventsService :: getEventsCount :: ${error.message} :: ${error}`);
@@ -96,7 +96,7 @@ export const eventsService = {
             if (cacheResult) return JSON.parse(cacheResult);
 
             const events = await eventsRepository.listEventsByCategory(categoryId);
-            if (events && events.length > 0) redis.setRedis(key, JSON.stringify(events), CacheTTL.LONG);
+            if (events && events.length > 0) redis.SetRedis(key, events, CacheTTL.LONG);
             return events;
         } catch (error) {
             logger.error(`eventsService :: listEventsByCategory :: ${error.message} :: ${error}`);

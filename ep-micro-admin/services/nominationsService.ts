@@ -70,7 +70,7 @@ export const nominationsService = {
             }
 
             logger.debug(`nominationsService :: getNomination :: nomineeId :: ${nomineeId} :: ${JSON.stringify(nomination)}`);
-            if (nomination) redis.setRedis(key, JSON.stringify(nomination), CacheTTL.LONG);
+            if (nomination) redis.SetRedis(key, nomination, CacheTTL.LONG);
             return nomination;
         } catch (error) {
             logger.error(`nominationsService :: getNomination :: nomineeId :: ${nomineeId} :: ${error.message} :: ${error}`);
@@ -97,7 +97,7 @@ export const nominationsService = {
                     if (nomination && nomination.eventId) {
                         const event = await eventsService.getEvent(nomination.eventId);
                         if (event && event.eventName) nomination["eventName"] = event.eventName;
-                        
+
                         const category = await categoriesService.getCategoryById(event.categoryId);
                         if (category && category.category_name) nomination["categoryName"] = category.category_name;
                     }
@@ -105,7 +105,7 @@ export const nominationsService = {
             }
 
             if (nominations && nominations.length > 0) {
-                redis.setRedis(key, JSON.stringify(nominations), CacheTTL.LONG);
+                redis.SetRedis(key, nominations, CacheTTL.LONG);
                 return nominations;
             }
         } catch (error) {
@@ -123,8 +123,8 @@ export const nominationsService = {
             if (cacheResult) return parseInt(cacheResult, 10);
 
             const count = await nominationsRepository.getNominationsCount(createdBy, status, eventId);
-            if (count !== undefined) {
-                redis.setRedis(key, count.toString(), CacheTTL.LONG);
+            if (count > 0) {
+                redis.SetRedis(key, count, CacheTTL.LONG);
             }
             return count;
         } catch (error) {

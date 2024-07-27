@@ -101,7 +101,7 @@ export const judgesService = {
             }
 
             if (judges && judges.length > 0) {
-                redis.setRedis(key, JSON.stringify(judges), CacheTTL.LONG);
+                redis.SetRedis(key, judges, CacheTTL.LONG);
                 return judges;
             }
         } catch (error) {
@@ -118,7 +118,7 @@ export const judgesService = {
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await judgesRepository.getJudgesCount(createdBy, eventId);
-            if (count > 0) redis.setRedis(key, JSON.stringify(count), CacheTTL.LONG);
+            if (count > 0) redis.SetRedis(key, count, CacheTTL.LONG);
             return count;
         } catch (error) {
             logger.error(`judgesService :: getJudgesCount :: ${error.message} :: ${error}`);

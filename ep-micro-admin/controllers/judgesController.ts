@@ -105,7 +105,6 @@ export const judgesController = {
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.JUDGES.JUDGES000);
         }
     },
-
     getJudges: async (req: Request, res: Response) => {
         try {
             /*  
@@ -136,7 +135,6 @@ export const judgesController = {
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.JUDGES.JUDGES000);
         }
     },
-
     getJudge: async (req: Request, res: Response) => {
         try {
             /*  
@@ -167,7 +165,6 @@ export const judgesController = {
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.JUDGES.JUDGES000);
         }
     },
-
     updateJudgeStatus: async (req: Request, res: Response) => {
         try {
             /*  

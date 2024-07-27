@@ -3,43 +3,43 @@ export const ROLES = {
     errorCode: "ROLE0000",
     errorMessage: "Internal Server Error",
   },
-  ROLE00001:  {
+  ROLE00001: {
     errorCode: "ROLE00001",
     errorMessage: "Invalid Role name length, It must be within 3 and 20",
   },
-  ROLE00002:  {
+  ROLE00002: {
     errorCode: "ROLE00002",
     errorMessage: "Invalid Role Description length, It must be within 3 and 50",
   },
-  ROLE00003:  {
+  ROLE00003: {
     errorCode: "ROLE00003",
     errorMessage: "Role Id Required!",
   },
-  ROLE00004:  {
+  ROLE00004: {
     errorCode: "ROLE00004",
     errorMessage: "Invalid Role Status!",
   },
-  ROLE00005:  {
+  ROLE00005: {
     errorCode: "ROLE00005",
     errorMessage: "User Id Required!",
   },
-  ROLE00006:  {
+  ROLE00006: {
     errorCode: "ROLE00006",
     errorMessage: "Requested Role does not exists!",
   },
-  ROLE00007:  {
+  ROLE00007: {
     errorCode: "ROLE00007",
     errorMessage: "Role with Requested Name already exists!",
   },
-  ROLE00008:  {
+  ROLE00008: {
     errorCode: "ROLE00008",
     errorMessage: "Requested User does not exists!",
   },
-  ROLE00009:  {
+  ROLE00009: {
     errorCode: "ROLE00009",
     errorMessage: "Level Required!",
   },
-  ROLE00010:  {
+  ROLE00010: {
     errorCode: "ROLE00010",
     errorMessage: "Permissions are Required!",
   },
@@ -50,47 +50,47 @@ export const USERS = {
     errorCode: "USER00000",
     errorMessage: "Internal Server Error",
   },
-  USER00001:  {
+  USER00001: {
     errorCode: "USER00001",
     errorMessage: "Invalid User name length, It must be within 3 and 20",
   },
-  USER00002:  {
+  USER00002: {
     errorCode: "USER00002",
     errorMessage: "Invalid Display Name length, It must be within 3 and 20",
   },
-  USER00003:  {
+  USER00003: {
     errorCode: "USER00003",
     errorMessage: "Invalid First Name length, It must be within 3 and 20",
   },
-  USER00004:  {
+  USER00004: {
     errorCode: "USER00004",
     errorMessage: "Invalid Last Name length, It must be within 3 and 20",
   },
-  USER00005:  {
+  USER00005: {
     errorCode: "USER00005",
     errorMessage: "User with Requested Mobile number already exists!",
   },
-  USER00006:  {
+  USER00006: {
     errorCode: "USER00006",
     errorMessage: "User Id Required!",
   },
-  USER00007:  {
+  USER00007: {
     errorCode: "USER00007",
     errorMessage: "Role Id Required!",
   },
-  USER000011:  {
+  USER000011: {
     errorCode: "USER000011",
     errorMessage: "User with Requested Id does not exists!",
   },
-  USER000012:  {
+  USER000012: {
     errorCode: "USER000012",
     errorMessage: "User Requested to report does not exists!",
   },
-  USER000013:  {
+  USER000013: {
     errorCode: "USER000013",
     errorMessage: "Role Id Invalid!",
   },
-  USER000014:  {
+  USER000014: {
     errorCode: "USER000014",
     errorMessage: "Invalid User Status!",
   },
@@ -101,11 +101,11 @@ export const PASSWORDPOLICIES = {
     errorCode: "PASSWORDPOLICIES000",
     errorMessage: "Internal Server Error",
   },
-  PASSWORDPOLICIES001:  {
+  PASSWORDPOLICIES001: {
     errorCode: "PASSWORDPOLICIES001",
     errorMessage: "Requested Password Policy does not exists!",
   },
-  PASSWORDPOLICIES002:  {
+  PASSWORDPOLICIES002: {
     errorCode: "PASSWORDPOLICIES002",
     errorMessage: "Password Policy Id Required!",
   },
@@ -116,23 +116,23 @@ export const CATEGORIES = {
     errorCode: "CATEGORIES000",
     errorMessage: "Internal Server Error",
   },
-  CATEGORIES001:  {
+  CATEGORIES001: {
     errorCode: "CATEGORIES001",
     errorMessage: "Requested Category does not exists!",
   },
-  CATEGORIES002:  {
+  CATEGORIES002: {
     errorCode: "CATEGORIES002",
     errorMessage: "Category Id Required!",
   },
-  CATEGORIES003:  {
+  CATEGORIES003: {
     errorCode: "CATEGORIES003",
     errorMessage: "Invalid Category Status!",
   },
-  CATEGORIES004:  {
+  CATEGORIES004: {
     errorCode: "CATEGORIES004",
     errorMessage: "Invalid Category Id!",
   },
-  CATEGORIES005:  {
+  CATEGORIES005: {
     errorCode: "CATEGORIES005",
     errorMessage: "Requested Category name already exists!",
   },
@@ -143,23 +143,23 @@ export const MENUS = {
     errorCode: "MENUS000",
     errorMessage: "Internal Server Error",
   },
-  MENUS001:  {
+  MENUS001: {
     errorCode: "MENUS001",
     errorMessage: "Requested Menu does not exists!",
   },
-  MENUS002:  {
+  MENUS002: {
     errorCode: "MENUS002",
     errorMessage: "Menu Id Required!",
   },
-  MENUS003:  {
+  MENUS003: {
     errorCode: "MENUS003",
     errorMessage: "Invalid Menu Status!",
   },
-  MENUS004:  {
+  MENUS004: {
     errorCode: "MENUS004",
     errorMessage: "Invalid Menu Id!",
   },
-  MENUS005:  {
+  MENUS005: {
     errorCode: "MENUS005",
     errorMessage: "Requested Menu name already exists!",
   },
@@ -170,23 +170,23 @@ export const EVENTS = {
     errorCode: "EVENTS000",
     errorMessage: "Internal Server Error",
   },
-  EVENTS001:  {
+  EVENTS001: {
     errorCode: "EVENTS001",
     errorMessage: "Requested Event does not exists!",
   },
-  EVENTS002:  {
+  EVENTS002: {
     errorCode: "EVENTS002",
     errorMessage: "Event Id Required!",
   },
-  EVENTS003:  {
+  EVENTS003: {
     errorCode: "EVENTS003",
     errorMessage: "Invalid Event Status!",
   },
-  EVENTS004:  {
+  EVENTS004: {
     errorCode: "EVENTS004",
     errorMessage: "Invalid Event Id!",
   },
-  EVENTS005:  {
+  EVENTS005: {
     errorCode: "EVENTS005",
     errorMessage: "Requested Event name already exists!",
   },
@@ -197,27 +197,27 @@ export const JUDGES = {
     errorCode: "JUDGES000",
     errorMessage: "Internal Server Error",
   },
-  JUDGES001:  {
+  JUDGES001: {
     errorCode: "JUDGES001",
     errorMessage: "Requested Judge does not exists!",
   },
-  JUDGES002:  {
+  JUDGES002: {
     errorCode: "JUDGES002",
     errorMessage: "Judge Id Required!",
   },
-  JUDGES003:  {
+  JUDGES003: {
     errorCode: "JUDGES003",
     errorMessage: "Invalid Judge Status!",
   },
-  JUDGES004:  {
+  JUDGES004: {
     errorCode: "JUDGES004",
     errorMessage: "Invalid Judge Id!",
   },
-  JUDGES005:  {
+  JUDGES005: {
     errorCode: "JUDGES005",
     errorMessage: "Requested Judge name already exists!",
   },
-  JUDGES006:  {
+  JUDGES006: {
     errorCode: "JUDGES006",
     errorMessage: "Judge Profile Picture Required!",
   },
@@ -228,28 +228,35 @@ export const NOMINATIONS = {
     errorCode: "NOMINATIONS000",
     errorMessage: "Internal Server Error",
   },
-  NOMINATIONS001:  {
+  NOMINATIONS001: {
     errorCode: "NOMINATIONS001",
     errorMessage: "Requested Nomination does not exists!",
   },
-  NOMINATIONS002:  {
+  NOMINATIONS002: {
     errorCode: "NOMINATIONS002",
     errorMessage: "Nomination Id Required!",
   },
-  NOMINATIONS003:  {
+  NOMINATIONS003: {
     errorCode: "NOMINATIONS003",
     errorMessage: "Invalid Nomination Status!",
   },
-  NOMINATIONS004:  {
+  NOMINATIONS004: {
     errorCode: "NOMINATIONS004",
     errorMessage: "Invalid Nomination Id!",
   },
-  NOMINATIONS005:  {
+  NOMINATIONS005: {
     errorCode: "NOMINATIONS005",
     errorMessage: "Requested Nomination name already exists!",
   },
-  NOMINATIONS006:  {
+  NOMINATIONS006: {
     errorCode: "NOMINATIONS006",
     errorMessage: "Nomination Profile Picture Required!",
   },
+}
+
+export const VOTES = {
+  VOTES000: {
+    errorCode: "VOTES000",
+    errorMessage: "Internal Server Error",
+  }
 }

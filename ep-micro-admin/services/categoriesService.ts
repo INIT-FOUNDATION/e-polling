@@ -1,3 +1,4 @@
+import { CacheTTL } from "../enums";
 import { categoriesRepository } from "../repositories";
 import { ICategory } from "../types/custom";
 import { logger, redis } from "ep-micro-common";
@@ -46,7 +47,7 @@ export const categoriesService = {
 
             const categories = await categoriesRepository.listCategories(currentPage, pageSize, createdBy);
             if (categories && categories.length > 0) {
-                await redis.setRedis(key, JSON.stringify(categories));
+                redis.SetRedis(key, categories, CacheTTL.LONG);
                 return categories;
             }
         } catch (error) {
@@ -63,8 +64,8 @@ export const categoriesService = {
             }
 
             const count = await categoriesRepository.getCategoriesCount(created_by);
-            if (count) {
-                await redis.setRedis(key, JSON.stringify(count));
+            if (count > 0) {
+                redis.SetRedis(key, count, CacheTTL.LONG);
                 return count;
             }
         } catch (error) {
@@ -82,7 +83,7 @@ export const categoriesService = {
 
             const category = await categoriesRepository.getCategoryById(categoryId);
             if (category) {
-                await redis.setRedis(key, JSON.stringify(category));
+                redis.SetRedis(key, category, CacheTTL.LONG);
                 return category;
             }
         } catch (error) {
