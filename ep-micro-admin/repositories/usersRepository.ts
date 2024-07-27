@@ -1,6 +1,7 @@
 import { pg, logger } from "ep-micro-common";
 import { QUERY } from "../constants";
 import { IUser } from "../types/custom";
+import { UserStatus } from "../enums";
 
 export const usersRepository = {
     usersUpdatedWithinFiveMints: async (): Promise<boolean> => {
@@ -148,7 +149,7 @@ export const usersRepository = {
             throw new Error(error.message);
         }
     },
-    updateUserStatus: async (user: IUser, status: number, updatedBy: number) => {
+    updateUserStatus: async (user: IUser, status: UserStatus, updatedBy: number) => {
         try {
             const _query = {
                 text: QUERY.USERS.updateUserStatus,

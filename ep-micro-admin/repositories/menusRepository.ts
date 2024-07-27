@@ -1,8 +1,9 @@
 import { QUERY } from "../constants";
+import { MenuStatus } from "../enums";
 import { IMenu } from "../types/custom";
 import { pg, logger } from "ep-micro-common";
 
-export const menuRepository = {
+export const menusRepository = {
     createMenu: async (menu: IMenu) => {
         try {
             const _query = {
@@ -97,7 +98,7 @@ export const menuRepository = {
             throw new Error(error.message);
         }
     },
-    updateMenuStatus: async (menuId: number, status: number) => {
+    updateMenuStatus: async (menuId: number, status: MenuStatus) => {
         try {
             const _query = {
                 text: QUERY.MENUS.updateMenuStatus,

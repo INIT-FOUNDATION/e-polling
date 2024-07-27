@@ -1,8 +1,9 @@
 import { QUERY } from "../constants";
+import { CategoryStatus } from "../enums";
 import { ICategory } from "../types/custom";
 import { pg, logger } from "ep-micro-common";
 
-export const categoryRepository = {
+export const categoriesRepository = {
     createCategory: async (category: ICategory) => {
         try {
             const _query = {
@@ -118,7 +119,7 @@ export const categoryRepository = {
             throw new Error(error.message);
         }
     },
-    updateCategoryStatus: async (categoryId: number, status: number) => {
+    updateCategoryStatus: async (categoryId: number, status: CategoryStatus) => {
         try {
             const _query = {
                 text: QUERY.CATEGORIES.updateCategoryStatus,

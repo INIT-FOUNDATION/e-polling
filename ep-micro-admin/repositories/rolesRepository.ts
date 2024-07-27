@@ -1,6 +1,7 @@
 import { logger, pg } from "ep-micro-common";
 import { IRole } from "../types/custom";
 import { QUERY } from "../constants";
+import { RoleStatus } from "../enums";
 
 export const rolesRepository = {
     addRole: async (role: IRole): Promise<IRole[]> => {
@@ -34,7 +35,7 @@ export const rolesRepository = {
             throw new Error(error.message);
         }
     },
-    updateRoleStatus: async (roleId: number, status: number, updatedBy: number) => {
+    updateRoleStatus: async (roleId: number, status: RoleStatus, updatedBy: number) => {
         try {
             const _query = {
                 text: QUERY.ROLES.updateRoleStatus,
