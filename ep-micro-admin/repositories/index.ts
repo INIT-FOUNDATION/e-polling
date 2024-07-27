@@ -5,3 +5,4 @@ export * from "./categoriesRepository";
 export * from "./menusRepository";
 export * from "./eventsRepository";
 export * from "./judgesRepository";
+export * from "./nominationsRepository";

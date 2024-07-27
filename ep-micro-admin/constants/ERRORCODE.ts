@@ -222,3 +222,34 @@ export const JUDGES = {
     errorMessage: "Judge Profile Picture Required!",
   },
 }
+
+export const NOMINATIONS = {
+  NOMINATIONS000: {
+    errorCode: "NOMINATIONS000",
+    errorMessage: "Internal Server Error",
+  },
+  NOMINATIONS001:  {
+    errorCode: "NOMINATIONS001",
+    errorMessage: "Requested Nomination does not exists!",
+  },
+  NOMINATIONS002:  {
+    errorCode: "NOMINATIONS002",
+    errorMessage: "Nomination Id Required!",
+  },
+  NOMINATIONS003:  {
+    errorCode: "NOMINATIONS003",
+    errorMessage: "Invalid Nomination Status!",
+  },
+  NOMINATIONS004:  {
+    errorCode: "NOMINATIONS004",
+    errorMessage: "Invalid Nomination Id!",
+  },
+  NOMINATIONS005:  {
+    errorCode: "NOMINATIONS005",
+    errorMessage: "Requested Nomination name already exists!",
+  },
+  NOMINATIONS006:  {
+    errorCode: "NOMINATIONS006",
+    errorMessage: "Nomination Profile Picture Required!",
+  },
+}

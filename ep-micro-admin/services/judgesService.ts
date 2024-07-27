@@ -3,7 +3,7 @@ import { IJudge } from "../types/custom";
 import { judgesRepository } from "../repositories";
 import { CacheTTL, JudgeStatus } from "../enums";
 import { UploadedFile } from "express-fileupload";
-import { OBJECT_STORAGE_BUCET } from "../constants";
+import { OBJECT_STORAGE_BUCKET } from "../constants";
 
 export const judgesService = {
     createJudge: async (judge: IJudge, judgeProfilePicture: UploadedFile) => {
@@ -12,7 +12,7 @@ export const judgesService = {
 
             if (judgeProfilePicture) {
                 const objectStoragePath = `profile-pictures/judges/profile_picture_${judge.judgeId}.${judgeProfilePicture.mimetype.split("/")[1]}`;
-                await objectStorageUtility.putObject(OBJECT_STORAGE_BUCET, objectStoragePath, judgeProfilePicture.data);
+                await objectStorageUtility.putObject(OBJECT_STORAGE_BUCKET, objectStoragePath, judgeProfilePicture.data);
                 judge.profilePictureUrl = objectStoragePath;
             }
 
@@ -31,7 +31,7 @@ export const judgesService = {
 
             if (judgeProfilePicture) {
                 const objectStoragePath = `profile-pictures/judges/profile_picture_${judge.judgeId}.${judgeProfilePicture.mimetype.split("/")[1]}`;
-                await objectStorageUtility.putObject(OBJECT_STORAGE_BUCET, objectStoragePath, judgeProfilePicture.data);
+                await objectStorageUtility.putObject(OBJECT_STORAGE_BUCKET, objectStoragePath, judgeProfilePicture.data);
                 judge.profilePictureUrl = objectStoragePath;
             }
 
@@ -53,7 +53,7 @@ export const judgesService = {
 
             const judge = await judgesRepository.getJudge(judgeId);
             if (judge && judge.profilePictureUrl) {
-                const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCET, judge.profilePictureUrl, CacheTTL.LONG);
+                const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCKET, judge.profilePictureUrl, CacheTTL.LONG);
                 if (temporaryPublicURL) judge.profilePictureUrl = temporaryPublicURL;
             }
 
@@ -77,7 +77,7 @@ export const judgesService = {
 
             for (const judge of judges) {
                 if (judge.profilePictureUrl) {
-                    const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCET, judge.profilePictureUrl, CacheTTL.LONG);
+                    const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCKET, judge.profilePictureUrl, CacheTTL.LONG);
                     if (temporaryPublicURL) judge.profilePictureUrl = temporaryPublicURL;
                 }
             }

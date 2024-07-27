@@ -1,7 +1,7 @@
 import { pg, logger, redis, JSONUTIL, objectStorageUtility, envUtils, ejsUtils, commonCommunication } from "ep-micro-common";
 import { USERS } from "../constants/QUERY";
 import { IPasswordPolicy, IUser } from "../types/custom";
-import { DEFAULT_PASSWORD, OBJECT_STORAGE_BUCET } from "../constants/CONST";
+import { DEFAULT_PASSWORD, OBJECT_STORAGE_BUCKET } from "../constants/CONST";
 import { passwordPoliciesService } from "./passwordPoliciesService";
 import bcrypt from "bcryptjs";
 import RandExp from "randexp";
@@ -236,7 +236,7 @@ export const usersService = {
   },
   generatePublicURLFromObjectStoragePrivateURL: async (locationPath: string, expiresIn: number = 3600): Promise<string> => {
     try {
-      const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCET, locationPath, expiresIn);
+      const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCKET, locationPath, expiresIn);
       return temporaryPublicURL;
     } catch (error) {
       logger.error(`usersService :: generatePublicURLFromObjectStoragePrivateURL :: ${error.message} :: ${error}`)

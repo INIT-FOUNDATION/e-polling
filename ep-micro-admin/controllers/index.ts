@@ -6,3 +6,4 @@ export * from "./menusController";
 export * from "./categoriesController";
 export * from "./eventsController";
 export * from "./judgesController";
+export * from "./nominationsController";

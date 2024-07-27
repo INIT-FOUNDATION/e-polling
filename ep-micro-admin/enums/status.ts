@@ -45,7 +45,9 @@ export enum JudgeStatus {
 export enum EventStatus {
     INACTIVE = 0,
     ACTIVE = 1,
-    DELETED = 2
+    OPENED = 2,
+    CLOSED = 3,
+    DELETED = 4
 }
 
 export enum NominationStatus {

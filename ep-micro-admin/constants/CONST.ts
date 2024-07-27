@@ -10,4 +10,4 @@ export const CONFIG =  {
 
 export const DEFAULT_PASSWORD = "EP123!@#";
 
-export const OBJECT_STORAGE_BUCET = envUtils.getStringEnvVariableOrDefault("EP_OBJECT_STORAGE_BUCKET", "lta-dev");
+export const OBJECT_STORAGE_BUCKET = envUtils.getStringEnvVariableOrDefault("EP_OBJECT_STORAGE_BUCKET", "lta-dev");

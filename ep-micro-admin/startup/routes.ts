@@ -8,6 +8,7 @@ import { categoriesRouter } from '../routes/categoriesRouter';
 import { menusRouter } from '../routes/menusRouter';
 import { eventsRouter } from '../routes/eventsRouter';
 import { judgesRouter } from '../routes/judgesRouter';
+import { nominationsRouter } from '../routes/nominationsRouter';
 
 export default function (app: Express): void {
   app.use(express.json());
@@ -40,5 +41,6 @@ export default function (app: Express): void {
   app.use("/api/v1/admin/menus", menusRouter);
   app.use("/api/v1/admin/events", eventsRouter);
   app.use("/api/v1/admin/judges", judgesRouter);
+  app.use("/api/v1/admin/nominations", nominationsRouter);
   app.use('/api/v1/admin', adminRouter);
 }

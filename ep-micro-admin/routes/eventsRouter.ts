@@ -11,4 +11,4 @@ eventsRouter.post("/updateStatus", eventsController.updateEventStatus);
 
 eventsRouter.get("/list", eventsController.getEvents);
 
-eventsRouter.get("/:menuId", eventsController.getEvent);
+eventsRouter.get("/:eventId", eventsController.getEvent);

@@ -107,7 +107,7 @@ export interface IJudge {
     status: JudgeStatus;
 }
 
-export interface INominee {
+export interface INomination {
     nomineeId: string;
     nomineeName: string;
     selfNominee: boolean;

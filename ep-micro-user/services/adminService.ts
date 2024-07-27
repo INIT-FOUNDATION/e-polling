@@ -3,7 +3,7 @@ import { IUser } from "../types/custom";
 import { UploadedFile } from "express-fileupload";
 import { CacheTTL } from "../enums/cacheTTL";
 import { adminRepository } from "../repositories";
-import { OBJECT_STORAGE_BUCET } from "../constants";
+import { OBJECT_STORAGE_BUCKET } from "../constants";
 
 export const adminService = {
     getLoggedInUserInfo: async (user_id: number): Promise<IUser> => {
@@ -29,7 +29,7 @@ export const adminService = {
     },
     generatePublicURLFromObjectStoragePrivateURL: async (locationPath: string, expiresIn: number = 3600): Promise<string> => {
         try {
-            const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCET, locationPath, expiresIn);
+            const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCKET, locationPath, expiresIn);
             return temporaryPublicURL;
         } catch (error) {
             logger.error(`adminService :: generatePublicURLFromObjectStoragePrivateURL :: ${error.message} :: ${error}`)
@@ -40,7 +40,7 @@ export const adminService = {
         try {
             const key = `loggedin_user_info:${userId}`;
             const objectStoragePath = `profile-pictures/users/profile_picture_${userId}.${profilePicture.mimetype.split("/")[1]}`;
-            await objectStorageUtility.putObject(OBJECT_STORAGE_BUCET, objectStoragePath, profilePicture.data);
+            await objectStorageUtility.putObject(OBJECT_STORAGE_BUCKET, objectStoragePath, profilePicture.data);
 
             await adminRepository.updateProfilePic(objectStoragePath, userId);
             redis.deleteRedis(key);

@@ -80,15 +80,4 @@ export const judgesRepository = {
             throw new Error(error.message);
         }
     },
-    existsByJudgeName: async (judgeName: string, judgeId: string): Promise<boolean> => {
-        try {
-            logger.info(`judgesRepository :: existsByJudgeName :: judgeName :: ${judgeName} :: judgeId :: ${judgeId}`);
-            const exists = await mongoDBRead.isExist(MongoCollections.EVENTS, { judgeName, judgeId: { $ne: judgeId }, status: { $ne: JudgeStatus.DELETED } });
-            logger.debug(`judgesRepository :: existsByJudgeName :: judgeName :: ${judgeName} :: judgeId :: ${judgeId} :: exists :: ${exists}`);
-            return exists;
-        } catch (error) {
-            logger.error(`judgesRepository :: existsByJudgeName :: ${error.message} :: ${error}`);
-            throw new Error(error.message);
-        }
-    }
 }

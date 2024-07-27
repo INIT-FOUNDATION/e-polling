@@ -11,4 +11,4 @@ judgesRouter.post("/updateStatus", judgesController.updateJudgeStatus);
 
 judgesRouter.get("/list", judgesController.getJudges);
 
-judgesRouter.get("/:menuId", judgesController.getJudge);
+judgesRouter.get("/:judgeId", judgesController.getJudge);
