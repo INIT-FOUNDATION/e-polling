@@ -6,6 +6,7 @@ import { CacheTTL, NotificationStatus } from "../enums";
 export const notificationsService = {
     getNotifications: async (currentPage: number, pageSize: number, notifiedTo: number): Promise<INomination[]> => {
         try {
+            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `notifications|notified_to:${notifiedTo}|page:${currentPage}|limit:${pageSize}`;
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);

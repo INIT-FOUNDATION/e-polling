@@ -9,6 +9,7 @@ import { categoriesService } from "./categoriesService";
 export const votesService = {
     listVotes: async (currentPage: number, pageSize: number, eventId: string): Promise<IVote[]> => {
         try {
+            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             let key = `votes|page:${currentPage}|limit:${pageSize}`;
             if (eventId) key = `votes|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
 
