@@ -47,6 +47,7 @@ export const eventsService = {
     },
     listEvents: async (currentPage: number, pageSize: number, createdBy: number): Promise<IEvent[]> => {
         try {
+            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `events|created_by:${createdBy}|page:${currentPage}|limit:${pageSize}`;
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);

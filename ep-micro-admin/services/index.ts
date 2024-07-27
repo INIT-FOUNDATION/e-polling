@@ -8,3 +8,4 @@ export * from "./judgesService";
 export * from "./nominationsService";
 export * from "./votesService";
 export * from "./supportRequestsService";
+export * from "./notificationsService";

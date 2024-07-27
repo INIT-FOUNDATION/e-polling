@@ -9,8 +9,8 @@ import { categoriesService } from "./categoriesService";
 export const votesService = {
     listVotes: async (currentPage: number, pageSize: number, eventId: string): Promise<IVote[]> => {
         try {
-            let key = `votes`;
-            if (eventId) key = `votes|event:${eventId}`;
+            let key = `votes|page:${currentPage}|limit:${pageSize}`;
+            if (eventId) key = `votes|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
 
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);

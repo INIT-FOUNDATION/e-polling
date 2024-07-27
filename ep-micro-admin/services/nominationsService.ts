@@ -80,6 +80,7 @@ export const nominationsService = {
 
     listNominations: async (currentPage: number, pageSize: number, createdBy: number, status: NominationStatus, eventId: string): Promise<INomination[]> => {
         try {
+            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             let key = `nominations|created_by:${createdBy}|status:${status}|page:${currentPage}|limit:${pageSize}`;
             if (eventId) key = `nominations|created_by:${createdBy}|status:${status}|event_id:${eventId}|page:${currentPage}|limit:${pageSize}`;
 

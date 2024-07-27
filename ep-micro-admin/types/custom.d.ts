@@ -1,4 +1,4 @@
-import { CategoryStatus, EventStatus, JudgeStatus, MenuStatus, NominationStatus, NotificationStatus, RoleStatus, SupportRequestStatus, UserStatus, VoteStatus } from "../enums";
+import { CategoryStatus, EventStatus, JudgeStatus, MenuStatus, NominationStatus, NotificationStatus, NotificationTypes, RoleStatus, SupportRequestStatus, UserStatus, VoteStatus } from "../enums";
 
 export interface IRole {
     role_id: number;
@@ -157,6 +157,7 @@ export interface ISupportRequest {
 
 export interface INotification {
     notificationId: string;
+    notificationType: NotificationTypes,
     notificationDescription: string;
     notifiedTo: number;
     dateCreated: string;

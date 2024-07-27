@@ -9,3 +9,4 @@ export * from "./judgesController";
 export * from "./nominationsController";
 export * from "./supportRequestsController";
 export * from "./votesController";
+export * from "./notificationsController";

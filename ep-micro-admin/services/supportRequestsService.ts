@@ -6,6 +6,7 @@ import { supportRequestsRepository } from "../repositories";
 export const supportRequestsService = {
     listSupportRequests: async (currentPage: number, pageSize: number, supportRequestPeriodType: SupportRequestsPeriodTypes): Promise<ISupportRequest[]> => {
         try {
+            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `support_requests|period_type:${supportRequestPeriodType}|page:${currentPage}|limit:${pageSize}`;
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);

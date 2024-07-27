@@ -271,3 +271,14 @@ export const SUPPORTREQUESTS = {
     errorMessage: "Requested Support Request does not exists!",
   },
 }
+
+export const NOTIFICATIONS = {
+  NOTIFICATIONS000: {
+    errorCode: "NOTIFICATIONS000",
+    errorMessage: "Internal Server Error",
+  },
+  NOTIFICATIONS001: {
+    errorCode: "NOTIFICATIONS001",
+    errorMessage: "Requested Notification does not exists!",
+  },
+}

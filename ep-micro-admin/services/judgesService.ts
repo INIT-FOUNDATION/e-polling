@@ -74,6 +74,7 @@ export const judgesService = {
 
     listJudges: async (currentPage: number, pageSize: number, createdBy: number, eventId: string): Promise<IJudge[]> => {
         try {
+            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             let key = `judges|created_by:${createdBy}|page:${currentPage}|limit:${pageSize}`;
             if (eventId) key = `judges|created_by:${createdBy}|event_id:${eventId}|page:${currentPage}|limit:${pageSize}`;
 

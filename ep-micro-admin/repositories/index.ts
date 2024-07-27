@@ -8,3 +8,4 @@ export * from "./judgesRepository";
 export * from "./nominationsRepository";
 export * from "./votesRepository";
 export * from "./supportRequestsRepository";
+export * from "./notificationsRepository";

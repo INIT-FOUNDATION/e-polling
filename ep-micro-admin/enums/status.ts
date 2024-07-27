@@ -76,3 +76,9 @@ export enum SupportRequestsPeriodTypes {
     YESTERDAY = 2,
     PAST = 3
 }
+
+export enum NotificationTypes {
+    SUPPORT_REQUEST = 1,
+    NOMINATION = 2,
+    VOTE = 3
+}
