@@ -164,3 +164,61 @@ export const MENUS = {
     errorMessage: "Requested Menu name already exists!",
   },
 }
+
+export const EVENTS = {
+  EVENTS000: {
+    errorCode: "EVENTS000",
+    errorMessage: "Internal Server Error",
+  },
+  EVENTS001:  {
+    errorCode: "EVENTS001",
+    errorMessage: "Requested Event does not exists!",
+  },
+  EVENTS002:  {
+    errorCode: "EVENTS002",
+    errorMessage: "Event Id Required!",
+  },
+  EVENTS003:  {
+    errorCode: "EVENTS003",
+    errorMessage: "Invalid Event Status!",
+  },
+  EVENTS004:  {
+    errorCode: "EVENTS004",
+    errorMessage: "Invalid Event Id!",
+  },
+  EVENTS005:  {
+    errorCode: "EVENTS005",
+    errorMessage: "Requested Event name already exists!",
+  },
+}
+
+export const JUDGES = {
+  JUDGES000: {
+    errorCode: "JUDGES000",
+    errorMessage: "Internal Server Error",
+  },
+  JUDGES001:  {
+    errorCode: "JUDGES001",
+    errorMessage: "Requested Judge does not exists!",
+  },
+  JUDGES002:  {
+    errorCode: "JUDGES002",
+    errorMessage: "Judge Id Required!",
+  },
+  JUDGES003:  {
+    errorCode: "JUDGES003",
+    errorMessage: "Invalid Judge Status!",
+  },
+  JUDGES004:  {
+    errorCode: "JUDGES004",
+    errorMessage: "Invalid Judge Id!",
+  },
+  JUDGES005:  {
+    errorCode: "JUDGES005",
+    errorMessage: "Requested Judge name already exists!",
+  },
+  JUDGES006:  {
+    errorCode: "JUDGES006",
+    errorMessage: "Judge Profile Picture Required!",
+  },
+}

@@ -1,11 +1,11 @@
-import { menuRepository } from "../repositories";
+import { menusRepository } from "../repositories";
 import { IMenu } from "../types/custom";
 import { logger, redis } from "ep-micro-common";
 
 export const menusService = {
     createMenu: async (menu: IMenu) => {
         try {
-            await menuRepository.createMenu(menu);
+            await menusRepository.createMenu(menu);
             redis.deleteRedis(`menus`);
         } catch (error) {
             logger.error(`menusService :: createMenu :: ${error.message} :: ${error}`);
@@ -14,7 +14,7 @@ export const menusService = {
     },
     updateMenu: async (menu: IMenu) => {
         try {
-            await menuRepository.updateMenu(menu);
+            await menusRepository.updateMenu(menu);
             redis.deleteRedis(`menus`);
             redis.deleteRedis(`menu:${menu.menu_id}`);
         } catch (error) {
@@ -24,7 +24,7 @@ export const menusService = {
     },
     updateMenuStatus: async (menuId: number, status: number) => {
         try {
-            await menuRepository.updateMenuStatus(menuId, status);
+            await menusRepository.updateMenuStatus(menuId, status);
             redis.deleteRedis(`menus`);
             redis.deleteRedis(`menu:${menuId}`);
         } catch (error) {
@@ -40,7 +40,7 @@ export const menusService = {
                 return JSON.parse(cacheResult);
             }
 
-            const menus = await menuRepository.listMenus();
+            const menus = await menusRepository.listMenus();
             if (menus && menus.length > 0) {
                 await redis.setRedis(key, JSON.stringify(menus));
                 return menus;
@@ -58,7 +58,7 @@ export const menusService = {
                 return JSON.parse(cacheResult);
             }
 
-            const menu = await menuRepository.getMenuById(menuId);
+            const menu = await menusRepository.getMenuById(menuId);
             if (menu) {
                 await redis.setRedis(key, JSON.stringify(menu));
                 return menu;

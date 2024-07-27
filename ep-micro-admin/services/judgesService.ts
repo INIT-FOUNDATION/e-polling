@@ -1,4 +1,4 @@
-import { logger, redis, envUtils, objectStorageUtility } from "ep-micro-common";
+import { logger, redis, objectStorageUtility } from "ep-micro-common";
 import { IJudge } from "../types/custom";
 import { judgesRepository } from "../repositories";
 import { CacheTTL, JudgeStatus } from "../enums";
@@ -6,11 +6,10 @@ import { UploadedFile } from "express-fileupload";
 import { OBJECT_STORAGE_BUCET } from "../constants";
 
 export const judgesService = {
-
     createJudge: async (judge: IJudge, judgeProfilePicture: UploadedFile) => {
         try {
             logger.info(`judgesService :: createJudge :: ${JSON.stringify(judge)}`);
-            
+
             if (judgeProfilePicture) {
                 const objectStoragePath = `profile-pictures/judges/profile_picture_${judge.judgeId}.${judgeProfilePicture.mimetype.split("/")[1]}`;
                 await objectStorageUtility.putObject(OBJECT_STORAGE_BUCET, objectStoragePath, judgeProfilePicture.data);
@@ -18,7 +17,8 @@ export const judgesService = {
             }
 
             await judgesRepository.createJudge(judge);
-            redis.deleteRedis('judges');
+            redis.deleteRedis(`judges|created_by:${judge.createdBy}|page:0|limit:50`);
+            redis.deleteRedis(`judges|created_by:${judge.createdBy}|count`);
         } catch (error) {
             logger.error(`judgesService :: createJudge :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -36,8 +36,8 @@ export const judgesService = {
             }
 
             await judgesRepository.updateJudge(judge);
-            redis.deleteRedis('judges');
-            redis.deleteRedis(`judge:${judge.judgeId}`);
+            redis.deleteRedis(`judges|created_by:${judge.createdBy}|page:0|limit:50`);
+            redis.deleteRedis(`judges|created_by:${judge.createdBy}|count`);
         } catch (error) {
             logger.error(`judgesService :: updateJudge :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -66,13 +66,13 @@ export const judgesService = {
         }
     },
 
-    listJudges: async (currentPage: number, pageSize: number): Promise<IJudge[]> => {
+    listJudges: async (currentPage: number, pageSize: number, createdBy: number): Promise<IJudge[]> => {
         try {
-            const key = `judges`;
+            const key = `judges|created_by:${createdBy}|page:${currentPage}|limit:${pageSize}`;
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
-            const judges = await judgesRepository.getJudges(currentPage, pageSize);
+            const judges = await judgesRepository.getJudges(currentPage, pageSize, createdBy);
             logger.debug(`judgesService :: listJudges :: judges :: ${JSON.stringify(judges)}`);
 
             for (const judge of judges) {
@@ -83,7 +83,7 @@ export const judgesService = {
             }
 
             if (judges && judges.length > 0) {
-                redis.setRedis(key, JSON.stringify(judges));
+                redis.setRedis(key, JSON.stringify(judges), CacheTTL.LONG);
                 return judges;
             }
         } catch (error) {
@@ -91,13 +91,26 @@ export const judgesService = {
             throw new Error(error.message);
         }
     },
+    getJudgesCount: async (createdBy: number): Promise<number> => {
+        try {
+            const key = `judges|created_by:${createdBy}|count`;
+            const cacheResult = await redis.getRedis(key);
+            if (cacheResult) return JSON.parse(cacheResult);
 
-    updateJudgeStatus: async (judgeId: string, status: JudgeStatus) => {
+            const count = await judgesRepository.getJudgesCount(createdBy);
+            if (count > 0) redis.setRedis(key, JSON.stringify(count), CacheTTL.LONG);
+            return count;
+        } catch (error) {
+            logger.error(`judgesService :: getJudgesCount :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    updateJudgeStatus: async (judgeId: string, status: JudgeStatus, createdBy: number) => {
         try {
             logger.info(`judgesService :: updateJudgeStatus :: ${judgeId} :: ${status}`);
             await judgesRepository.updateJudgeStatus(judgeId, status);
-            redis.deleteRedis('judges');
-            redis.deleteRedis(`judge:${judgeId}`);
+            redis.deleteRedis(`judges|created_by:${createdBy}|page:0|limit:50`);
+            redis.deleteRedis(`judges|created_by:${createdBy}|count`);
         } catch (error) {
             logger.error(`judgesService :: updateJudgeStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

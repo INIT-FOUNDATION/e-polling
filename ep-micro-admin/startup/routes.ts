@@ -5,8 +5,10 @@ import { rolesRouter } from '../routes/rolesRouter';
 import { passwordPolicyRouter } from '../routes/passwordPolicyRouter';
 import { usersRouter } from '../routes/usersRouter';
 import { categoriesRouter } from '../routes/categoriesRouter';
-import { menusRouter } from '../routes/menusRouter'
-;
+import { menusRouter } from '../routes/menusRouter';
+import { eventsRouter } from '../routes/eventsRouter';
+import { judgesRouter } from '../routes/judgesRouter';
+
 export default function (app: Express): void {
   app.use(express.json());
 
@@ -36,5 +38,7 @@ export default function (app: Express): void {
   app.use("/api/v1/admin/users", usersRouter);
   app.use("/api/v1/admin/categories", categoriesRouter);
   app.use("/api/v1/admin/menus", menusRouter);
+  app.use("/api/v1/admin/events", eventsRouter);
+  app.use("/api/v1/admin/judges", judgesRouter);
   app.use('/api/v1/admin', adminRouter);
 }

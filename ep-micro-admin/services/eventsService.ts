@@ -9,7 +9,8 @@ export const eventsService = {
         try {
             logger.info(`eventsService :: createEvent :: ${JSON.stringify(event)}`);
             await eventsRepository.createEvent(event);
-            redis.deleteRedis('events');
+            redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
+            redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
         } catch (error) {
             logger.error(`eventsService :: createEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -19,8 +20,8 @@ export const eventsService = {
         try {
             logger.info(`eventsService :: updateEvent :: ${JSON.stringify(event)}`);
             await eventsRepository.updateEvent(event);
-            redis.deleteRedis('events');
-            redis.deleteRedis(`event:${event.eventId}`);
+            redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
+            redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
         } catch (error) {
             logger.error(`eventsService :: updateEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -42,15 +43,15 @@ export const eventsService = {
             throw new Error(error.message);
         }
     },
-    listEvents: async (currentPage: number, pageSize: number): Promise<IEvent[]> => {
+    listEvents: async (currentPage: number, pageSize: number, createdBy: number): Promise<IEvent[]> => {
         try {
-            const key = `events`;
+            const key = `events|created_by:${createdBy}|page:${currentPage}|limit:${pageSize}`;
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
-            const events = await eventsRepository.getEvents(currentPage, pageSize);
+            const events = await eventsRepository.getEvents(currentPage, pageSize, createdBy);
             if (events && events.length > 0) {
-                redis.setRedis(key, JSON.stringify(events));
+                redis.setRedis(key, JSON.stringify(events), CacheTTL.LONG);
                 return events;
             }
         } catch (error) {
@@ -58,12 +59,26 @@ export const eventsService = {
             throw new Error(error.message);
         }
     },
-    updateEventStatus: async (eventId: string, status: EventStatus) => {
+    getEventsCount: async (createdBy: number): Promise<number> => {
+        try {
+            const key = `events|created_by:${createdBy}|count`;
+            const cacheResult = await redis.getRedis(key);
+            if (cacheResult) return JSON.parse(cacheResult);
+
+            const count = await eventsRepository.getEventsCount(createdBy);
+            if (count > 0) redis.setRedis(key, JSON.stringify(count), CacheTTL.LONG);
+            return count;
+        } catch (error) {
+            logger.error(`eventsService :: getEventsCount :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    updateEventStatus: async (eventId: string, status: EventStatus, createdBy: number) => {
         try {
             logger.info(`eventsService :: updateEventStatus :: ${eventId} :: ${status}`);
             await eventsRepository.updateEventStatus(eventId, status);
-            redis.deleteRedis('events');
-            redis.deleteRedis(`event:${eventId}`);
+            redis.deleteRedis(`events|created_by:${createdBy}|page:0|limit:50`);
+            redis.deleteRedis(`events|created_by:${createdBy}|count`);
         } catch (error) {
             logger.error(`eventsService :: updateEventStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

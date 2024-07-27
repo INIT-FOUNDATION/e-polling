@@ -51,11 +51,11 @@ export const categoriesRepository = {
             throw new Error(error.message);
         }
     },
-    listCategories: async (currentPage: number, pageSize: number): Promise<ICategory[]> => {
+    listCategories: async (currentPage: number, pageSize: number, createdBy: number): Promise<ICategory[]> => {
         try {
             const _query = {
                 text: QUERY.CATEGORIES.listCategories,
-                values: [currentPage, pageSize]
+                values: [currentPage, pageSize, createdBy]
             };
             logger.debug(`categoryRepository :: listCategories :: query :: ${JSON.stringify(_query)}`);
 
@@ -68,10 +68,11 @@ export const categoriesRepository = {
             throw new Error(error.message);
         }
     },
-    getCategoriesCount: async (): Promise<number> => {
+    getCategoriesCount: async (created_by: number): Promise<number> => {
         try {
             const _query = {
-                text: QUERY.CATEGORIES.getCategoriesCount
+                text: QUERY.CATEGORIES.getCategoriesCount,
+                values: [created_by]
             };
             logger.debug(`categoryRepository :: getCategoriesCount :: query :: ${JSON.stringify(_query)}`);
 

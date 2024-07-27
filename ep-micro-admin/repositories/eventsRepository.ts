@@ -33,10 +33,10 @@ export const eventsRepository = {
             throw new Error(error.message);
         }
     },
-    getEvents: async (currentPage: number, pageSize: number): Promise<IEvent[]> => {
+    getEvents: async (currentPage: number, pageSize: number, createdBy: number): Promise<IEvent[]> => {
         try {
             logger.info(`eventsRepository :: getEvents :: currentPage :: ${currentPage} :: pageSize :: ${pageSize}`);
-            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, { status: { $ne: EventStatus.DELETED } }, {
+            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, { createdBy,status: { $ne: EventStatus.DELETED } }, {
                 _id: 0
             },
             pageSize,
@@ -51,10 +51,10 @@ export const eventsRepository = {
             throw new Error(error.message);
         }
     },
-    getEventsCount: async (): Promise<number> => {
+    getEventsCount: async (createdBy: number): Promise<number> => {
         try {
             logger.info(`eventsRepository :: getEventsCount`);
-            const count = await mongoDBRead.count(MongoCollections.EVENTS, { status: { $ne: EventStatus.DELETED } });
+            const count = await mongoDBRead.count(MongoCollections.EVENTS, { createdBy, status: { $ne: EventStatus.DELETED } });
             return count;
         } catch (error) {
             logger.error(`eventsRepository :: getEventsCount :: ${error.message} :: ${error}`);

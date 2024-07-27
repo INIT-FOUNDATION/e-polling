@@ -83,14 +83,15 @@ export interface IPermission {
 export interface IEvent {
     eventId: string;
     eventName: string;
-    startDate: string;
-    endDate: string;
+    eventDescription: string;
+    startTime: string;
+    endTime: string;
     status: EventStatus;
     categoryId: number;
     dateCreated: string;
     dateUpdated: string;
-    createdById: number;
-    updatedById: number;
+    createdBy: number;
+    updatedBy: number;
 }
 
 export interface IJudge {

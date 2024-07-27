@@ -1,9 +1,10 @@
 import { logger, STATUS } from "ep-micro-common";
-import { Request, Response } from "express";
+import { Response } from "express";
+import { Request } from "../types/express";
 import { categoriesModel } from "../models";
 import { ERRORCODE } from "../constants";
 import { categoriesService } from "../services";
-import { categoryRepository } from "../repositories";
+import { categoriesRepository } from "../repositories";
 import { GridDefaultOptions } from "../enums";
 
 export const categoriesController = {
@@ -23,6 +24,7 @@ export const categoriesController = {
                 }    
             */
             const category = new categoriesModel.Category(req.body);
+            const userId = req.plainToken.user_id;
 
             const { error } = categoriesModel.validateCreateCategory(category);
             if (error) {
@@ -31,8 +33,11 @@ export const categoriesController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.CATEGORIES.CATEGORIES000.errorCode, errorMessage: error.message });
             }
 
-            const categoryNameExists = await categoryRepository.existsByCategoryName(category.category_name, null);
+            const categoryNameExists = await categoriesRepository.existsByCategoryName(category.category_name, null);
             if (categoryNameExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES005);
+
+            category.created_by = userId;
+            category.updated_by = userId;
 
             await categoriesService.createCategory(category);
             return res.status(STATUS.OK).send({
@@ -41,7 +46,7 @@ export const categoriesController = {
             });
         } catch (error) {
             logger.error(`categoriesController :: createCategory :: ${error.message} :: ${error}`);
-            res.status(STATUS.INTERNAL_SERVER_ERROR).send();
+            res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.CATEGORIES.CATEGORIES000);
         }
     },
     updateCategory: async (req: Request, res: Response) => {
@@ -61,6 +66,7 @@ export const categoriesController = {
                 }    
             */
             const category = new categoriesModel.Category(req.body);
+            const userId = req.plainToken.user_id;
 
             const { error } = categoriesModel.validateUpdateCategory(category);
             if (error) {
@@ -69,11 +75,13 @@ export const categoriesController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.CATEGORIES.CATEGORIES000.errorCode, errorMessage: error.message });
             }
 
-            const categoryIdExists = await categoryRepository.existsByCategoryId(category.category_id);
+            const categoryIdExists = await categoriesRepository.existsByCategoryId(category.category_id);
             if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
 
-            const categoryNameExists = await categoryRepository.existsByCategoryName(category.category_name, category.category_id);
+            const categoryNameExists = await categoriesRepository.existsByCategoryName(category.category_name, category.category_id);
             if (categoryNameExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES005);
+
+            category.updated_by = userId;
 
             await categoriesService.updateCategory(category);
             return res.status(STATUS.OK).send({
@@ -82,7 +90,7 @@ export const categoriesController = {
             });
         } catch (error) {
             logger.error(`categoriesController :: updateCategory :: ${error.message} :: ${error}`);
-            res.status(STATUS.INTERNAL_SERVER_ERROR).send();
+            res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.CATEGORIES.CATEGORIES000);
         }
     },
     getCategories: async (req: Request, res: Response) => {
@@ -100,9 +108,10 @@ export const categoriesController = {
                     }
                 }    
             */
+            const userId = req.plainToken.user_id;
             const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE } = req.query;
-            const categories = await categoriesService.listCategories(Number(pageSize), Number(currentPage));
-            const categoriesCount = await categoriesService.getCategoriesCount();
+            const categories = await categoriesService.listCategories(Number(pageSize), Number(currentPage), userId);
+            const categoriesCount = await categoriesService.getCategoriesCount(userId);
 
             return res.status(STATUS.OK).send({
                 data: { categories, categoriesCount },
@@ -130,7 +139,7 @@ export const categoriesController = {
             const { categoryId } = req.params;
             if (!categoryId) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES002);
 
-            const categoryIdExists = await categoryRepository.existsByCategoryId(parseInt(categoryId));
+            const categoryIdExists = await categoriesRepository.existsByCategoryId(parseInt(categoryId));
             if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
 
             const category = await categoriesService.getCategoryById(parseInt(categoryId));
@@ -159,6 +168,7 @@ export const categoriesController = {
                 }    
             */
             const { categoryId, status } = req.body;
+            const userId = req.plainToken.user_id;
 
             const { error } = categoriesModel.validateUpdateCategoryStatus(req.body);
             if (error) {
@@ -167,10 +177,10 @@ export const categoriesController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.CATEGORIES.CATEGORIES000.errorCode, errorMessage: error.message });
             }
 
-            const categoryIdExists = await categoryRepository.existsByCategoryId(parseInt(categoryId));
+            const categoryIdExists = await categoriesRepository.existsByCategoryId(parseInt(categoryId));
             if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
 
-            await categoriesService.updateCategoryStatus(parseInt(categoryId), status);
+            await categoriesService.updateCategoryStatus(parseInt(categoryId), status, userId);
             return res.status(STATUS.OK).send({
                 data: null,
                 message: "Category Status Updated Successfully!"
