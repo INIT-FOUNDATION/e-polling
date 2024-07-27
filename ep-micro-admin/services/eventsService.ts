@@ -2,6 +2,8 @@ import { logger, redis } from "ep-micro-common";
 import { IEvent } from "../types/custom";
 import { eventsRepository } from "../repositories";
 import { CacheTTL, EventStatus } from "../enums";
+import moment from "moment";
+import { votesService } from "./votesService";
 
 export const eventsService = {
 
@@ -53,6 +55,17 @@ export const eventsService = {
             if (cacheResult) return JSON.parse(cacheResult);
 
             const events = await eventsRepository.getEvents(currentPage, pageSize, createdBy);
+            for (const event of events) {
+                if (moment().isAfter(event.endTime)) {
+                    await eventsService.updateEventStatus(event.eventId, EventStatus.CLOSED, event.createdBy);
+                    const votes = await votesService.getNomineeVotesByEvent(1, 50, event.eventId);
+                    if (votes.length > 0) {
+                        event["winnerName"] = votes[0].nomineeName;
+                        event.status = EventStatus.CLOSED;
+                    }
+                }
+            }
+
             if (events && events.length > 0) {
                 redis.SetRedis(key, events, CacheTTL.LONG);
                 return events;

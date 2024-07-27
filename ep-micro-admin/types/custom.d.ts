@@ -135,6 +135,11 @@ export interface IVote {
     status: VoteStatus;
 }
 
+export interface IVoteResult {
+    nomineeName: string;
+    votes: number
+}
+
 export interface IPlatformLinks {
     instagram: string;
     tiktok: string;

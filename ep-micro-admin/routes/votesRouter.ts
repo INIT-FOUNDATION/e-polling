@@ -4,3 +4,5 @@ import { votesController } from "../controllers";
 export const votesRouter = express.Router();
 
 votesRouter.get("/list", votesController.listVotes);
+
+votesRouter.get("/listByEvent", votesController.getNominationVotesByEventId);

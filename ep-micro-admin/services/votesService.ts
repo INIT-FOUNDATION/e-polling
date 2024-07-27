@@ -1,6 +1,6 @@
 import { CacheTTL } from "../enums";
 import { votesRepository } from "../repositories";
-import { IVote } from "../types/custom";
+import { IVote, IVoteResult } from "../types/custom";
 import { logger, redis } from "ep-micro-common";
 import { nominationsService } from "./nominationsService";
 import { eventsService } from "./eventsService";
@@ -55,6 +55,35 @@ export const votesService = {
             return count;
         } catch (error) {
             logger.error(`votesService :: getVotesCount :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    getNomineeVotesByEvent: async (currentPage: number, pageSize: number, eventId: string): Promise<IVoteResult[]> => {
+        try {
+            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
+            const key = `votes_result|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
+            const cacheResult = await redis.getRedis(key);
+            if (cacheResult) return JSON.parse(cacheResult);
+
+            const votes = await votesRepository.getNominationVotesByEventId(currentPage, pageSize, eventId);
+            if (votes && votes.length > 0) redis.SetRedis(key, votes, CacheTTL.LONG);
+            return votes;
+        } catch (error) {
+            logger.error(`votesService :: getNomineeVotesByEvent :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    getNomineeVotesCountByEvent: async (eventId: string): Promise<number> => {
+        try {
+            const key = `votes_result|event:${eventId}|count`;
+            const cacheResult = await redis.getRedis(key);
+            if (cacheResult) return JSON.parse(cacheResult);
+
+            const count = await votesRepository.getNominationVotesCountByEventId(eventId);
+            if (count > 0) redis.SetRedis(key, count, CacheTTL.LONG);
+            return count;
+        } catch (error) {
+            logger.error(`votesService :: getNomineeVotesCountByEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     }

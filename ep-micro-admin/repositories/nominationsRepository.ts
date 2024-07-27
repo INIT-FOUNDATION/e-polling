@@ -84,4 +84,15 @@ export const nominationsRepository = {
             throw new Error(error.message);
         }
     },
+    getNominationsByEventId: async (eventId: string): Promise<INomination[]> => {
+        try {
+            logger.info(`nominationsRepository :: getNominationsByEventId :: eventId :: ${eventId}`);
+            const result = await mongoDBRead.findWithProjectionSort(MongoCollections.NOMINATIONS, { eventId, status: { $ne: NominationStatus.APPROVED } }, { _id: 0 }, { dateCreated: -1 });
+            logger.debug(`nominationsRepository :: getNominationsByEventId :: eventId :: ${eventId} :: ${JSON.stringify(result)}`);
+            return result;
+        } catch (error) {
+            logger.error(`nominationsRepository :: getNominationsByEventId :: eventId :: ${eventId} :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    }
 };

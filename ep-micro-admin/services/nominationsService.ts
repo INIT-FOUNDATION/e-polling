@@ -25,13 +25,13 @@ export const nominationsService = {
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|count`);
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
+                redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
             }
         } catch (error) {
             logger.error(`nominationsService :: createNomination :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-
     updateNomination: async (nomination: INomination, nomineeProfilePicture: UploadedFile) => {
         try {
             logger.info(`nominationsService :: updateNomination :: ${JSON.stringify(nomination)}`);
@@ -49,13 +49,13 @@ export const nominationsService = {
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
                 redis.deleteRedis(`nominee:${nomination.nomineeId}`);
+                redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
             }
         } catch (error) {
             logger.error(`nominationsService :: updateNomination :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-
     getNomination: async (nomineeId: string): Promise<INomination> => {
         try {
             logger.info(`nominationsService :: getNomination :: ${nomineeId}`);
@@ -77,7 +77,6 @@ export const nominationsService = {
             throw new Error(error.message);
         }
     },
-
     listNominations: async (currentPage: number, pageSize: number, createdBy: number, status: NominationStatus, eventId: string): Promise<INomination[]> => {
         try {
             currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
@@ -114,7 +113,6 @@ export const nominationsService = {
             throw new Error(error.message);
         }
     },
-
     getNominationsCount: async (createdBy: number, status: NominationStatus, eventId: string): Promise<number> => {
         try {
             let key = `nominations|created_by:${createdBy}|status:${status}|count`;
@@ -133,7 +131,6 @@ export const nominationsService = {
             throw new Error(error.message);
         }
     },
-
     updateNominationStatus: async (nomineeId: string, status: NominationStatus, createdBy: number) => {
         try {
             logger.info(`nominationsService :: updateNominationStatus :: ${nomineeId} :: ${status}`);
@@ -146,19 +143,35 @@ export const nominationsService = {
                 redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
                 redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
                 redis.deleteRedis(`nominee:${nomineeId}`);
+                redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
             }
         } catch (error) {
             logger.error(`nominationsService :: updateNominationStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-
     existsByNomineeId: async (nomineeId: string): Promise<boolean> => {
         try {
             logger.info(`nominationsService :: existsByNomineeId :: nomineeId :: ${nomineeId}`);
             return await nominationsRepository.existsByNomineeId(nomineeId);
         } catch (error) {
             logger.error(`nominationsService :: existsByNomineeId :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    getNominationsByEventId: async (eventId: string): Promise<INomination[]> => {
+        try {
+            const key = `nominations|event_id:${eventId}`;
+            const cacheResult = await redis.getRedis(key);
+            if (cacheResult) return JSON.parse(cacheResult);
+
+            logger.info(`nominationsService :: getNominationsByEventId :: eventId :: ${eventId}`);
+
+            const nominations = await nominationsRepository.getNominationsByEventId(eventId);
+            if (nominations && nominations.length > 0) redis.SetRedis(key, nominations, CacheTTL.LONG);
+            return nominations;
+        } catch (error) {
+            logger.error(`nominationsService :: getNominationsByEventId :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
