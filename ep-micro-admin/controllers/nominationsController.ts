@@ -6,7 +6,7 @@ import { ERRORCODE } from "../constants";
 import { nominationsRepository } from "../repositories";
 import { nominationsService } from "../services";
 import { UploadedFile } from "express-fileupload";
-import { GridDefaultOptions } from "../enums";
+import { GridDefaultOptions, NominationStatus } from "../enums";
 
 export const nominationsController = {
     createNomination: async (req: Request, res: Response) => {
@@ -154,14 +154,16 @@ export const nominationsController = {
                 required: false,
                 schema: {
                     pageSize: 10,
-                    currentPage: 1
+                    currentPage: 1,
+                    status: 1,
+                    eventId: 'E1'
                 }
             }
             */
             const userId = req.plainToken.user_id;
-            const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE } = req.query;
-            const nominations = await nominationsService.listNominations(Number(pageSize), Number(currentPage), userId);
-            const nominationsCount = await nominationsService.getNominationsCount(userId);
+            const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE, status = NominationStatus.APPROVED, eventId } = req.query;
+            const nominations = await nominationsService.listNominations(Number(pageSize), Number(currentPage), userId, Number(status), String(eventId));
+            const nominationsCount = await nominationsService.getNominationsCount(userId, Number(status), String(eventId));
 
             return res.status(STATUS.OK).send({
                 data: { nominations, nominationsCount },

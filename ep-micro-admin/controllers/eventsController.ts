@@ -4,7 +4,7 @@ import { Request } from "../types/express";
 import { eventsModel } from "../models";
 import { ERRORCODE } from "../constants";
 import { eventsService } from "../services";
-import { eventsRepository } from "../repositories";
+import { categoriesRepository, eventsRepository } from "../repositories";
 import { GridDefaultOptions } from "../enums";
 
 export const eventsController = {
@@ -35,6 +35,9 @@ export const eventsController = {
                     return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.EVENTS.EVENTS000.errorCode, errorMessage: error.details[0].message });
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.EVENTS.EVENTS000.errorCode, errorMessage: error.message });
             }
+
+            const categoryIdExists = await categoriesRepository.existsByCategoryId(event.categoryId);
+            if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
 
             event.createdBy = userId;
             event.updatedBy = userId;
@@ -80,6 +83,9 @@ export const eventsController = {
 
             const eventIdExists = await eventsRepository.existsByEventId(event.eventId);
             if (!eventIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.EVENTS.EVENTS001);
+
+            const categoryIdExists = await categoriesRepository.existsByCategoryId(event.categoryId);
+            if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
 
             event.updatedBy = userId;
 
@@ -187,6 +193,36 @@ export const eventsController = {
             });
         } catch (error) {
             logger.error(`eventsController :: updateEventStatus :: ${error.message} :: ${error}`);
+            res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.EVENTS.EVENTS000);
+        }
+    },
+    getEventByCategoryId: async (req: Request, res: Response) => {
+        try {
+            /*  
+                #swagger.tags = ['Events']
+                #swagger.summary = 'Get Event By Category Id'
+                #swagger.description = 'Endpoint to Get Event By Category Id'
+                #swagger.parameters['params'] = {
+                    in: 'params',
+                    required: true,
+                    schema: {
+                        categoryId: 1
+                    }
+                }    
+            */
+            const { categoryId } = req.params;
+            if (!categoryId) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES002);
+
+            const categoryIdExists = await categoriesRepository.existsByCategoryId(parseInt(categoryId));
+            if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
+
+            const events = await eventsService.listEventsByCategory(parseInt(categoryId));
+            return res.status(STATUS.OK).send({
+                data: events,
+                message: "Events Fetched Successfully!"
+            });
+        } catch (error) {
+            logger.error(`eventsController :: getEventByCategoryId :: ${error.message} :: ${error}`);
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.EVENTS.EVENTS000);
         }
     }

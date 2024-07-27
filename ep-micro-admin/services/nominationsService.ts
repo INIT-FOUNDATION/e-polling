@@ -4,6 +4,8 @@ import { nominationsRepository } from "../repositories";
 import { CacheTTL, NominationStatus } from "../enums";
 import { UploadedFile } from "express-fileupload";
 import { OBJECT_STORAGE_BUCKET } from "../constants";
+import { eventsService } from "./eventsService";
+import { categoriesService } from "./categoriesService";
 
 export const nominationsService = {
     createNomination: async (nomination: INomination, nomineeProfilePicture: UploadedFile) => {
@@ -17,8 +19,13 @@ export const nominationsService = {
             }
 
             await nominationsRepository.createNomination(nomination);
-            redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|page:0|limit:50`);
-            redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|count`);
+
+            for (const status of Object.values(NominationStatus)) {
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|page:0|limit:50`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|count`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
+            }
         } catch (error) {
             logger.error(`nominationsService :: createNomination :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -36,15 +43,20 @@ export const nominationsService = {
             }
 
             await nominationsRepository.updateNomination(nomination);
-            redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|page:0|limit:50`);
-            redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|count`);
+            for (const status of Object.values(NominationStatus)) {
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|page:0|limit:50`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|count`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
+                redis.deleteRedis(`nominee:${nomination.nomineeId}`);
+            }
         } catch (error) {
             logger.error(`nominationsService :: updateNomination :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
 
-    getNomination: async (nomineeId: string) => {
+    getNomination: async (nomineeId: string): Promise<INomination> => {
         try {
             logger.info(`nominationsService :: getNomination :: ${nomineeId}`);
             const key = `nominee:${nomineeId}`;
@@ -66,19 +78,29 @@ export const nominationsService = {
         }
     },
 
-    listNominations: async (currentPage: number, pageSize: number, createdBy: number): Promise<INomination[]> => {
+    listNominations: async (currentPage: number, pageSize: number, createdBy: number, status: NominationStatus, eventId: string): Promise<INomination[]> => {
         try {
-            const key = `nominations|created_by:${createdBy}|page:${currentPage}|limit:${pageSize}`;
+            let key = `nominations|created_by:${createdBy}|status:${status}|page:${currentPage}|limit:${pageSize}`;
+            if (eventId) key = `nominations|created_by:${createdBy}|status:${status}|event_id:${eventId}|page:${currentPage}|limit:${pageSize}`;
+
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
-            const nominations = await nominationsRepository.getNominations(currentPage, pageSize, createdBy);
+            const nominations = await nominationsRepository.getNominations(currentPage, pageSize, createdBy, status, eventId);
             logger.debug(`nominationsService :: listNominations :: nominations :: ${JSON.stringify(nominations)}`);
 
             for (const nomination of nominations) {
                 if (nomination.profilePictureUrl) {
                     const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCKET, nomination.profilePictureUrl, CacheTTL.LONG);
                     if (temporaryPublicURL) nomination.profilePictureUrl = temporaryPublicURL;
+
+                    if (nomination && nomination.eventId) {
+                        const event = await eventsService.getEvent(nomination.eventId);
+                        if (event && event.eventName) nomination["eventName"] = event.eventName;
+                        
+                        const category = await categoriesService.getCategoryById(event.categoryId);
+                        if (category && category.category_name) nomination["categoryName"] = category.category_name;
+                    }
                 }
             }
 
@@ -92,13 +114,15 @@ export const nominationsService = {
         }
     },
 
-    getNominationsCount: async (createdBy: number): Promise<number> => {
+    getNominationsCount: async (createdBy: number, status: NominationStatus, eventId: string): Promise<number> => {
         try {
-            const key = `nominations|created_by:${createdBy}|count`;
+            let key = `nominations|created_by:${createdBy}|status:${status}|count`;
+            if (eventId) key = `nominations|created_by:${createdBy}|status:${status}|event_id:${eventId}|count`;
+
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return parseInt(cacheResult, 10);
 
-            const count = await nominationsRepository.getNominationsCount(createdBy);
+            const count = await nominationsRepository.getNominationsCount(createdBy, status, eventId);
             if (count !== undefined) {
                 redis.setRedis(key, count.toString(), CacheTTL.LONG);
             }
@@ -113,8 +137,15 @@ export const nominationsService = {
         try {
             logger.info(`nominationsService :: updateNominationStatus :: ${nomineeId} :: ${status}`);
             await nominationsRepository.updateNominationStatus(nomineeId, status);
-            redis.deleteRedis(`nominations|created_by:${createdBy}|page:0|limit:50`);
-            redis.deleteRedis(`nominations|created_by:${createdBy}|count`);
+            const nomination = await nominationsService.getNomination(nomineeId);
+
+            for (const status of Object.values(NominationStatus)) {
+                redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|page:0|limit:50`);
+                redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|count`);
+                redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
+                redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
+                redis.deleteRedis(`nominee:${nomineeId}`);
+            }
         } catch (error) {
             logger.error(`nominationsService :: updateNominationStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

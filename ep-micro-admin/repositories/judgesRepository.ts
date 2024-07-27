@@ -32,10 +32,13 @@ export const judgesRepository = {
             throw new Error(error.message);
         }
     },
-    getJudges: async (currentPage: number, pageSize: number, createdBy: number): Promise<IJudge[]> => {
+    getJudges: async (currentPage: number, pageSize: number, createdBy: number, eventId: string): Promise<IJudge[]> => {
         try {
             logger.info(`judgesRepository :: getJudges :: currentPage :: ${currentPage} :: pageSize :: ${pageSize}`);
-            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, { createdBy, status: { $ne: JudgeStatus.DELETED } }, {
+            const query =  { createdBy, status: { $ne: JudgeStatus.DELETED } }
+            if (eventId) query["eventId"] = eventId
+
+            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, query, {
                 _id: 0
             },
             pageSize,
@@ -50,10 +53,13 @@ export const judgesRepository = {
             throw new Error(error.message);
         }
     },
-    getJudgesCount: async (createdBy: number): Promise<number> => {
+    getJudgesCount: async (createdBy: number, eventId: string): Promise<number> => {
         try {
             logger.info(`judgesRepository :: getJudgesCount`);
-            const count = await mongoDBRead.count(MongoCollections.EVENTS, { createdBy, status: { $ne: JudgeStatus.DELETED } });
+            const query = { createdBy, status: { $ne: JudgeStatus.DELETED } }
+            if (eventId) query["eventId"] = eventId
+
+            const count = await mongoDBRead.count(MongoCollections.EVENTS, query);
             return count;
         } catch (error) {
             logger.error(`judgesRepository :: getJudgesCount :: ${error.message} :: ${error}`);

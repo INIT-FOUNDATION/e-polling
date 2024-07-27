@@ -11,6 +11,7 @@ export const eventsService = {
             await eventsRepository.createEvent(event);
             redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
             redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
+            redis.deleteRedis(`event|category:${event.categoryId}`);
         } catch (error) {
             logger.error(`eventsService :: createEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -22,12 +23,13 @@ export const eventsService = {
             await eventsRepository.updateEvent(event);
             redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
             redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
+            redis.deleteRedis(`event|category:${event.categoryId}`);
         } catch (error) {
             logger.error(`eventsService :: updateEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-    getEvent: async (eventId: string) => {
+    getEvent: async (eventId: string): Promise<IEvent> => {
         try {
             logger.info(`eventsService :: getEvent :: ${eventId}`);
             const key = `event:${eventId}`;
@@ -76,11 +78,28 @@ export const eventsService = {
     updateEventStatus: async (eventId: string, status: EventStatus, createdBy: number) => {
         try {
             logger.info(`eventsService :: updateEventStatus :: ${eventId} :: ${status}`);
+            const event = await eventsService.getEvent(eventId);
             await eventsRepository.updateEventStatus(eventId, status);
             redis.deleteRedis(`events|created_by:${createdBy}|page:0|limit:50`);
             redis.deleteRedis(`events|created_by:${createdBy}|count`);
+            redis.deleteRedis(`event|category:${event.categoryId}`);
         } catch (error) {
             logger.error(`eventsService :: updateEventStatus :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    listEventsByCategory: async (categoryId: number): Promise<IEvent[]> => {
+        try {
+            logger.info(`eventsService :: listEventsByCategory :: ${categoryId}`);
+            const key = `events|category:${categoryId}`;
+            const cacheResult = await redis.getRedis(key);
+            if (cacheResult) return JSON.parse(cacheResult);
+
+            const events = await eventsRepository.listEventsByCategory(categoryId);
+            if (events && events.length > 0) redis.setRedis(key, JSON.stringify(events), CacheTTL.LONG);
+            return events;
+        } catch (error) {
+            logger.error(`eventsService :: listEventsByCategory :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     }

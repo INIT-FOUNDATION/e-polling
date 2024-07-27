@@ -81,4 +81,15 @@ export const eventsRepository = {
             throw new Error(error.message);
         }
     },
+    listEventsByCategory: async (categoryId: number): Promise<IEvent[]> => {
+        try {
+            logger.info(`eventsRepository :: listEventsByCategory :: categoryId :: ${categoryId}`);
+            const result = await mongoDBRead.filteredDocs(MongoCollections.EVENTS, { categoryId, status: { $ne: EventStatus.DELETED } });
+            logger.debug(`eventsRepository :: listEventsByStatus :: categoryId :: ${categoryId} :: ${JSON.stringify(result)}`);
+            return result;
+        } catch (error) {
+            logger.error(`eventsRepository :: listEventsByStatus :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    }
 }

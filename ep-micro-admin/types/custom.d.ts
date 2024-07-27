@@ -127,7 +127,8 @@ export interface IVote {
     voteId: string;
     nomineeId: string;
     voterName: string;
-    voterMobile: number;
+    voterMobile ?: number;
+    voterEmail ?: string;
     dateCreated: string;
     dateUpdated: string;
     voterDeviceDetails: string;

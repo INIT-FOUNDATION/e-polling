@@ -117,14 +117,15 @@ export const judgesController = {
                 required: false,
                 schema: {
                     pageSize: 10,
-                    currentPage: 1
+                    currentPage: 1,
+                    eventId: 'E1'
                 }
             }    
             */
             const userId = req.plainToken.user_id;
-            const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE } = req.query;
-            const judges = await judgesService.listJudges(Number(pageSize), Number(currentPage), userId);
-            const judgesCount = await judgesService.getJudgesCount(userId);
+            const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE, eventId } = req.query;
+            const judges = await judgesService.listJudges(Number(pageSize), Number(currentPage), userId, String(eventId));
+            const judgesCount = await judgesService.getJudgesCount(userId, String(eventId));
 
             return res.status(STATUS.OK).send({
                 data: { judges, judgesCount },

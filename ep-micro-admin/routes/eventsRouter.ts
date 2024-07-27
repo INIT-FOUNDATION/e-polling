@@ -11,4 +11,6 @@ eventsRouter.post("/updateStatus", eventsController.updateEventStatus);
 
 eventsRouter.get("/list", eventsController.getEvents);
 
+eventsRouter.get("/listByCategory/:categoryId", eventsController.getEventByCategoryId);
+
 eventsRouter.get("/:eventId", eventsController.getEvent);

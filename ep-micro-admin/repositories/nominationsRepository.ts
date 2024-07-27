@@ -35,27 +35,32 @@ export const nominationsRepository = {
         }
     },
 
-    getNominations: async (currentPage: number, pageSize: number, createdBy: number): Promise<INomination[]> => {
+    getNominations: async (currentPage: number, pageSize: number, createdBy: number, status: NominationStatus, eventId: string): Promise<INomination[]> => {
         try {
-            logger.info(`nominationsRepository :: getNominations :: currentPage :: ${currentPage} :: pageSize :: ${pageSize}`);
-            const result = await mongoDBRead.findWithLimit(MongoCollections.NOMINATIONS, { createdBy, status: { $ne: NominationStatus.REJECTED } }, {
+            logger.info(`nominationsRepository :: getNominations :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: createdBy :: ${createdBy} :: status :: ${status} :: eventId :: ${eventId}`);
+            const query =  { createdBy, status }
+            if (eventId) query["eventId"] = eventId
+
+            const result = await mongoDBRead.findWithLimit(MongoCollections.NOMINATIONS, query, {
                 _id: 0
             }, pageSize, { dateCreated: -1 }, currentPage);
-            logger.debug(`nominationsRepository :: getNominations :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: ${JSON.stringify(result)}`);
+            logger.debug(`nominationsRepository :: getNominations :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: createdBy :: ${createdBy} :: status :: ${status} :: eventId :: ${eventId} :: ${JSON.stringify(result)}`);
             return result;
         } catch (error) {
-            logger.error(`nominationsRepository :: getNominations :: ${error.message} :: ${error}`);
+            logger.error(`nominationsRepository :: getNominations :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: createdBy :: ${createdBy} :: status :: ${status} :: eventId :: ${eventId} :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
 
-    getNominationsCount: async (createdBy: number): Promise<number> => {
+    getNominationsCount: async (createdBy: number, status: NominationStatus, eventId: string): Promise<number> => {
         try {
-            logger.info(`nominationsRepository :: getNominationsCount`);
-            const count = await mongoDBRead.count(MongoCollections.NOMINATIONS, { createdBy, status: { $ne: NominationStatus.REJECTED } });
+            logger.info(`nominationsRepository :: getNominationsCount :: status :: ${status} :: createdBy :: ${createdBy} :: eventId :: ${eventId}`);
+            const query =  { createdBy, status }
+            if (eventId) query["eventId"] = eventId
+            const count = await mongoDBRead.count(MongoCollections.NOMINATIONS, query);
             return count;
         } catch (error) {
-            logger.error(`nominationsRepository :: getNominationsCount :: ${error.message} :: ${error}`);
+            logger.error(`nominationsRepository :: getNominationsCount :: status :: ${status} :: createdBy :: ${createdBy} :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
