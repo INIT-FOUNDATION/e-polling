@@ -53,7 +53,7 @@ export interface INomination {
     createdBy: number;
     updatedBy: number;
     status: NominationStatus;
-    nomineeDeviceDetails: INomineeDeviceDetails;
+    nomineeDeviceDetails: IDeviceDetails;
 }
 
 export interface IVote {
@@ -64,7 +64,7 @@ export interface IVote {
     voterEmail ?: string;
     dateCreated: string;
     dateUpdated: string;
-    voterDeviceDetails: IVoterDeviceDetails;
+    voterDeviceDetails: IDeviceDetails;
     status: VoteStatus;
 }
 
@@ -89,35 +89,11 @@ export interface ISupportRequest {
     resolvedBy: number;
     dateCreated: string;
     dateUpdated: string;
-    requesterDeviceDetails: ISupportRequesterDeviceDetails;
+    requesterDeviceDetails: IDeviceDetails;
     status: SupportRequestStatus;
 }
 
-export interface IVoterDeviceDetails {
-    deviceType: string;
-    deviceOs: string;
-    deviceOsVersion: string;
-    isMobile: boolean;
-    isTablet: boolean;
-    isDesktop: boolean;
-    browserVersion: string;
-    browserName: string;
-    clientIp: string;
-}
-
-export interface ISupportRequesterDeviceDetails {
-    deviceType: string;
-    deviceOs: string;
-    deviceOsVersion: string;
-    isMobile: boolean;
-    isTablet: boolean;
-    isDesktop: boolean;
-    browserVersion: string;
-    browserName: string;
-    clientIp: string;
-}
-
-export interface INomineeDeviceDetails {
+export interface IDeviceDetails {
     deviceType: string;
     deviceOs: string;
     deviceOsVersion: string;

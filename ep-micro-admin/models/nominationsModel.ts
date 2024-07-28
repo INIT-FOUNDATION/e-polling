@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { NominationStatus } from "../enums";
-import { INomination, INomineeDeviceDetails, IPlatformLinks } from "../types/custom";
+import { INomination, IDeviceDetails, IPlatformLinks } from "../types/custom";
 
 class Nomination implements INomination {
   nomineeId: string;
@@ -16,7 +16,7 @@ class Nomination implements INomination {
   createdBy: number;
   updatedBy: number;
   status: NominationStatus;
-  nomineeDeviceDetails: INomineeDeviceDetails;
+  nomineeDeviceDetails: IDeviceDetails;
 
   constructor(nomination: INomination) {
     this.nomineeId = nomination.nomineeId;

@@ -7,6 +7,7 @@ import { nominationsRepository } from "../repositories";
 import { nominationsService } from "../services";
 import { UploadedFile } from "express-fileupload";
 import { GridDefaultOptions, NominationStatus } from "../enums";
+import { requestModifierHelper } from "../helpers";
 
 export const nominationsController = {
     createNomination: async (req: Request, res: Response) => {
@@ -48,6 +49,7 @@ export const nominationsController = {
             }
             */
             const nomination = new nominationsModel.Nomination(req.body);
+            nomination.nomineeDeviceDetails = requestModifierHelper.appendClientDetailsInRequest(req);
             const userId = req.plainToken.user_id;
             const file = req.files.file as UploadedFile;
 
@@ -115,6 +117,7 @@ export const nominationsController = {
             }
             */
             const nomination = new nominationsModel.Nomination(req.body);
+            nomination.nomineeDeviceDetails = requestModifierHelper.appendClientDetailsInRequest(req);
             const userId = req.plainToken.user_id;
             const file = req.files.file as UploadedFile;
 
