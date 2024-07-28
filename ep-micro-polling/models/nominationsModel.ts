@@ -13,8 +13,8 @@ class Nomination implements INomination {
   eventId: string;
   dateCreated: string;
   dateUpdated: string;
-  createdBy: number;
-  updatedBy: number;
+  createdBy ?: number;
+  updatedBy ?: number;
   status: NominationStatus;
   nomineeDeviceDetails: IDeviceDetails;
 

@@ -1,4 +1,4 @@
-import { logger, mongoDBRead } from "ep-micro-common";
+import { logger, mongoDBRead, mongoDB } from "ep-micro-common";
 import { NominationStatus, MongoCollections } from "../enums";
 import { INomination } from "../types/custom";
 
@@ -35,6 +35,15 @@ export const nominationsRepository = {
             return exists;
         } catch (error) {
             logger.error(`nominationsRepository :: existsByNomineeId :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    createNomination: async (nomination: INomination) => {
+        try {
+            logger.info(`nominationsRepository :: createNomination :: ${JSON.stringify(nomination)}`);
+            await mongoDB.insertOne(MongoCollections.NOMINATIONS, nomination);
+        } catch (error) {
+            logger.error(`nominationsRepository :: createNomination :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },

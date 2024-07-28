@@ -1,8 +1,9 @@
 import { logger, redis, objectStorageUtility } from "ep-micro-common";
 import { INomination } from "../types/custom";
 import { nominationsRepository } from "../repositories";
-import { CacheTTL } from "../enums";
+import { CacheTTL, NominationStatus } from "../enums";
 import { OBJECT_STORAGE_BUCKET } from "../constants";
+import { UploadedFile } from "express-fileupload";
 
 export const nominationsService = {
     listNominationsByEvent: async (eventId: string): Promise<INomination[]> => {
@@ -49,6 +50,31 @@ export const nominationsService = {
             return nomination;
         } catch (error) {
             logger.error(`nominationsService :: getNomination :: nomineeId :: ${nomineeId} :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    createNomination: async (nomination: INomination, nomineeProfilePicture: UploadedFile) => {
+        try {
+            logger.info(`nominationsService :: createNomination :: ${JSON.stringify(nomination)}`);
+
+            if (nomineeProfilePicture) {
+                const objectStoragePath = `profile-pictures/nominees/profile_picture_${nomination.nomineeId}.${nomineeProfilePicture.mimetype.split("/")[1]}`;
+                await objectStorageUtility.putObject(OBJECT_STORAGE_BUCKET, objectStoragePath, nomineeProfilePicture.data);
+                nomination.profilePictureUrl = objectStoragePath;
+            }
+
+            await nominationsRepository.createNomination(nomination);
+
+            for (const status of Object.values(NominationStatus)) {
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|page:0|limit:50`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|count`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
+                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
+                redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
+                redis.deleteRedis(`nominations|approved|event_id:${nomination.eventId}`)
+            }
+        } catch (error) {
+            logger.error(`nominationsService :: createNomination :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
