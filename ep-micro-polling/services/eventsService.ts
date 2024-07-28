@@ -1,7 +1,8 @@
 import { logger, redis } from "ep-micro-common";
 import { IEvent } from "../types/custom";
 import { eventsRepository } from "../repositories";
-import { CacheTTL, EventStatus } from "../enums";
+import { CacheTTL, EventStatus, GridDefaultOptions } from "../enums";
+import { votesService } from "./votesService";
 
 export const eventsService = {
     getEvent: async (eventId: string): Promise<IEvent> => {
@@ -45,6 +46,26 @@ export const eventsService = {
             return events;
         } catch (error) {
             logger.error(`eventsService :: listEventsByCategory :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    pastClosedEvents: async (limit: number, categoryId: number): Promise<IEvent[]> => {
+        try {
+            let key = `events|closed`;
+            if (categoryId && categoryId > 0) key = `events|closed|category:${categoryId}`;
+
+            const cacheResult = await redis.getRedis(key);
+            if (cacheResult) return JSON.parse(cacheResult);
+            
+            const events = await eventsRepository.pastClosedEvents(limit, categoryId);
+            for (const event of events) {
+                const votes = await votesService.getNomineeVotesByEvent(GridDefaultOptions.CURRENT_PAGE, GridDefaultOptions.PAGE_SIZE, event.eventId);
+                event["votes"] = votes.slice(0, 3);
+            }
+            if (events && events.length > 0) redis.SetRedis(key, events, CacheTTL.LONG);
+            return events;
+        } catch (error) {
+            logger.error(`eventsService :: pastClosedEvents :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     }

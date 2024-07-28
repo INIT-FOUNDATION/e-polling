@@ -1,6 +1,6 @@
 import { CacheTTL, EventStatus } from "../enums";
 import { votesRepository } from "../repositories";
-import { IVote } from "../types/custom";
+import { IVote, IVoteResult } from "../types/custom";
 import { logger, redis } from "ep-micro-common";
 import { nominationsService } from "./nominationsService";
 import { v4 as uuidv4 } from 'uuid';
@@ -79,5 +79,20 @@ export const votesService = {
             logger.error(`votesService :: publishVote :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
-    }
+    },
+    getNomineeVotesByEvent: async (currentPage: number, pageSize: number, eventId: string): Promise<IVoteResult[]> => {
+        try {
+            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
+            const key = `votes_result|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
+            const cacheResult = await redis.getRedis(key);
+            if (cacheResult) return JSON.parse(cacheResult);
+
+            const votes = await votesRepository.getNominationVotesByEventId(currentPage, pageSize, eventId);
+            if (votes && votes.length > 0) redis.SetRedis(key, votes, CacheTTL.LONG);
+            return votes;
+        } catch (error) {
+            logger.error(`votesService :: getNomineeVotesByEvent :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
 }

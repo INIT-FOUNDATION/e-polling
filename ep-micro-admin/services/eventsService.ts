@@ -14,6 +14,8 @@ export const eventsService = {
             redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
             redis.deleteRedis(`events|category:${event.categoryId}`);
             redis.deleteRedis(`events|opened|category:${event.categoryId}`);
+            redis.deleteRedis(`events|closed|category:${event.categoryId}`);
+            redis.deleteRedis(`events|closed`);
         } catch (error) {
             logger.error(`eventsService :: createEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -27,6 +29,8 @@ export const eventsService = {
             redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
             redis.deleteRedis(`events|category:${event.categoryId}`);
             redis.deleteRedis(`events|opened|category:${event.categoryId}`);
+            redis.deleteRedis(`events|closed|category:${event.categoryId}`);
+            redis.deleteRedis(`events|closed`);
         } catch (error) {
             logger.error(`eventsService :: updateEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -103,6 +107,8 @@ export const eventsService = {
             redis.deleteRedis(`events|created_by:${createdBy}|count`);
             redis.deleteRedis(`events|category:${event.categoryId}`);
             redis.deleteRedis(`events|opened|category:${event.categoryId}`);
+            redis.deleteRedis(`events|closed|category:${event.categoryId}`);
+            redis.deleteRedis(`events|closed`);
         } catch (error) {
             logger.error(`eventsService :: updateEventStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

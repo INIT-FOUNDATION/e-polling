@@ -46,4 +46,28 @@ export const eventsRepository = {
             throw new Error(error.message);
         }
     },
+    pastClosedEvents: async (limit: number, categoryId: number): Promise<IEvent[]> => {
+        try {
+            const query = { status: EventStatus.CLOSED };
+            if (categoryId && categoryId > 0) query['categoryId'] = categoryId;
+
+            logger.info(`eventsRepository :: pastClosedEvents :: limit :: ${limit}`);
+            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, { query }, {
+                _id: 0,
+                eventId: 1,
+                eventName: 1,
+                dateCreated: 1
+            }, limit,
+                {
+                    dateCreated: -1
+                },
+                0
+            );
+            logger.debug(`eventsRepository :: pastClosedEvents :: limit :: ${limit} :: ${JSON.stringify(result)}`);
+            return result;
+        } catch (error) {
+            logger.error(`eventsRepository :: pastClosedEvents :: limit :: ${limit} :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    }
 }

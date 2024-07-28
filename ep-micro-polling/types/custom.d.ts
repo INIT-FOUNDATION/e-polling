@@ -39,6 +39,11 @@ export interface IJudge {
     status: JudgeStatus;
 }
 
+export interface IVoteResult {
+    nomineeName: string;
+    votes: number
+}
+
 export interface INomination {
     nomineeId: string;
     nomineeName: string;
