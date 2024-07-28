@@ -1,7 +1,7 @@
 import swaggerAutogen from 'swagger-autogen';
 
-const moduleName = process.env.MODULE || "ep-micro-admin"
-const port = process.env.PORT || 9002;
+const moduleName = process.env.MODULE || "ep-micro-polling"
+const port = process.env.PORT || 5004;
 const apiBaseUrl = process.env.EP_APIS_BASE_URL || `localhost:${port}`;
 const scheme = apiBaseUrl.includes("localhost") ? "http" : "https";
 const doc = {

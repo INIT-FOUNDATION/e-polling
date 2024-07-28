@@ -8,9 +8,8 @@ import helmet from "helmet";
 import fileUpload from "express-fileupload";
 import dotenv from "dotenv";
 import routes from "./startup/routes";
-import { AUTH } from "./constants/AUTH";
 import bodyParser from "body-parser";
-import { SECURITY, logger, envUtils } from "ep-micro-common";
+import { logger, envUtils } from "ep-micro-common";
 import swaggerUi from "swagger-ui-express";
 import swaggerFile from "./config/swagger.json"
 import * as CONST from "./constants/CONST";
@@ -58,14 +57,13 @@ app.use(function applyXFrame(req: Request, res: Response, next: NextFunction) {
   res.set("X-Frame-Options", "DENY");
   next();
 });
-app.use('/api/v1/admin/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use('/api/v1/polling/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
-SECURITY(app, AUTH);
 routes(app);
 
 process.on("uncaughtException", function (err) {});
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5004;
 const server = app.listen(port, () => {
   logger.info(`[SERVER STARTED] Listening to port [${port}]`);
 });

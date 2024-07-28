@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { STATUS } from "owa-micro-common";
+import { STATUS } from "ep-micro-common";
 
-export const adminController = {
+export const pollingController = {
     health: (req: Request, res: Response): Response => {
         /*  
                 #swagger.tags = ['Admin']
