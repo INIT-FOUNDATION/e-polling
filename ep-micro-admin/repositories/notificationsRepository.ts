@@ -38,22 +38,13 @@ export const notificationsRepository = {
             throw new Error(error.message);
         }
     },
-    updateNotificationStatus: async (notificationId: string, status: NotificationStatus) => {
+    updateNotificationStatus: async (notifiedTo: number, status: NotificationStatus) => {
         try {
-            logger.info(`notificationsRepository :: updateNotificationStatus :: notificationId :: ${notificationId} :: status :: ${status}`);
-            await mongoDB.updateOne(MongoCollections.NOTIFICATIONS, { notificationId }, { status, dateUpdated: new Date().toISOString() });
+            logger.info(`notificationsRepository :: updateNotificationStatus :: notifiedTo :: ${notifiedTo} :: status :: ${status}`);
+            await mongoDB.updateMany(MongoCollections.NOTIFICATIONS, { notifiedTo }, { status, dateUpdated: new Date().toISOString() });
         } catch (error) {
-            logger.error(`notificationsRepository :: updateNotificationStatus :: notificationId :: ${notificationId} :: status :: ${status} :: ${error.message} :: ${error}`);
+            logger.error(`notificationsRepository :: updateNotificationStatus :: notifiedTo :: ${notifiedTo} :: status :: ${status} :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-    existsByNotificationId: async (notificationId: string): Promise<boolean> => {
-        try {
-            logger.info(`notificationsRepository :: existsByNotificationId :: notificationId :: ${notificationId}`);
-            return await mongoDB.exists(MongoCollections.NOTIFICATIONS, { notificationId });
-        } catch (error) {
-            logger.error(`notificationsRepository :: existsByNotificationId :: notificationId :: ${notificationId} :: ${error.message} :: ${error}`);
-            throw new Error(error.message);
-        }
-    }
 }

@@ -77,7 +77,6 @@ export const nominationsController = {
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.NOMINATIONS.NOMINATIONS000);
         }
     },
-
     updateNomination: async (req: Request, res: Response) => {
         try {
             /*  
@@ -145,7 +144,6 @@ export const nominationsController = {
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.NOMINATIONS.NOMINATIONS000);
         }
     },
-
     getNominations: async (req: Request, res: Response) => {
         try {
             /*  
@@ -177,7 +175,6 @@ export const nominationsController = {
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.NOMINATIONS.NOMINATIONS000);
         }
     },
-
     getNomination: async (req: Request, res: Response) => {
         try {
             /*  
@@ -208,7 +205,6 @@ export const nominationsController = {
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.NOMINATIONS.NOMINATIONS000);
         }
     },
-
     updateNominationStatus: async (req: Request, res: Response) => {
         try {
             /*  

@@ -80,5 +80,6 @@ export enum SupportRequestsPeriodTypes {
 export enum NotificationTypes {
     SUPPORT_REQUEST = 1,
     NOMINATION = 2,
-    VOTE = 3
+    VOTE = 3,
+    CONTACTED = 4
 }

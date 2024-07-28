@@ -48,11 +48,11 @@ export const notificationsService = {
             throw new Error(error.message);
         }
     },
-    updateNotificationStatus: async (notificationId: string, status: NotificationStatus, notifiedTo: number) => {
+    updateNotificationStatus: async (status: NotificationStatus, notifiedTo: number) => {
         try {
-            await notificationsRepository.updateNotificationStatus(notificationId, status);
+            await notificationsRepository.updateNotificationStatus(notifiedTo, status);
             redis.deleteRedis(`notifications|notified_to:${notifiedTo}|unread_count`);
-            redis.deleteRedis(`notifications|notified_to:${notifiedTo}|page:1|limit:10`);
+            redis.deleteRedis(`notifications|notified_to:${notifiedTo}|page:0|limit:10`);
             redis.deleteRedis(`notifications|notified_to:${notifiedTo}|count`);
         } catch (error) {
             logger.error(`notificationsService :: updateNotificationStatus :: ${error.message} :: ${error}`);

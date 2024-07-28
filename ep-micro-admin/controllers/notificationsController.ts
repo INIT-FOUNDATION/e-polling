@@ -3,8 +3,7 @@ import { Response } from "express";
 import { logger, STATUS } from "ep-micro-common";
 import { notificationsService } from "../services";
 import { ERRORCODE } from "../constants";
-import { notificationsModel } from "../models";
-import { notificationsRepository } from "../repositories";
+import { NotificationStatus } from "../enums";
 
 export const notificationsController = {
     getNotifications: async (req: Request, res: Response) => {
@@ -15,6 +14,8 @@ export const notificationsController = {
                 #swagger.description = 'Endpoint to get Notifications'
             */
             const { currentPage, pageSize, notifiedTo } = req.body;
+            
+            await notificationsService.updateNotificationStatus(NotificationStatus.READ, notifiedTo);
             const notifications = await notificationsService.getNotifications(currentPage, pageSize, notifiedTo);
             const notificationsCount = await notificationsService.getNotificationsCount(notifiedTo);
 
@@ -42,51 +43,6 @@ export const notificationsController = {
             });
         } catch (error) {
             logger.error(`notificationsController :: getUnreadNotificationsCount :: ${error.message} :: ${error}`);
-            return res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.NOTIFICATIONS.NOTIFICATIONS000);
-        }
-    },
-    updateNotificationStatus: async (req: Request, res: Response) => {
-        try {
-            /*
-                #swagger.tags = ['Notifications']
-                #swagger.summary = 'Update Notification Status'
-                #swagger.description = 'Endpoint to Update Notification Status'
-                #swagger.parameters['body'] = {
-                    in: 'body',
-                    required: true,
-                    schema: {
-                        notificationId: 'N1',
-                        status: 1
-                    }
-                }    
-            */
-            const { status, notificationId } = req.body;
-            const userId = req.plainToken.user_id;
-            const { error } = notificationsModel.validateUpdateNotificationStatus(req.body);
-            if (error) {
-                if (error.details != null) {
-                    return res.status(STATUS.BAD_REQUEST).send({
-                        errorCode: ERRORCODE.NOTIFICATIONS.NOTIFICATIONS000.errorCode,
-                        errorMessage: error.details[0].message
-                    });
-                } else {
-                    return res.status(STATUS.BAD_REQUEST).send({
-                        errorCode: ERRORCODE.NOTIFICATIONS.NOTIFICATIONS000.errorCode,
-                        errorMessage: error.message
-                    });
-                }
-            }
-
-            const notificationExists = await notificationsRepository.existsByNotificationId(req.body.notificationId);
-            if (!notificationExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOTIFICATIONS.NOTIFICATIONS001);
-            await notificationsService.updateNotificationStatus(notificationId, Number(status), userId);
-
-            return res.status(STATUS.OK).send({
-                data: null,
-                message: "Notification status updated successfully!"
-            });
-        } catch (error) {
-            logger.error(`notificationsController :: updateNotificationStatus :: ${error.message} :: ${error}`);
             return res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.NOTIFICATIONS.NOTIFICATIONS000);
         }
     }
