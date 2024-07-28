@@ -3,12 +3,4 @@ import { judgesController } from "../controllers";
 
 export const judgesRouter = express.Router();
 
-judgesRouter.post("/add", judgesController.createJudge);
-
-judgesRouter.post("/update", judgesController.updateJudge);
-
-judgesRouter.post("/updateStatus", judgesController.updateJudgeStatus);
-
-judgesRouter.get("/list", judgesController.getJudges);
-
-judgesRouter.get("/:judgeId", judgesController.getJudge);
+judgesRouter.get("/listByEvent/:eventId", judgesController.getJudgesByEvent);

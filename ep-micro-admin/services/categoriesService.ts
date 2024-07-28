@@ -9,6 +9,7 @@ export const categoriesService = {
             await categoriesRepository.createCategory(category);
             redis.deleteRedis(`categories|created_by:${category.created_by}|page:0|limit:50`);
             redis.deleteRedis(`categories|created_by:${category.created_by}|count`);
+            redis.deleteRedis('categories');
         } catch (error) {
             logger.error(`categoriesService :: createCategory :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -20,6 +21,7 @@ export const categoriesService = {
             redis.deleteRedis(`categories|created_by:${category.created_by}|page:0|limit:50`);
             redis.deleteRedis(`categories|created_by:${category.created_by}|count`);
             redis.deleteRedis(`category:${category.category_id}`);
+            redis.deleteRedis('categories');
         } catch (error) {
             logger.error(`categoriesService :: updateCategory :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -31,6 +33,7 @@ export const categoriesService = {
             redis.deleteRedis(`categories|created_by:${createdBy}|page:0|limit:50`);
             redis.deleteRedis(`categories|created_by:${createdBy}|count`);
             redis.deleteRedis(`category:${categoryId}`);
+            redis.deleteRedis('categories');
         } catch (error) {
             logger.error(`categoriesService :: updateCategoryStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

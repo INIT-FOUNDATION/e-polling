@@ -105,7 +105,7 @@ export const eventsService = {
     listEventsByCategory: async (categoryId: number): Promise<IEvent[]> => {
         try {
             logger.info(`eventsService :: listEventsByCategory :: ${categoryId}`);
-            const key = `events|category:${categoryId}`;
+            const key = `events|opened|category:${categoryId}`;
             const cacheResult = await redis.getRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 

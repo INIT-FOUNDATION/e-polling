@@ -50,3 +50,8 @@ export enum NotificationTypes {
     NOMINATION = 2,
     VOTE = 3
 }
+
+export enum GridDefaultOptions {
+    PAGE_SIZE = 50,
+    CURRENT_PAGE = 1
+}

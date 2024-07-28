@@ -6,14 +6,14 @@ import moment from "moment";
 import { votesService } from "./votesService";
 
 export const eventsService = {
-
     createEvent: async (event: IEvent) => {
         try {
             logger.info(`eventsService :: createEvent :: ${JSON.stringify(event)}`);
             await eventsRepository.createEvent(event);
             redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
             redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
-            redis.deleteRedis(`event|category:${event.categoryId}`);
+            redis.deleteRedis(`events|category:${event.categoryId}`);
+            redis.deleteRedis(`events|opened|category:${event.categoryId}`);
         } catch (error) {
             logger.error(`eventsService :: createEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -25,7 +25,8 @@ export const eventsService = {
             await eventsRepository.updateEvent(event);
             redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
             redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
-            redis.deleteRedis(`event|category:${event.categoryId}`);
+            redis.deleteRedis(`events|category:${event.categoryId}`);
+            redis.deleteRedis(`events|opened|category:${event.categoryId}`);
         } catch (error) {
             logger.error(`eventsService :: updateEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -56,6 +57,10 @@ export const eventsService = {
 
             const events = await eventsRepository.getEvents(currentPage, pageSize, createdBy);
             for (const event of events) {
+                if (moment().isAfter(event.startTime)) {
+                    await eventsService.updateEventStatus(event.eventId, EventStatus.OPENED, event.createdBy);
+                    event.status = EventStatus.OPENED;
+                }
                 if (moment().isAfter(event.endTime)) {
                     await eventsService.updateEventStatus(event.eventId, EventStatus.CLOSED, event.createdBy);
                     const votes = await votesService.getNomineeVotesByEvent(1, 50, event.eventId);
@@ -96,7 +101,8 @@ export const eventsService = {
             await eventsRepository.updateEventStatus(eventId, status);
             redis.deleteRedis(`events|created_by:${createdBy}|page:0|limit:50`);
             redis.deleteRedis(`events|created_by:${createdBy}|count`);
-            redis.deleteRedis(`event|category:${event.categoryId}`);
+            redis.deleteRedis(`events|category:${event.categoryId}`);
+            redis.deleteRedis(`events|opened|category:${event.categoryId}`);
         } catch (error) {
             logger.error(`eventsService :: updateEventStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

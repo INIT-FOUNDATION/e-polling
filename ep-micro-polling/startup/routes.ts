@@ -1,6 +1,10 @@
 import express, { Request, Response, Express, NextFunction } from 'express';
 import * as CONSTANT from '../constants/CONST';
 import { pollingRouter } from '../routes/pollingRouter';
+import { categoriesRouter } from '../routes/categoriesRouter';
+import { eventsRouter } from '../routes/eventsRouter';
+import { nominationsRouter } from '../routes/nominationsRouter';
+import { judgesRouter } from '../routes/judgesRouter';
 
 export default function (app: Express): void {
   app.use(express.json());
@@ -26,5 +30,9 @@ export default function (app: Express): void {
     next();
   });
 
+  app.use('/api/v1/polling/categories', categoriesRouter);
+  app.use('/api/v1/polling/events', eventsRouter);
+  app.use('/api/v1/polling/nominations', nominationsRouter);
+  app.use('/api/v1/polling/judges', judgesRouter);
   app.use('/api/v1/polling', pollingRouter);
 }

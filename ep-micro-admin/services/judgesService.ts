@@ -23,6 +23,7 @@ export const judgesService = {
             redis.deleteRedis(`judges|created_by:${judge.createdBy}|count`);
             redis.deleteRedis(`judges|created_by:${judge.createdBy}|event_id:${judge.eventId}|page:0|limit:50`);
             redis.deleteRedis(`judges|created_by:${judge.createdBy}|event_id:${judge.eventId}|count`);
+            redis.deleteRedis(`judges|active|event_id:${judge.eventId}`);
         } catch (error) {
             logger.error(`judgesService :: createJudge :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -44,6 +45,7 @@ export const judgesService = {
             redis.deleteRedis(`judges|created_by:${judge.createdBy}|count`);
             redis.deleteRedis(`judges|created_by:${judge.createdBy}|event_id:${judge.eventId}|page:0|limit:50`);
             redis.deleteRedis(`judges|created_by:${judge.createdBy}|event_id:${judge.eventId}|count`);
+            redis.deleteRedis(`judges|active|event_id:${judge.eventId}`);
         } catch (error) {
             logger.error(`judgesService :: updateJudge :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -136,6 +138,7 @@ export const judgesService = {
             redis.deleteRedis(`judges|created_by:${createdBy}|count`);
             redis.deleteRedis(`judges|created_by:${createdBy}|event_id:${judge.eventId}|page:0|limit:50`);
             redis.deleteRedis(`judges|created_by:${createdBy}|event_id:${judge.eventId}|count`);
+            redis.deleteRedis(`judges|active|event_id:${judge.eventId}`);
         } catch (error) {
             logger.error(`judgesService :: updateJudgeStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

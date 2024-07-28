@@ -104,8 +104,8 @@ export const CATEGORIES = {
     addCategory: `INSERT INTO m_categories(category_name, category_description, status, date_created, date_updated, created_by, updated_by)
                     VALUES ($1, $2, $3, NOW(), NOW(), $4, $5)`,
     listCategories: `SELECT category_id, category_name, category_description, status
-                      FROM m_categories WHERE status <> 2 AND created_by = $3
-                      ORDER BY date_updated DESC LIMIT $1 OFFSET $2`,
+                      FROM m_categories WHERE status <> 2
+                      ORDER BY date_updated DESC`,
     getCategoriesCount: `SELECT count(*) as count FROM m_categories WHERE status <> 2 AND created_by = $1`,
     updateCategory: `UPDATE m_categories 
                       SET category_name = $2, category_description = $3, status = $4, date_updated = NOW(), created_by = $5, updated_by = $6 

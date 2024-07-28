@@ -34,7 +34,7 @@ export const judgesRepository = {
     },
     getJudges: async (currentPage: number, pageSize: number, createdBy: number, eventId: string): Promise<IJudge[]> => {
         try {
-            logger.info(`judgesRepository :: getJudges :: currentPage :: ${currentPage} :: pageSize :: ${pageSize}`);
+            logger.info(`judgesRepository :: getJudges :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: createdBy :: ${createdBy} :: eventId :: ${eventId}`);
             const query =  { createdBy, status: { $ne: JudgeStatus.DELETED } }
             if (eventId) query["eventId"] = eventId
 
@@ -46,10 +46,10 @@ export const judgesRepository = {
                 dateCreated: -1,
             },
             currentPage);
-            logger.debug(`judgesRepository :: getJudges :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: ${JSON.stringify(result)}`);
+            logger.debug(`judgesRepository :: getJudges :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: createdBy :: ${createdBy} :: eventId :: ${eventId} :: ${JSON.stringify(result)}`);
             return result;
         } catch (error) {
-            logger.error(`judgesRepository.getJudges: ${error.message} :: ${error}`);
+            logger.error(`judgesRepository :: getJudges :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: createdBy :: ${createdBy} :: eventId :: ${eventId} :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
@@ -68,10 +68,10 @@ export const judgesRepository = {
     },
     updateJudgeStatus: async (judgeId: string, status: JudgeStatus) => {
         try {
-            logger.info(`judgesRepository.updateJudgeStatus: ${judgeId} :: ${status}`);
+            logger.info(`judgesRepository :: updateJudgeStatus :: judgeId :: ${judgeId} :: status :: ${status}`);
             await mongoDB.updateOne(MongoCollections.EVENTS, { judgeId }, { status, dateUpdated: new Date().toISOString() });
         } catch (error) {
-            logger.error(`judgesRepository.updateJudgeStatus: ${error.message} :: ${error}`);
+            logger.error(`judgesRepository :: updateJudgeStatus :: judgeId :: ${judgeId} :: status :: ${status} :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },

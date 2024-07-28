@@ -26,6 +26,7 @@ export const nominationsService = {
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
                 redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
+                redis.deleteRedis(`nominations|approved|event_id:${nomination.eventId}`)
             }
         } catch (error) {
             logger.error(`nominationsService :: createNomination :: ${error.message} :: ${error}`);
@@ -50,6 +51,7 @@ export const nominationsService = {
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
                 redis.deleteRedis(`nominee:${nomination.nomineeId}`);
                 redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
+                redis.deleteRedis(`nominations|approved|event_id:${nomination.eventId}`)
             }
         } catch (error) {
             logger.error(`nominationsService :: updateNomination :: ${error.message} :: ${error}`);
@@ -144,6 +146,7 @@ export const nominationsService = {
                 redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
                 redis.deleteRedis(`nominee:${nomineeId}`);
                 redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
+                redis.deleteRedis(`nominations|approved|event_id:${nomination.eventId}`)
             }
         } catch (error) {
             logger.error(`nominationsService :: updateNominationStatus :: ${error.message} :: ${error}`);
