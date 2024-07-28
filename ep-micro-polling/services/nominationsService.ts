@@ -1,9 +1,11 @@
 import { logger, redis, objectStorageUtility } from "ep-micro-common";
 import { INomination } from "../types/custom";
 import { nominationsRepository } from "../repositories";
-import { CacheTTL, NominationStatus } from "../enums";
+import { CacheTTL, NominationStatus, NotificationTypes } from "../enums";
 import { OBJECT_STORAGE_BUCKET } from "../constants";
 import { UploadedFile } from "express-fileupload";
+import { notificationService } from "./notificationService";
+import { eventsService } from "./eventsService";
 
 export const nominationsService = {
     listNominationsByEvent: async (eventId: string): Promise<INomination[]> => {
@@ -63,7 +65,10 @@ export const nominationsService = {
                 nomination.profilePictureUrl = objectStoragePath;
             }
 
+            const event = await eventsService.getEvent(nomination.eventId);
+
             await nominationsRepository.createNomination(nomination);
+            await notificationService.createNotification(NotificationTypes.NOMINATION, `${nomination.nomineeName} has requested for the nomination of ${event.eventName}`, event.createdBy);
 
             for (const status of Object.values(NominationStatus)) {
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|page:0|limit:50`);

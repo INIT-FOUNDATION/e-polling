@@ -3,7 +3,7 @@ import { Response } from "express";
 import { logger, STATUS } from "ep-micro-common";
 import { notificationsService } from "../services";
 import { ERRORCODE } from "../constants";
-import { NotificationStatus } from "../enums";
+import { GridDefaultOptions, NotificationStatus } from "../enums";
 
 export const notificationsController = {
     getNotifications: async (req: Request, res: Response) => {
@@ -13,8 +13,8 @@ export const notificationsController = {
                 #swagger.summary = 'Get Notifications'
                 #swagger.description = 'Endpoint to get Notifications'
             */
-            const { currentPage, pageSize, notifiedTo } = req.body;
-            
+            const { currentPage = GridDefaultOptions.CURRENT_PAGE, pageSize = 10, notifiedTo } = req.body;
+
             await notificationsService.updateNotificationStatus(NotificationStatus.READ, notifiedTo);
             const notifications = await notificationsService.getNotifications(currentPage, pageSize, notifiedTo);
             const notificationsCount = await notificationsService.getNotificationsCount(notifiedTo);

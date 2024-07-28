@@ -1,5 +1,5 @@
 import { BlobOptions } from "buffer";
-import { CategoryStatus, EventStatus, JudgeStatus, NominationStatus, SupportRequestStatus, VoteStatus } from "../enums";
+import { CategoryStatus, EventStatus, JudgeStatus, NominationStatus, NotificationStatus, NotificationTypes, SupportRequestStatus, VoteStatus } from "../enums";
 
 export interface ICategory {
     category_id: number;
@@ -103,4 +103,14 @@ export interface IDeviceDetails {
     browserVersion: string;
     browserName: string;
     clientIp: string;
+}
+
+export interface INotification {
+    notificationId: string;
+    notificationType: NotificationTypes,
+    notificationDescription: string;
+    notifiedTo: number;
+    dateCreated: string;
+    dateUpdated: string;
+    status: NotificationStatus;
 }
