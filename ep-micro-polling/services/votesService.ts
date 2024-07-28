@@ -1,4 +1,4 @@
-import { CacheTTL } from "../enums";
+import { CacheTTL, EventStatus } from "../enums";
 import { votesRepository } from "../repositories";
 import { IVote } from "../types/custom";
 import { logger, redis } from "ep-micro-common";
@@ -6,7 +6,9 @@ import { nominationsService } from "./nominationsService";
 import { v4 as uuidv4 } from 'uuid';
 import { encDecHelper } from "../helpers";
 import { eventsService } from "./eventsService";
+import { commonCommunication } from "ep-micro-common";
 import moment from "moment";
+import { COMMUNICATION } from "../constants";
 
 export const votesService = {
     getMobileOtpForVote: async (vote: IVote): Promise<string> => {
@@ -14,6 +16,13 @@ export const votesService = {
             logger.info(`votesService :: getMobileOtpForVote :: vote :: ${vote}`);
             const txnId = uuidv4();
             const otp = Math.floor(100000 + Math.random() * 900000);
+
+            const smsBodyTemplate = COMMUNICATION.SMS.USER_LOGIN_WITH_OTP.body;
+            const smsBodyCompiled = smsBodyTemplate.replace("<otp>", String(otp))
+              .replace("<module>", "E-Polling")
+              .replace("<time>", "3 min");
+            await commonCommunication.sendSms(smsBodyCompiled, vote.voterMobile, COMMUNICATION.SMS.USER_LOGIN_WITH_OTP.template_id);
+
             redis.SetRedis(`vote|txn_id:${txnId}`, { otp, vote }, CacheTTL.MID);
             return txnId;
         } catch (error) {
@@ -42,7 +51,6 @@ export const votesService = {
             if  (decrytedOtp !== otpDetails.otp) return false;
 
             redis.deleteRedis(`votes|txn_id:${txnId}`);
-            await votesService.publishVote(otpDetails.vote);
             return true;
         } catch (error) {
             logger.error(`votesService :: verifyMobileOtp :: ${error.message} :: ${error}`);
@@ -53,7 +61,9 @@ export const votesService = {
         try {
             const nomination = await nominationsService.getNomination(vote.nomineeId);
             const event = await eventsService.getEvent(nomination.eventId);
-            if (moment().isAfter(moment(event.endTime))) return false;
+            if (moment().isAfter(moment(event.endTime))) {
+                await eventsService.updateEventStatus(event.eventId, EventStatus.CLOSED, event.createdBy);
+            };
             
             logger.info(`votesService :: publishVote :: vote :: ${JSON.stringify(vote)}`);
             await votesRepository.publishVote(vote);

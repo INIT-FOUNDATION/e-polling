@@ -68,7 +68,8 @@ const validateCreateNomination = (nomination: INomination): Joi.ValidationResult
     dateUpdated: Joi.string().isoDate().allow("", null),
     createdBy: Joi.number().required(),
     updatedBy: Joi.number().allow("", null),
-    status: Joi.string().valid(...Object.values(NominationStatus)).required()
+    status: Joi.string().valid(...Object.values(NominationStatus)).required(),
+    nomineeDeviceDetails: Joi.object().required()
   });
   return nomineeSchema.validate(nomination);
 };
@@ -103,7 +104,8 @@ const validateUpdateNomination = (nomination: INomination): Joi.ValidationResult
     dateUpdated: Joi.string().isoDate().allow("", null),
     createdBy: Joi.number().required(),
     updatedBy: Joi.number().required(),
-    status: Joi.string().valid(...Object.values(NominationStatus)).required()
+    status: Joi.string().valid(...Object.values(NominationStatus)).required(),
+    nomineeDeviceDetails: Joi.object().required()
   });
   return nomineeSchema.validate(nomination);
 };

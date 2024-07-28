@@ -258,7 +258,23 @@ export const VOTES = {
   VOTES000: {
     errorCode: "VOTES000",
     errorMessage: "Internal Server Error",
-  }
+  },
+  VOTES001: {
+    errorCode: "VOTES001",
+    errorMessage: "Already voted with provided Mobile!",
+  },
+  VOTES002: {
+    errorCode: "VOTES002",
+    errorMessage: "Invalid Otp Details!",
+  },
+  VOTES003: {
+    errorCode: "VOTES003",
+    errorMessage: "Invalid Otp!",
+  },
+  VOTES004: {
+    errorCode: "VOTES001",
+    errorMessage: "Already voted with provided Email!",
+  },
 }
 
 export const SUPPORTREQUESTS = {

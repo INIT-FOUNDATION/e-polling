@@ -34,5 +34,6 @@ export default function (app: Express): void {
   app.use('/api/v1/polling/events', eventsRouter);
   app.use('/api/v1/polling/nominations', nominationsRouter);
   app.use('/api/v1/polling/judges', judgesRouter);
+  app.use('/api/v1/polling/votes', pollingRouter);
   app.use('/api/v1/polling', pollingRouter);
 }

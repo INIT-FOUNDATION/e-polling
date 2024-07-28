@@ -27,4 +27,15 @@ export const nominationsRepository = {
             throw new Error(error.message);
         }
     },
+    existsByNomineeId: async (nomineeId: string): Promise<boolean> => {
+        try {
+            logger.info(`nominationsRepository :: existsByNomineeId :: nomineeId :: ${nomineeId}`);
+            const exists = await mongoDBRead.isExist(MongoCollections.NOMINATIONS, { nomineeId, status: NominationStatus.APPROVED });
+            logger.debug(`nominationsRepository :: existsByNomineeId :: nomineeId :: ${nomineeId} :: exists :: ${exists}`);
+            return exists;
+        } catch (error) {
+            logger.error(`nominationsRepository :: existsByNomineeId :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
 };

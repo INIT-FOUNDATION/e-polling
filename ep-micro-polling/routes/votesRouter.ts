@@ -3,8 +3,8 @@ import { votesController } from "../controllers";
 
 export const votesRouter = express.Router();
 
-votesRouter.post("/mobile/publish", votesController.publishVote);
+votesRouter.post("/mobile/publish", votesController.publishVoteWithMobile);
 
-votesRouter.post("/mobile/verifyPublish", votesController.publishVote);
+votesRouter.post("/mobile/verifyPublish", votesController.verifyVoteWithMobile);
 
-votesRouter.post("/email/publish", votesController.publishVote);
+votesRouter.post("/email/publish", votesController.publishVoteWithEmail);
