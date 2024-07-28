@@ -1,47 +1,42 @@
 import { logger, redis } from "ep-micro-common";
 import { ISupportRequest } from "../types/custom";
-import { CacheTTL, SupportRequestsPeriodTypes, SupportRequestStatus } from "../enums";
+import { NotificationTypes, SupportRequestStatus } from "../enums";
 import { supportRequestsRepository } from "../repositories";
+import { notificationsService } from "./";
+import { usersService } from "./usersService";
+import { emailService } from "./emailService";
+import { WEBSITE_URL } from "../constants";
+import moment from "moment";
 
 export const supportRequestsService = {
-    listSupportRequests: async (currentPage: number, pageSize: number, supportRequestPeriodType: SupportRequestsPeriodTypes): Promise<ISupportRequest[]> => {
+    createSupportRequest: async (supportRequest: ISupportRequest) => {
         try {
-            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
-            const key = `support_requests|period_type:${supportRequestPeriodType}|page:${currentPage}|limit:${pageSize}`;
-            const cacheResult = await redis.getRedis(key);
-            if (cacheResult) return JSON.parse(cacheResult);
+            logger.info(`supportRequestsService :: createSupportRequest :: ${JSON.stringify(supportRequest)}`);
+            await supportRequestsRepository.createSupportRequest(supportRequest);
 
-            const supportRequests = await supportRequestsRepository.listSupportRequests(currentPage, pageSize, supportRequestPeriodType);
-            if (supportRequests && supportRequests.length > 0) redis.SetRedis(key, supportRequests, CacheTTL.LONG);
-            return supportRequests;
-        } catch (error) {
-            logger.error(`supportRequestsService :: getSupportRequests :: ${error.message} :: ${error}`)
-            throw new Error(error.message);
-        }
-    },
-    getSupportRequestsCount: async (supportRequestPeriodType: SupportRequestsPeriodTypes): Promise<number> => {
-        try {
-            const key = `support_requests|period_type:${supportRequestPeriodType}|count`;
-            const cacheResult = await redis.getRedis(key);
-            if (cacheResult) return JSON.parse(cacheResult);
-
-            const count = await supportRequestsRepository.getSupportRequestsCount(supportRequestPeriodType);
-            if (count > 0) redis.SetRedis(key, count, CacheTTL.LONG);
-            return count;
-        } catch (error) {
-            logger.error(`supportRequestsService :: getSupportRequestsCount :: ${error.message} :: ${error}`)
-            throw new Error(error.message);
-        }
-    },
-    updateSupportRequestStatus: async (supportRequestId: string, status: SupportRequestStatus, resolvedBy: number) => {
-        try {
-            await supportRequestsRepository.updateSupportRequestStatus(supportRequestId, status, resolvedBy);
             for (const status of Object.values(SupportRequestStatus)) {
                 redis.deleteRedis(`support_requests|period_type:${status}|page:0|limit:50`);
                 redis.deleteRedis(`support_requests|period_type:${status}|count`);
             }
+
+            await notificationsService.createNotification(NotificationTypes.SUPPORT_REQUEST, `Support request raised from ${supportRequest.requesterName}`, 1);
+            const user = await usersService.getUserById(1);
+
+            await emailService.sendEmail('E-POLLING | SUPPORT REQUEST', 'views/supportRequestEmailTemplate.ejs', user.email_id, {
+                name: user.display_name,
+                requesterEmail: supportRequest.requesterEmail,
+                websiteUrl: WEBSITE_URL,
+                message: supportRequest.requesterMessage,
+                year: moment().year()
+            });
+
+            await emailService.sendEmail('E-POLLING | THANK YOU FOR CONTACTING', 'views/contactAcknowledgementTemplate.ejs', user.email_id, {
+                name: user.display_name,
+                websiteUrl: WEBSITE_URL,
+                year: moment().year()
+            });
         } catch (error) {
-            logger.error(`supportRequestsService :: updateSupportRequestStatus :: ${error.message} :: ${error}`)
+            logger.error(`supportRequestsService :: createSupportRequest :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     }

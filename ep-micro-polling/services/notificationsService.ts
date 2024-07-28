@@ -3,7 +3,7 @@ import { notificationsRepository } from "../repositories/notificationsRepository
 import { redis, logger } from "ep-micro-common";
 import { v4 as uuidv4 } from 'uuid';
 
-export const notificationService = {
+export const notificationsService = {
     createNotification: async (notificationType: NotificationTypes, notificationDescription: string, notifiedTo: number) => {
         try {
             logger.info(`notificationsService :: createNotification :: notificationType :: ${notificationType} :: notificationDescription :: ${notificationDescription} :: notifiedTo :: ${notifiedTo}`);

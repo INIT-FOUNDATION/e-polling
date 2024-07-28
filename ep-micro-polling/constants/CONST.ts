@@ -11,3 +11,5 @@ export const CONFIG =  {
 export const DEFAULT_PASSWORD = "EP123!@#";
 
 export const OBJECT_STORAGE_BUCKET = envUtils.getStringEnvVariableOrDefault("EP_OBJECT_STORAGE_BUCKET", "lta-dev");
+
+export const WEBSITE_URL = envUtils.getStringEnvVariableOrDefault("EP_WEBSITE_URL", "http://localhost:4200");

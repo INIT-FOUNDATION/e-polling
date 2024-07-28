@@ -2,10 +2,12 @@ import { logger, redis, objectStorageUtility } from "ep-micro-common";
 import { INomination } from "../types/custom";
 import { nominationsRepository } from "../repositories";
 import { CacheTTL, NominationStatus, NotificationTypes } from "../enums";
-import { OBJECT_STORAGE_BUCKET } from "../constants";
+import { OBJECT_STORAGE_BUCKET, WEBSITE_URL } from "../constants";
 import { UploadedFile } from "express-fileupload";
-import { notificationService } from "./notificationService";
+import { notificationsService } from ".";
 import { eventsService } from "./eventsService";
+import { emailService } from "./emailService";
+import moment from "moment";
 
 export const nominationsService = {
     listNominationsByEvent: async (eventId: string): Promise<INomination[]> => {
@@ -68,7 +70,15 @@ export const nominationsService = {
             const event = await eventsService.getEvent(nomination.eventId);
 
             await nominationsRepository.createNomination(nomination);
-            await notificationService.createNotification(NotificationTypes.NOMINATION, `${nomination.nomineeName} has requested for the nomination of ${event.eventName}`, event.createdBy);
+            await notificationsService.createNotification(NotificationTypes.NOMINATION, `${nomination.nomineeName} has requested for the nomination of ${event.eventName}`, event.createdBy);
+
+            if (nomination.requesterEmail) {
+                await emailService.sendEmail('E-POLLING | THANK YOU FOR NOMINATION', 'views/nominationRequestAcknowledgmentTemplate.ejs', nomination.requesterEmail, {
+                    name: nomination.selfNominee ? nomination.nomineeName : nomination.requesterName,
+                    websiteUrl: WEBSITE_URL,
+                    year: moment().year()
+                });
+            }
 
             for (const status of Object.values(NominationStatus)) {
                 redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|page:0|limit:50`);

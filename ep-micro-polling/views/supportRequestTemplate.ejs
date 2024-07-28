@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You've got a Support Request</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #fce4ec;
+        }
+        .email-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(to right, #4a90e2, #8e2de2, #4b2d8a); /* Gradient of blue, violet, and indigo */
+            color: #ffffff;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            padding: 20px;
+            color: #333333;
+        }
+        .content h2 {
+            color: #4a4a4a;
+        }
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #fce4ec;
+            color: #555555;
+            border-radius: 0 0 8px 8px;
+        }
+        .footer a {
+            color: #4a90e2;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>E-Polling</h1>
+        </div>
+        <div class="content">
+            <h2>Hello <%= name %>,</h2>
+            <p><%= requesterEmail %> has sent you a support request with the following message :</p><p><%= message %>.</p>
+            <p>Best regards</p>
+        </div>
+        <div class="footer">
+            <p>&copy; <%= year %> E-Polling. All rights reserved.</p>
+            <p><a href="<%= websiteUrl %>">Visit our website</a></p>
+        </div>
+    </div>
+</body>
+</html>
