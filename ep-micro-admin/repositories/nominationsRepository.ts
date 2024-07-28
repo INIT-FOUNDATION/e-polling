@@ -12,7 +12,6 @@ export const nominationsRepository = {
             throw new Error(error.message);
         }
     },
-
     updateNomination: async (nomination: INomination) => {
         try {
             logger.info(`nominationsRepository :: updateNomination :: ${JSON.stringify(nomination)}`);
@@ -22,7 +21,6 @@ export const nominationsRepository = {
             throw new Error(error.message);
         }
     },
-
     getNomination: async (nomineeId: string): Promise<INomination | null> => {
         try {
             logger.info(`nominationsRepository :: getNomination :: ${nomineeId}`);
@@ -34,7 +32,6 @@ export const nominationsRepository = {
             throw new Error(error.message);
         }
     },
-
     getNominations: async (currentPage: number, pageSize: number, createdBy: number, status: NominationStatus, eventId: string): Promise<INomination[]> => {
         try {
             logger.info(`nominationsRepository :: getNominations :: currentPage :: ${currentPage} :: pageSize :: ${pageSize} :: createdBy :: ${createdBy} :: status :: ${status} :: eventId :: ${eventId}`);

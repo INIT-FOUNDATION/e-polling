@@ -1,89 +1,72 @@
 import { CacheTTL } from "../enums";
 import { votesRepository } from "../repositories";
-import { IVote, IVoteResult } from "../types/custom";
+import { IVote } from "../types/custom";
 import { logger, redis } from "ep-micro-common";
 import { nominationsService } from "./nominationsService";
+import { v4 as uuidv4 } from 'uuid';
+import { encDecHelper } from "../helpers";
 import { eventsService } from "./eventsService";
-import { categoriesService } from "./categoriesService";
+import moment from "moment";
 
 export const votesService = {
-    listVotes: async (currentPage: number, pageSize: number, eventId: string): Promise<IVote[]> => {
+    getMobileOtpForVote: async (vote: IVote): Promise<string> => {
         try {
-            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
-            let key = `votes|page:${currentPage}|limit:${pageSize}`;
-            if (eventId) key = `votes|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
-
-            const cacheResult = await redis.getRedis(key);
-            if (cacheResult) return JSON.parse(cacheResult);
-
-            const votes = await votesRepository.listVotes(currentPage, pageSize, eventId);
-            if (votes && votes.length > 0) {
-                for (const vote of votes) {
-                    if (vote) {
-                        if (vote.nomineeId) {
-                            const nomination = await nominationsService.getNomination(vote.nomineeId);
-                            if (nomination && nomination.nomineeName) vote["nomineeName"] = nomination.nomineeName;   
-
-                            if (nomination.eventId) {
-                                const event = await eventsService.getEvent(nomination.eventId);
-                                if (event && event.eventName) vote["eventName"] = event.eventName;
-
-                                const category = await categoriesService.getCategoryById(event.categoryId);
-                                if (category && category.category_name) vote["categoryName"] = category.category_name;
-                            }
-                        }
-                    }
-                }
-                redis.SetRedis(key, votes, CacheTTL.LONG);
-            }
-            return votes;
+            logger.info(`votesService :: getMobileOtpForVote :: vote :: ${vote}`);
+            const txnId = uuidv4();
+            const otp = Math.floor(100000 + Math.random() * 900000);
+            redis.SetRedis(`vote|txn_id:${txnId}`, { otp, vote }, CacheTTL.MID);
+            return txnId;
         } catch (error) {
-            logger.error(`votesService :: listVotes :: ${error.message} :: ${error}`);
+            logger.error(`votesService :: getMobileOtpForVote :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-    getVotesCount: async (eventId: string): Promise<number> => {
+    getMobileOtpDetails: async (txnId: string): Promise<any> => {
         try {
-            let key = `votes|count`;
-            if (eventId) key = `votes|event:${eventId}|count`;
-
-            const cacheResult = await redis.getRedis(key);
-            if (cacheResult) return JSON.parse(cacheResult);
-
-            const count = await votesRepository.getVotesCount(eventId);
-            if (count > 0) redis.SetRedis(key, count, CacheTTL.LONG);
-            return count;
+            logger.info(`votesService :: getMobileOtpDetails :: txnId :: ${txnId}`);
+            const otpDetails = await redis.GetRedis(`vote|txn_id:${txnId}`);
+            logger.debug(`votesService :: getMobileOtpDetails :: otpDetails :: ${JSON.stringify(otpDetails)}`);
+            return otpDetails ? JSON.parse(otpDetails) : null;
         } catch (error) {
-            logger.error(`votesService :: getVotesCount :: ${error.message} :: ${error}`);
+            logger.error(`votesService :: getMobileOtpDetails :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-    getNomineeVotesByEvent: async (currentPage: number, pageSize: number, eventId: string): Promise<IVoteResult[]> => {
+    verifyMobileOtp: async (txnId: string, otp: string): Promise<boolean> => {
         try {
-            currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
-            const key = `votes_result|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
-            const cacheResult = await redis.getRedis(key);
-            if (cacheResult) return JSON.parse(cacheResult);
+            logger.info(`votesService :: verifyMobileOtp :: txnId :: ${txnId} :: otp :: ${otp}`);
+            const otpDetails = await votesService.getMobileOtpDetails(txnId);
+            if (!otpDetails) return false;
 
-            const votes = await votesRepository.getNominationVotesByEventId(currentPage, pageSize, eventId);
-            if (votes && votes.length > 0) redis.SetRedis(key, votes, CacheTTL.LONG);
-            return votes;
+            const decrytedOtp = encDecHelper.decryptPayload(otp);
+            if  (decrytedOtp !== otpDetails.otp) return false;
+
+            redis.deleteRedis(`votes|txn_id:${txnId}`);
+            await votesService.publishVote(otpDetails.vote);
+            return true;
         } catch (error) {
-            logger.error(`votesService :: getNomineeVotesByEvent :: ${error.message} :: ${error}`);
+            logger.error(`votesService :: verifyMobileOtp :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-    getNomineeVotesCountByEvent: async (eventId: string): Promise<number> => {
+    publishVote: async (vote: IVote) => {
         try {
-            const key = `votes_result|event:${eventId}|count`;
-            const cacheResult = await redis.getRedis(key);
-            if (cacheResult) return JSON.parse(cacheResult);
-
-            const count = await votesRepository.getNominationVotesCountByEventId(eventId);
-            if (count > 0) redis.SetRedis(key, count, CacheTTL.LONG);
-            return count;
+            const nomination = await nominationsService.getNomination(vote.nomineeId);
+            const event = await eventsService.getEvent(nomination.eventId);
+            if (moment().isAfter(moment(event.endTime))) return false;
+            
+            logger.info(`votesService :: publishVote :: vote :: ${JSON.stringify(vote)}`);
+            await votesRepository.publishVote(vote);
+            redis.deleteRedis(`votes|page:0|limit:50`);
+            redis.deleteRedis(`votes|count`);
+            redis.deleteRedis(`votes|event:${nomination.eventId}|page:0|limit:50`);
+            redis.deleteRedis(`votes|event:${nomination.eventId}|count`);
+            redis.deleteRedis(`votes|event:${nomination.eventId}|page:0|limit:50`);
+            redis.deleteRedis(`votes_result|event:${nomination.eventId}|count`);
+            redis.deleteRedis(`votes_result|event:${nomination.eventId}|page:0|limit:50`);
+            redis.deleteRedis(`votes_result|event:${nomination.eventId}|count`);
         } catch (error) {
-            logger.error(`votesService :: getNomineeVotesCountByEvent :: ${error.message} :: ${error}`);
+            logger.error(`votesService :: publishVote :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     }

@@ -16,4 +16,15 @@ export const nominationsRepository = {
             throw new Error(error.message);
         }
     },
+    getNomination: async (nomineeId: string): Promise<INomination | null> => {
+        try {
+            logger.info(`nominationsRepository :: getNomination :: ${nomineeId}`);
+            const result = await mongoDBRead.findOne(MongoCollections.NOMINATIONS, { nomineeId, status: { $ne: NominationStatus.REJECTED } });
+            logger.debug(`nominationsRepository :: getNomination :: ${JSON.stringify(result)}`);
+            return result;
+        } catch (error) {
+            logger.error(`nominationsRepository :: getNomination :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
 };

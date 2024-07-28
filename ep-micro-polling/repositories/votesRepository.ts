@@ -1,150 +1,36 @@
 import { logger, mongoDBRead } from "ep-micro-common";
-import { MongoCollections, NominationStatus, VoteStatus } from "../enums";
-import { IVote, IVoteResult } from "../types/custom";
+import { MongoCollections, VoteStatus } from "../enums";
+import { IVote } from "../types/custom";
 
 export const votesRepository = {
-    listVotes: async (currentPage: number, pageSize: number, eventId: string): Promise<IVote[]> => {
+    existsVoteByNomineeIdAndEmail: async (nomineeId: string, voterEmail: string): Promise<boolean> => {
         try {
-            const query = {}
-            if (eventId) query["eventId"] = eventId
-
-            logger.info(`votesRepository :: listVotes :: eventId :: ${eventId}`);
-            return await mongoDBRead.findWithLimit(MongoCollections.VOTES, query, {
-                _id: 0
-            }, 
-            pageSize,
-            {
-                dateCreated: -1
-            },
-            currentPage);
+            logger.info(`votesRepository :: existsVoteByNomineeIdAndEmail :: nomineeId :: ${nomineeId} :: voterEmail :: ${voterEmail}`);
+            const exists = await mongoDBRead.isExist(MongoCollections.VOTES, { nomineeId, voterEmail, status: { $ne: VoteStatus.ACTIVE } });
+            logger.debug(`votesRepository :: existsVoteByNomineeIdAndEmail :: nomineeId :: ${nomineeId} :: voterEmail :: ${voterEmail} :: exists :: ${exists}`);
+            return exists;
         } catch (error) {
-            logger.error(`votesRepository :: listVotes :: ${error.message} :: ${error}`);
+            logger.error(`votesRepository :: existsVoteByNomineeIdAndEmail :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-    getVotesCount: async (eventId: string): Promise<number> => {
+    existsVoteByNomineeAndMobile: async (nomineeId: string, voterMobile: number): Promise<boolean> => {
         try {
-            logger.info(`votesRepository :: getVotesCount :: eventId :: ${eventId}`);
-            const query = {}
-            if (eventId) query["eventId"] = eventId
-            const count = await mongoDBRead.count(MongoCollections.VOTES, query);
-            return count;
+            logger.info(`votesRepository :: existsVoteByNomineeAndMobile :: nomineeId :: ${nomineeId} :: voterMobile :: ${voterMobile}`);
+            const exists = await mongoDBRead.isExist(MongoCollections.VOTES, { nomineeId, voterMobile, status: { $ne: VoteStatus.ACTIVE } });
+            logger.debug(`votesRepository :: existsVoteByNomineeAndMobile :: nomineeId :: ${nomineeId} :: voterMobile :: ${voterMobile} :: exists :: ${exists}`);
+            return exists;
         } catch (error) {
-            logger.error(`votesRepository :: getVotesCount :: ${error.message} :: ${error}`);
+            logger.error(`votesRepository :: existsVoteByNomineeIdAndEmail :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
-    getNominationVotesByEventId: async (currentPage: number, pageSize: number, eventId: string): Promise<IVoteResult[]> => {
+    publishVote: async (vote: IVote) => {
         try {
-            logger.info(`votesRepository :: getNominationVotesByEventId :: eventId :: ${eventId}`);
-            const aggegration = [
-                {
-                    $match: {
-                        status: VoteStatus.ACTIVE
-                    }
-                },
-                {
-                    $lookup: {
-                        from: MongoCollections.NOMINATIONS,
-                        pipeline: [
-                            { 
-                                $match: {
-                                    status: NominationStatus.APPROVED
-                                }
-                            }
-                        ],
-                        localField: "nomineeId",
-                        foreignField: "nomineeId",
-                        as: "nomination"
-                    }
-                },
-                {
-                    $unwind: "$nomination"
-                },
-                {
-                    $group: {
-                        _id: {
-                            nomineeName: "$nomination.nomineeName"
-                        },
-                        votes: { $sum: 1 }
-                    }
-                },
-                {
-                    $sort: { votes: -1 }
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        nomineeName: "$_id.nomineeName",
-                        votes: 1
-                    }
-                },
-                {
-                    $skip: currentPage
-                },
-                {
-                    $limit: pageSize
-                }
-            ]
-            return await mongoDBRead.findWithAggregation(MongoCollections.VOTES, aggegration);
+            logger.info(`votesRepository :: publishVote :: ${JSON.stringify(vote)}`);
+            await mongoDBRead.insertOne(MongoCollections.VOTES, vote);
         } catch (error) {
-            logger.error(`votesRepository :: getNominationVotesByNomineeId :: ${error.message} :: ${error}`);
-            throw new Error(error.message);
-        }
-    },
-    getNominationVotesCountByEventId: async (eventId: string): Promise<number> => {
-        try {
-            logger.info(`votesRepository :: getNominationVotesCountByEventId :: eventId :: ${eventId}`);
-            const aggregation = [
-                {
-                    $match: {
-                        status: VoteStatus.ACTIVE
-                    }
-                },
-                {
-                    $lookup: {
-                        from: MongoCollections.NOMINATIONS,
-                        pipeline: [
-                            { 
-                                $match: {
-                                    status: NominationStatus.APPROVED
-                                }
-                            }
-                        ],
-                        localField: "nomineeId",
-                        foreignField: "nomineeId",
-                        as: "nomination"
-                    }
-                },
-                {
-                    $unwind: "$nomination"
-                },
-                {
-                    $group: {
-                        _id: {
-                            nomineeName: "$nomination.nomineeName"
-                        },
-                        votes: { $sum: 1 }
-                    }
-                },
-                {
-                    $sort: { votes: -1 }
-                },
-                {
-                    $project: {
-                        _id: 0,
-                        nomineeName: "$_id.nomineeName",
-                        votes: 1
-                    }
-                },
-                {
-                    $count: "totalVotes"
-                }
-            ];            
-            const result = await mongoDBRead.findWithAggregation(MongoCollections.VOTES, aggregation);
-            return result.totalVotes ? result.totalVotes : 0;
-        } catch (error) {
-            logger.error(`votesRepository :: getNominationVotesCountByEventId :: ${error.message} :: ${error}`);
+            logger.error(`votesRepository :: existsVoteByNomineeIdAndEmail :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     }

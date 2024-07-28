@@ -30,5 +30,26 @@ export const nominationsService = {
             logger.error(`nominationsService :: listNominations :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
-    }
+    },
+    getNomination: async (nomineeId: string): Promise<INomination> => {
+        try {
+            logger.info(`nominationsService :: getNomination :: ${nomineeId}`);
+            const key = `nominee:${nomineeId}`;
+            const cachedResult = await redis.getRedis(key);
+            if (cachedResult) return JSON.parse(cachedResult);
+
+            const nomination = await nominationsRepository.getNomination(nomineeId);
+            if (nomination && nomination.profilePictureUrl) {
+                const temporaryPublicURL = await objectStorageUtility.presignedGetObject(OBJECT_STORAGE_BUCKET, nomination.profilePictureUrl, CacheTTL.LONG);
+                if (temporaryPublicURL) nomination.profilePictureUrl = temporaryPublicURL;
+            }
+
+            logger.debug(`nominationsService :: getNomination :: nomineeId :: ${nomineeId} :: ${JSON.stringify(nomination)}`);
+            if (nomination) redis.SetRedis(key, nomination, CacheTTL.LONG);
+            return nomination;
+        } catch (error) {
+            logger.error(`nominationsService :: getNomination :: nomineeId :: ${nomineeId} :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
 };

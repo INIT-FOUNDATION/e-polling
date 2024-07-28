@@ -6,7 +6,7 @@ import { ERRORCODE } from "../constants";
 import { eventsRepository } from "../repositories";
 
 export const votesController = {
-    listVotes: async (req: Request, res: Response) => {
+    publishVote: async (req: Request, res: Response) => {
         try {
             /*  
                 #swagger.tags = ['Votes']
