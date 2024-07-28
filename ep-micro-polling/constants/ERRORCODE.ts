@@ -250,7 +250,7 @@ export const NOMINATIONS = {
   },
   NOMINATIONS006: {
     errorCode: "NOMINATIONS006",
-    errorMessage: "Nomination Profile Picture Required!",
+    errorMessage: "Nominee Profile Picture Required!",
   },
 }
 
