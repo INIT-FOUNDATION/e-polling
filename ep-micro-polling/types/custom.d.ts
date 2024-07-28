@@ -1,55 +1,4 @@
-import { CategoryStatus, EventStatus, JudgeStatus, MenuStatus, NominationStatus, NotificationStatus, NotificationTypes, RoleStatus, SupportRequestStatus, UserStatus, VoteStatus } from "../enums";
-
-export interface IRole {
-    role_id: number;
-    role_name: string;
-    role_description: string;
-    level: string;
-    status: RoleStatus;
-    permissions: any;
-    date_created: string | undefined;
-    date_updated: string | undefined;
-    created_by: number | undefined;
-    updated_by: number | undefined;
-}
-
-export interface IUser {
-    user_id: number;
-    user_name: string;
-    display_name: string;
-    first_name: string;
-    last_name: string;
-    mobile_number: number;
-    email_id: string;
-    gender: number;
-    dob: string;
-    role_id: number;
-    password: string;
-    invalid_attempts: string;
-    status: UserStatus;
-    profile_pic_url: string;
-    last_logged_in: string;
-    reporting_to_users: number[];
-    date_created: string | undefined;
-    date_updated: string | undefined;
-    created_by: number | undefined;
-    updated_by: number | undefined;
-}
-
-export interface IPasswordPolicy {
-    id: number;
-    password_expiry: number;
-    password_history: number;
-    minimum_password_length: number;
-    complexity: number;
-    alphabetical: number;
-    numeric: number;
-    special_characters: number;
-    allowed_special_characters: string;
-    maximum_invalid_attempts: number;
-    date_created: string | undefined;
-    date_updated: string | undefined;
-}
+import { CategoryStatus, EventStatus, JudgeStatus, NominationStatus, SupportRequestStatus, VoteStatus } from "../enums";
 
 export interface ICategory {
     category_id: number;
@@ -60,24 +9,6 @@ export interface ICategory {
     date_updated: string | undefined;
     created_by: number | undefined;
     updated_by: number | undefined;
-}
-
-export interface IMenu {
-    menu_id: number;
-    menu_name: string;
-    menu_description: string;
-    status: MenuStatus;
-    parent_menu_id: number;
-    menu_order: number;
-    route_url: string;
-    icon_class: string;
-    date_created: string | undefined;
-    date_updated: string | undefined;
-}
-
-export interface IPermission {
-    permission_id: number;
-    permission_name: string;
 }
 
 export interface IEvent {
@@ -158,14 +89,4 @@ export interface ISupportRequest {
     dateUpdated: string;
     requesterDeviceDetails: SupportRequestStatus;
     status: SupportRequestStatus;
-}
-
-export interface INotification {
-    notificationId: string;
-    notificationType: NotificationTypes,
-    notificationDescription: string;
-    notifiedTo: number;
-    dateCreated: string;
-    dateUpdated: string;
-    status: NotificationStatus;
 }
