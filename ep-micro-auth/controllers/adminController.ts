@@ -73,8 +73,7 @@ export const adminController = {
                     user_id: existingUser.user_id,
                     role_id: existingUser.role_id,
                     user_name: existingUser.user_name,
-                    email_id: existingUser.email_id,
-                    level: existingUser.level
+                    email_id: existingUser.email_id
                 }
                 const token = await generateToken.generate(existingUser.user_name, tokenDetails, expiryTime, AUTH.SECRET_KEY, req);
                 adminService.updateUserLoginStatus(UserStatus.LOGGED_IN, req.body.user_name);

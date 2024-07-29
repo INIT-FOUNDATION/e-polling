@@ -41,7 +41,6 @@ export const adminService = {
             const key = `loggedin_user_info:${userId}`;
             const objectStoragePath = `profile-pictures/users/profile_picture_${userId}.${profilePicture.mimetype.split("/")[1]}`;
             await objectStorageUtility.putObject(OBJECT_STORAGE_BUCKET, objectStoragePath, profilePicture.data);
-
             await adminRepository.updateProfilePic(objectStoragePath, userId);
             redis.deleteRedis(key);
         } catch (error) {

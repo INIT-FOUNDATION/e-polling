@@ -5,7 +5,7 @@
     "description": "API Swagger for ep-micro-user",
     "version": "1.0.0"
   },
-  "host": "localhost:9003",
+  "host": "localhost:5002",
   "basePath": "/",
   "schemes": [
     "http"
@@ -115,11 +115,7 @@
     },
     "/api/v1/user/health": {
       "get": {
-        "tags": [
-          "User"
-        ],
-        "summary": "Health Check API",
-        "description": "Endpoint for health check of User Micro Service",
+        "description": "",
         "responses": {
           "default": {
             "description": ""

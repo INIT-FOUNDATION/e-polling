@@ -1,7 +1,7 @@
 
 export const USERS = {
-    getUserByUsername:`SELECT u.user_id, user_name, password, display_name, u.role_id, r.level, mobile_number, email_id, u.status
-	from m_users u left join m_user_department_assoc ud on u.user_id = ud.user_id left join m_roles r on u.role_id = r.role_id
+    getUserByUsername:`SELECT u.user_id, user_name, password, display_name, u.role_id, mobile_number, email_id, u.status
+	from m_users u left join m_roles r on u.role_id = r.role_id
 	WHERE user_name = $1 AND u.status IN (1,4,5)`,
     selectRoleDetailsQueryByRoleId:`SELECT * FROM m_roles WHERE role_id = $1`,
     getInvalidAttempts:`SELECT invalid_attempts FROM m_users WHERE user_name = $1`,

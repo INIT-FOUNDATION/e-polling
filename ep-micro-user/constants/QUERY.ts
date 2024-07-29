@@ -10,8 +10,7 @@ export const USERS = {
                         U.display_name AS display_name,
                         R.role_id AS role_id,
                         R.role_name AS role_name, 
-                        U.profile_pic_url,
-                        D.department_name
+                        U.profile_pic_url
                     FROM m_users U
                     LEFT OUTER JOIN m_roles R ON U.role_id = R.role_id
                     WHERE U.user_id = $1 AND U.status IN (1,4)`,

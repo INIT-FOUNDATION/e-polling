@@ -25,8 +25,11 @@ export const adminRepository = {
             const _query = {
                 text: QUERY.USERS.updateProfilePic,
                 values: [userId, profilePictureUrl]
-            };
+            };    
             logger.debug(`adminRepository :: updateProfilePic :: query :: ${JSON.stringify(_query)}`);
+
+            const result = await pg.executeQueryPromise(_query);
+            logger.debug(`adminService :: getLoggedInUserInfo :: db result :: ${JSON.stringify(result)}`)
         } catch (error) {
             logger.error(`adminRepository :: updateProfilePic :: ${error.message} :: ${error}`);
             throw new Error(error.message);
