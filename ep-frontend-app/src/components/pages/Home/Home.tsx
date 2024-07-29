@@ -8,6 +8,7 @@ import Dates from "../Home/Components/Dates/Dates";
 import Categories from "../Categories/Categories";
 import WhoCanEnter from "./Components/WhoCanEnter/WhoCanEnter";
 import StarInfluenceAwards from "./Components/StarInfluencerAwards/StarInfluencerAwards";
+import HeroSection from "./Components/HeroSection/HeroSection";
 
 const Home: React.FC = () => {
 
@@ -29,6 +30,7 @@ const Home: React.FC = () => {
 
     return (
         <div>
+            <HeroSection />
             <StarInfluenceAwards />
             <Categories />
             <WhoCanEnter />
