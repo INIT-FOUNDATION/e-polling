@@ -8,7 +8,7 @@ export const supportRequestsService = {
         try {
             currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `support_requests|period_type:${supportRequestPeriodType}|page:${currentPage}|limit:${pageSize}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const supportRequests = await supportRequestsRepository.listSupportRequests(currentPage, pageSize, supportRequestPeriodType);
@@ -22,7 +22,7 @@ export const supportRequestsService = {
     getSupportRequestsCount: async (supportRequestPeriodType: SupportRequestsPeriodTypes): Promise<number> => {
         try {
             const key = `support_requests|period_type:${supportRequestPeriodType}|count`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await supportRequestsRepository.getSupportRequestsCount(supportRequestPeriodType);

@@ -8,7 +8,7 @@ export const notificationsService = {
         try {
             currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `notifications|notified_to:${notifiedTo}|page:${currentPage}|limit:${pageSize}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const notifications = await notificationsRepository.getNotifications(currentPage, pageSize, notifiedTo);
@@ -23,7 +23,7 @@ export const notificationsService = {
     getNotificationsCount: async (notifiedTo: number): Promise<number> => {
         try {
             const key = `notifications|notified_to:${notifiedTo}|count`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await notificationsRepository.getNotificationsCount(notifiedTo);
@@ -37,7 +37,7 @@ export const notificationsService = {
     getUnreadNotificationsCount: async (notifiedTo: number): Promise<number> => {
         try {
             const key = `notifications|notified_to:${notifiedTo}|unread_count`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await notificationsRepository.getUnreadNotificationsCount(notifiedTo);

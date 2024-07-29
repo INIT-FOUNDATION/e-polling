@@ -1,9 +1,9 @@
 export const ROLES = {
-    listRoles: 'SELECT role_id, role_name, role_description, level, status from m_roles',
+    listRoles: 'SELECT role_id, role_name, role_description, status from m_roles',
     listRolesCount: 'SELECT count(*) AS count from m_roles',
-    addRole: 'INSERT INTO m_roles (role_name, role_description, level, created_by, updated_by) VALUES ($1, $2, $3, $4, $5) RETURNING role_id',
-    updateRole: 'UPDATE m_roles SET role_name = $2, role_description = $3, level = $4, updated_by = $5, status = $6, date_updated = NOW() WHERE role_id = $1',
-    getRole: 'SELECT role_name, role_description, level, status FROM m_roles WHERE role_id = $1 AND status IN (0, 1)',
+    addRole: 'INSERT INTO m_roles (role_name, role_description, created_by, updated_by) VALUES ($1, $2, $3, $4, $5) RETURNING role_id',
+    updateRole: 'UPDATE m_roles SET role_name = $2, role_description = $3, updated_by = $4, status = $5, date_updated = NOW() WHERE role_id = $1',
+    getRole: 'SELECT role_name, role_description, status FROM m_roles WHERE role_id = $1 AND status IN (0, 1)',
     updateRoleStatus: 'UPDATE m_roles SET status = $2, updated_by = $3, date_updated = NOW() WHERE role_id = $1',
     getAccessListByRoleId: `SELECT mm.menu_id, 
                             mm.menu_name,
@@ -32,7 +32,6 @@ export const ROLES = {
                     )`,
     deleteExistingPermissions: "DELETE from access_control where role_id = $1",
     addPermissions: "INSERT INTO access_control (role_id, menu_id, permission_id, created_by, updated_by) values($1, $2, $3, $4, $4)",
-    getRolesByLevel: "SELECT role_id, role_name, level from m_roles WHERE status = 1 AND level = $1 ORDER BY date_created DESC"
 }
 
 export const USERS = {
@@ -56,9 +55,6 @@ export const USERS = {
     usersList: `select * from vw_m_users WHERE role_id <> 1 AND status <> 2`,
     latestUpdatedCheck: `SELECT COUNT(*) as count FROM vw_m_users WHERE date_updated >= NOW() - INTERVAL '5 minutes'`,
     usersListCount: `select count(*) as count from vw_m_users WHERE role_id <> 1 AND status <> 2`,
-    getReportingUsersList: `SELECT VU.user_id, VU.display_name FROM vw_m_users VU
-    INNER JOIN m_roles R ON VU.role_id = R.role_id and R.status=1 and VU.status IN (1, 4, 5)
-    WHERE R.level`,
     updateUserStatus: `UPDATE m_users SET status = $2, updated_by = $3, date_updated = NOW() WHERE user_id = $1`,
 }
 

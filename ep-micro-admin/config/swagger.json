@@ -86,10 +86,6 @@
                   "type": "string",
                   "example": "Head of the Department"
                 },
-                "level": {
-                  "type": "string",
-                  "example": "Level of Role"
-                },
                 "permissions": {
                   "type": "array",
                   "items": {
@@ -154,10 +150,6 @@
                 "status": {
                   "type": "number",
                   "example": 1
-                },
-                "level": {
-                  "type": "string",
-                  "example": "Level of Role"
                 },
                 "permissions": {
                   "type": "array",
@@ -812,6 +804,13 @@
         "description": "Endpoint to Create Category",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -845,6 +844,13 @@
         "summary": "Update Category",
         "description": "Endpoint to Update Category",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
           {
             "name": "body",
             "in": "body",
@@ -884,6 +890,13 @@
         "description": "Endpoint to Update Category Status",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -918,35 +931,19 @@
         "description": "Endpoint to List Categories with pagination",
         "parameters": [
           {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "pageSize": {
-                  "type": "number",
-                  "example": 10
-                },
-                "currentPage": {
-                  "type": "number",
-                  "example": 1
-                }
-              }
-            }
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
           },
           {
-            "name": "in",
+            "name": "pageSize",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "required",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "schema",
+            "name": "currentPage",
             "in": "query",
             "type": "string"
           }
@@ -973,18 +970,11 @@
             "type": "string"
           },
           {
-            "name": "params",
-            "in": "params",
+            "name": "Authorization",
+            "in": "header",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "categoryId": {
-                  "type": "number",
-                  "example": 2
-                }
-              }
-            }
+            "type": "string",
+            "description": "Bearer token for authentication"
           }
         ],
         "responses": {
@@ -1002,6 +992,13 @@
         "summary": "Create Menu",
         "description": "Endpoint to Create Menu",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
           {
             "name": "body",
             "in": "body",
@@ -1052,6 +1049,13 @@
         "summary": "Update Menu",
         "description": "Endpoint to Update Menu",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
           {
             "name": "body",
             "in": "body",
@@ -1107,6 +1111,13 @@
         "description": "Endpoint to Update Menu Status",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -1139,6 +1150,15 @@
         ],
         "summary": "List Menus",
         "description": "Endpoint to List Menus",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
         "responses": {
           "default": {
             "description": ""
@@ -1159,6 +1179,13 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
           }
         ],
         "responses": {
@@ -2028,6 +2055,59 @@
         }
       }
     },
+    "/api/v1/admin/votes/listByEvent": {
+      "get": {
+        "tags": [
+          "Votes"
+        ],
+        "summary": "Get Nomination Votes",
+        "description": "Endpoint to Get Nomination Votes with pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "pageSize": {
+                  "type": "number",
+                  "example": 10
+                },
+                "currentPage": {
+                  "type": "number",
+                  "example": 1
+                },
+                "eventId": {
+                  "type": "string",
+                  "example": "N1"
+                }
+              }
+            }
+          },
+          {
+            "name": "in",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "required",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/admin/supportRequests/updateStatus": {
       "post": {
         "tags": [
@@ -2108,6 +2188,34 @@
             "type": "string"
           }
         ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/notifications/list": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Get Notifications",
+        "description": "Endpoint to get Notifications",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/admin/notifications/unreadCount": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "summary": "Get Unread Notifications Count",
+        "description": "Endpoint to get Unread Notifications Count",
         "responses": {
           "default": {
             "description": ""

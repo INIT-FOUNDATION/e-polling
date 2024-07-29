@@ -8,7 +8,7 @@ export const menusRepository = {
         try {
             const _query = {
                 text: QUERY.MENUS.addMenu,
-                values: [menu.menu_name, menu.menu_description, menu.status, menu.parent_menu_id, menu.menu_order, menu.route_url]
+                values: [menu.menu_name, menu.menu_description, menu.status, menu.parent_menu_id, menu.menu_order, menu.route_url, menu.icon_class]
             }
             logger.debug(`menuRepository :: createMenu :: query :: ${JSON.stringify(_query)}`);
 

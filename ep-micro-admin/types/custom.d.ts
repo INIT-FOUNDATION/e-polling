@@ -4,7 +4,6 @@ export interface IRole {
     role_id: number;
     role_name: string;
     role_description: string;
-    level: string;
     status: RoleStatus;
     permissions: any;
     date_created: string | undefined;

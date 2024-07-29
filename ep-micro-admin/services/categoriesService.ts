@@ -18,10 +18,10 @@ export const categoriesService = {
     updateCategory: async (category: ICategory) => {
         try {
             await categoriesRepository.updateCategory(category);
-            redis.deleteRedis(`categories|created_by:${category.created_by}|page:0|limit:50`);
-            redis.deleteRedis(`categories|created_by:${category.created_by}|count`);
-            redis.deleteRedis(`category:${category.category_id}`);
-            redis.deleteRedis('categories');
+            await redis.deleteRedis(`categories|created_by:${category.created_by}|page:0|limit:50`);
+            await redis.deleteRedis(`categories|created_by:${category.created_by}|count`);
+            await redis.deleteRedis(`category:${category.category_id}`);
+            await redis.deleteRedis('categories');
         } catch (error) {
             logger.error(`categoriesService :: updateCategory :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -43,7 +43,7 @@ export const categoriesService = {
         try {
             currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `categories|created_by:${createdBy}|page:${currentPage}|limit:${pageSize}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) {
                 return JSON.parse(cacheResult);
             }
@@ -61,7 +61,7 @@ export const categoriesService = {
     getCategoriesCount: async (created_by: number): Promise<number> => {
         try {
             const key = `categories|created_by:${created_by}|count`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) {
                 return JSON.parse(cacheResult);
             }
@@ -79,7 +79,7 @@ export const categoriesService = {
     getCategoryById: async (categoryId: number): Promise<ICategory> => {
         try {
             const key = `category:${categoryId}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) {
                 return JSON.parse(cacheResult);
             }

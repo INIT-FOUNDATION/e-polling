@@ -62,7 +62,7 @@ export const nominationsService = {
         try {
             logger.info(`nominationsService :: getNomination :: ${nomineeId}`);
             const key = `nominee:${nomineeId}`;
-            const cachedResult = await redis.getRedis(key);
+            const cachedResult = await redis.GetKeyRedis(key);
             if (cachedResult) return JSON.parse(cachedResult);
 
             const nomination = await nominationsRepository.getNomination(nomineeId);
@@ -85,7 +85,7 @@ export const nominationsService = {
             let key = `nominations|created_by:${createdBy}|status:${status}|page:${currentPage}|limit:${pageSize}`;
             if (eventId) key = `nominations|created_by:${createdBy}|status:${status}|event_id:${eventId}|page:${currentPage}|limit:${pageSize}`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const nominations = await nominationsRepository.getNominations(currentPage, pageSize, createdBy, status, eventId);
@@ -120,7 +120,7 @@ export const nominationsService = {
             let key = `nominations|created_by:${createdBy}|status:${status}|count`;
             if (eventId) key = `nominations|created_by:${createdBy}|status:${status}|event_id:${eventId}|count`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return parseInt(cacheResult, 10);
 
             const count = await nominationsRepository.getNominationsCount(createdBy, status, eventId);
@@ -165,7 +165,7 @@ export const nominationsService = {
     getNominationsByEventId: async (eventId: string): Promise<INomination[]> => {
         try {
             const key = `nominations|event_id:${eventId}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             logger.info(`nominationsService :: getNominationsByEventId :: eventId :: ${eventId}`);

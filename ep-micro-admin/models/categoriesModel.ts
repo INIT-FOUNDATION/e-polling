@@ -38,7 +38,7 @@ const validateCreateCategory = (category: ICategory): Joi.ValidationResult => {
     return categorySchema.validate(category);
 };
 
-const validateUpdateCategory = (category: ICategory): Joi.ValidationResult => {
+const validateUpdateCategory = (category: Partial<ICategory>): Joi.ValidationResult => {
     const categorySchema = Joi.object({
         category_id: Joi.number().required(),
         category_name: Joi.string().min(3).max(30).required(),

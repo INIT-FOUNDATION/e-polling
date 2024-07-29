@@ -36,7 +36,7 @@ export const menusService = {
     listMenus: async (): Promise<IMenu[]> => {
         try {
             const key = `menus`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) {
                 return JSON.parse(cacheResult);
             }
@@ -54,7 +54,7 @@ export const menusService = {
     getMenuById: async (menuId: number): Promise<IMenu> => {
         try {
             const key = `menu:${menuId}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) {
                 return JSON.parse(cacheResult);
             }

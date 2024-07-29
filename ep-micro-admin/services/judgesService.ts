@@ -80,7 +80,7 @@ export const judgesService = {
             let key = `judges|created_by:${createdBy}|page:${currentPage}|limit:${pageSize}`;
             if (eventId) key = `judges|created_by:${createdBy}|event_id:${eventId}|page:${currentPage}|limit:${pageSize}`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const judges = await judgesRepository.getJudges(currentPage, pageSize, createdBy, eventId);
@@ -117,7 +117,7 @@ export const judgesService = {
             let key = `judges|created_by:${createdBy}|count`;
             if (eventId) key = `judges|created_by:${createdBy}|event_id:${eventId}|count`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await judgesRepository.getJudgesCount(createdBy, eventId);

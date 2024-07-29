@@ -14,7 +14,7 @@ export const nominationsService = {
         try {
             const key = `nominations|approved|event:${eventId}`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const nominations = await nominationsRepository.getNominationsByEvent(eventId);
@@ -40,7 +40,7 @@ export const nominationsService = {
         try {
             logger.info(`nominationsService :: getNomination :: ${nomineeId}`);
             const key = `nominee:${nomineeId}`;
-            const cachedResult = await redis.getRedis(key);
+            const cachedResult = await redis.GetKeyRedis(key);
             if (cachedResult) return JSON.parse(cachedResult);
 
             const nomination = await nominationsRepository.getNomination(nomineeId);

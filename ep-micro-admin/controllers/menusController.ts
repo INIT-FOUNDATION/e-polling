@@ -12,6 +12,12 @@ export const menusController = {
                 #swagger.tags = ['Menus']
                 #swagger.summary = 'Create Menu'
                 #swagger.description = 'Endpoint to Create Menu'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,
@@ -47,13 +53,18 @@ export const menusController = {
             res.status(STATUS.INTERNAL_SERVER_ERROR).send();
         }
     },
-
     updateMenu: async (req: Request, res: Response) => {
         try {
             /*  
                 #swagger.tags = ['Menus']
                 #swagger.summary = 'Update Menu'
                 #swagger.description = 'Endpoint to Update Menu'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,
@@ -100,6 +111,12 @@ export const menusController = {
                 #swagger.tags = ['Menus']
                 #swagger.summary = 'List Menus'
                 #swagger.description = 'Endpoint to List Menus'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
             */
             const menus = await menusService.listMenus();
             return res.status(STATUS.OK).send({
@@ -117,6 +134,12 @@ export const menusController = {
                 #swagger.tags = ['Menus']
                 #swagger.summary = 'Get Menu'
                 #swagger.description = 'Endpoint to Get Menu'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
             */
             const { menuId } = req.params;
             if (!menuId) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.MENUS.MENUS002);
@@ -140,6 +163,12 @@ export const menusController = {
                 #swagger.tags = ['Menus']
                 #swagger.summary = 'Update Menu Status'
                 #swagger.description = 'Endpoint to Update Menu Status'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,

@@ -56,7 +56,7 @@ export const eventsService = {
         try {
             currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `events|created_by:${createdBy}|page:${currentPage}|limit:${pageSize}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const events = await eventsRepository.getEvents(currentPage, pageSize, createdBy);
@@ -87,7 +87,7 @@ export const eventsService = {
     getEventsCount: async (createdBy: number): Promise<number> => {
         try {
             const key = `events|created_by:${createdBy}|count`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await eventsRepository.getEventsCount(createdBy);
@@ -118,7 +118,7 @@ export const eventsService = {
         try {
             logger.info(`eventsService :: listEventsByCategory :: ${categoryId}`);
             const key = `events|category:${categoryId}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const events = await eventsRepository.listEventsByCategory(categoryId);

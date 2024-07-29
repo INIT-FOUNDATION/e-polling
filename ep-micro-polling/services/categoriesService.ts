@@ -7,7 +7,7 @@ export const categoriesService = {
     listCategories: async (): Promise<ICategory[]> => {
         try {
             const key = `categories`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) {
                 return JSON.parse(cacheResult);
             }

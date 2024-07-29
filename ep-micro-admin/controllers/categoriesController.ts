@@ -14,6 +14,12 @@ export const categoriesController = {
                 #swagger.tags = ['Categories']
                 #swagger.summary = 'Create Category'
                 #swagger.description = 'Endpoint to Create Category'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,
@@ -55,6 +61,12 @@ export const categoriesController = {
                 #swagger.tags = ['Categories']
                 #swagger.summary = 'Update Category'
                 #swagger.description = 'Endpoint to Update Category'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,
@@ -65,7 +77,7 @@ export const categoriesController = {
                     }
                 }    
             */
-            const category = new categoriesModel.Category(req.body);
+            const category = req.body;
             const userId = req.plainToken.user_id;
 
             const { error } = categoriesModel.validateUpdateCategory(category);
@@ -99,18 +111,16 @@ export const categoriesController = {
                 #swagger.tags = ['Categories']
                 #swagger.summary = 'List Categories'
                 #swagger.description = 'Endpoint to List Categories with pagination'
-                #swagger.parameters['query'] = {
-                    in: 'query',
-                    required: false,
-                    schema: {
-                        pageSize: 10,
-                        currentPage: 1
-                    }
-                }    
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
             */
             const userId = req.plainToken.user_id;
             const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE } = req.query;
-            const categories = await categoriesService.listCategories(Number(pageSize), Number(currentPage), userId);
+            const categories = await categoriesService.listCategories(Number(currentPage), Number(pageSize), userId);
             const categoriesCount = await categoriesService.getCategoriesCount(userId);
 
             return res.status(STATUS.OK).send({
@@ -128,13 +138,12 @@ export const categoriesController = {
                 #swagger.tags = ['Categories']
                 #swagger.summary = 'Get Category'
                 #swagger.description = 'Endpoint to Get Category'
-                #swagger.parameters['params'] = {
-                    in: 'params',
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
                     required: true,
-                    schema: {
-                        categoryId: 2
-                    }
-                }    
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                } 
             */
             const { categoryId } = req.params;
             if (!categoryId) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES002);
@@ -158,6 +167,12 @@ export const categoriesController = {
                 #swagger.tags = ['Categories']
                 #swagger.summary = 'Update Category Status'
                 #swagger.description = 'Endpoint to Update Category Status'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,

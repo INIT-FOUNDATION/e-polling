@@ -84,7 +84,7 @@ export const votesService = {
         try {
             currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `votes_result|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const votes = await votesRepository.getNominationVotesByEventId(currentPage, pageSize, eventId);

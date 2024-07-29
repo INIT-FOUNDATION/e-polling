@@ -8,7 +8,7 @@ export const rolesRepository = {
         try {
             const _query = {
                 text: QUERY.ROLES.addRole,
-                values: [role.role_name, role.role_description, role.level, role.created_by, role.updated_by]
+                values: [role.role_name, role.role_description, role.created_by, role.updated_by]
             };
             logger.debug(`rolesRepository :: addRole :: query :: ${JSON.stringify(_query)}`)
 
@@ -24,7 +24,7 @@ export const rolesRepository = {
         try {
             const _query = {
                 text: QUERY.ROLES.updateRole,
-                values: [role.role_id, role.role_name, role.role_description, role.level, role.updated_by, role.status]
+                values: [role.role_id, role.role_name, role.role_description, role.updated_by, role.status]
             };
             logger.debug(`rolesRepository :: updateRole :: query :: ${JSON.stringify(_query)}`);
 

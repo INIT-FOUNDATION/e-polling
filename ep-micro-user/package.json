@@ -47,7 +47,7 @@
       "INIT_COMMON_REDIS_REQUIRED": true,
       "INIT_COMMON_REDIS_HOST": "dev.orrizonte.in",
       "INIT_COMMON_REDIS_PORT": 6379,
-      "INIT_COMMON_REDIS_KEY_PREFIX": "dev|e_polling|",
+      "INIT_COMMON_REDIS_KEY_PREFIX": "dev|e_polling",
       "INIT_COMMON_PG_DB_REQUIRED": true,
       "INIT_COMMON_MASTER_HOST": "dev.orrizonte.in",
       "INIT_COMMON_MASTER_USER": "dev",

@@ -23,7 +23,7 @@ export const categoriesRepository = {
         try {
             const _query = {
                 text: QUERY.CATEGORIES.updateCategory,
-                values: [category.category_name, category.category_description, category.status, category.created_by, category.updated_by, category.category_id]
+                values: [category.category_id, category.category_name, category.category_description, category.status, category.created_by, category.updated_by]
             };
             logger.debug(`categoryRepository :: updateCategory :: query :: ${JSON.stringify(_query)}`);
 
@@ -55,7 +55,7 @@ export const categoriesRepository = {
         try {
             const _query = {
                 text: QUERY.CATEGORIES.listCategories,
-                values: [currentPage, pageSize, createdBy]
+                values: [pageSize, currentPage, createdBy]
             };
             logger.debug(`categoryRepository :: listCategories :: query :: ${JSON.stringify(_query)}`);
 
@@ -108,7 +108,7 @@ export const categoriesRepository = {
                 text: QUERY.CATEGORIES.existsByCategoryName,
                 values: [categoryName]
             };
-            if (categoryId) _query.text = ` AND category_id <> ${categoryId}`;
+            if (categoryId) _query.text = _query.text.replace(`status <> 2`, `status <> 2 AND category_id <> ${categoryId}`); ` AND category_id <> ${categoryId}`;
             logger.debug(`categoryRepository :: existsByCategoryName :: query :: ${JSON.stringify(_query)}`);
 
             const result = await pg.executeQueryPromise(_query);

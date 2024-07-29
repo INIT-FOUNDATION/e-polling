@@ -13,7 +13,7 @@ export const votesService = {
             let key = `votes|page:${currentPage}|limit:${pageSize}`;
             if (eventId) key = `votes|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const votes = await votesRepository.listVotes(currentPage, pageSize, eventId);
@@ -47,7 +47,7 @@ export const votesService = {
             let key = `votes|count`;
             if (eventId) key = `votes|event:${eventId}|count`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await votesRepository.getVotesCount(eventId);
@@ -62,7 +62,7 @@ export const votesService = {
         try {
             currentPage = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
             const key = `votes_result|event:${eventId}|page:${currentPage}|limit:${pageSize}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const votes = await votesRepository.getNominationVotesByEventId(currentPage, pageSize, eventId);
@@ -76,7 +76,7 @@ export const votesService = {
     getNomineeVotesCountByEvent: async (eventId: string): Promise<number> => {
         try {
             const key = `votes_result|event:${eventId}|count`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const count = await votesRepository.getNominationVotesCountByEventId(eventId);

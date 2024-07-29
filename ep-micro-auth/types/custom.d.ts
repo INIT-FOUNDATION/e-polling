@@ -7,7 +7,6 @@ export interface IUser {
     mobile_number: string;
     email_id: string;
     role_id: number;
-    level: string;
     password: string;
     status: UserStatus,
     maximum_invalid_attempts: number,

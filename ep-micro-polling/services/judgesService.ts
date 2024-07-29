@@ -9,7 +9,7 @@ export const judgesService = {
         try {
             const key = `judges|active|event_id:${eventId}`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const judges = await judgesRepository.getJudges(eventId);

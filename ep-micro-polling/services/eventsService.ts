@@ -38,7 +38,7 @@ export const eventsService = {
         try {
             logger.info(`eventsService :: listEventsByCategory :: ${categoryId}`);
             const key = `events|opened|category:${categoryId}`;
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
 
             const events = await eventsRepository.listEventsByCategory(categoryId);
@@ -54,7 +54,7 @@ export const eventsService = {
             let key = `events|closed`;
             if (categoryId && categoryId > 0) key = `events|closed|category:${categoryId}`;
 
-            const cacheResult = await redis.getRedis(key);
+            const cacheResult = await redis.GetKeyRedis(key);
             if (cacheResult) return JSON.parse(cacheResult);
             
             const events = await eventsRepository.pastClosedEvents(limit, categoryId);
