@@ -1,14 +1,14 @@
 import React from "react";
-import HeroSectionBgImg from "../../../../../assets/images/HeroSection/HeroSectionBgImg.svg";
+import Homepage from "../../../../../assets/images/HeroSection/Homepage.svg";
 import "./HeroSection.scss";
 
 const HeroSection: React.FC = () => {
     return (
         <div
             className="bg-cover bg-center h-screen flex items-center justify-center"
-            style={{ backgroundImage: `url(${HeroSectionBgImg})` }}
+            style={{ backgroundImage: `url(${Homepage})` }}
         >
-            <div className="container mx-auto text-center pb-10 px-4 md:px-8">
+            <div className="container mx-auto text-center pb-8 px-4 md:px-8">
                 <div className="flex flex-col items-center">
                     <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-gray-700 pb-2 md:pb-4">
                         Star Influencer
