@@ -7,7 +7,7 @@ export const menusService = {
     createMenu: async (menu: IMenu) => {
         try {
             await menusRepository.createMenu(menu);
-            redis.deleteRedis(`menus`);
+            await redis.deleteRedis(`menus`);
         } catch (error) {
             logger.error(`menusService :: createMenu :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -16,8 +16,8 @@ export const menusService = {
     updateMenu: async (menu: IMenu) => {
         try {
             await menusRepository.updateMenu(menu);
-            redis.deleteRedis(`menus`);
-            redis.deleteRedis(`menu:${menu.menu_id}`);
+            await redis.deleteRedis(`menus`);
+            await redis.deleteRedis(`menu:${menu.menu_id}`);
         } catch (error) {
             logger.error(`menusService :: updateMenu :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -26,8 +26,8 @@ export const menusService = {
     updateMenuStatus: async (menuId: number, status: number) => {
         try {
             await menusRepository.updateMenuStatus(menuId, status);
-            redis.deleteRedis(`menus`);
-            redis.deleteRedis(`menu:${menuId}`);
+            await redis.deleteRedis(`menus`);
+            await redis.deleteRedis(`menu:${menuId}`);
         } catch (error) {
             logger.error(`menusService :: updateMenuStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

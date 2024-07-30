@@ -8,7 +8,7 @@ export const passwordPoliciesService = {
     try {
       const key = 'password_policies';
       await passwordPoliciesRepository.createPasswordPolicy(passwordPolicy);
-      redis.deleteRedis(key);
+      await redis.deleteRedis(key);
     } catch (error) {
       logger.error(`passwordPoliciesService :: createPasswordPolicy :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -17,8 +17,8 @@ export const passwordPoliciesService = {
   updatePasswordPolicy: async (passwordPolicy: IPasswordPolicy) => {
     try {
       await passwordPoliciesRepository.updatePasswordPolicy(passwordPolicy);
-      redis.deleteRedis('password_policies');
-      redis.deleteRedis(`password_policy:${passwordPolicy.id}`);
+      await redis.deleteRedis('password_policies');
+      await redis.deleteRedis(`password_policy:${passwordPolicy.id}`);
     } catch (error) {
       logger.error(`passwordPoliciesService :: createPasswordPolicy :: ${error.message} :: ${error}`)
       throw new Error(error.message);

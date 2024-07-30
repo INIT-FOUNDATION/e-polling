@@ -10,12 +10,12 @@ export const eventsService = {
         try {
             logger.info(`eventsService :: createEvent :: ${JSON.stringify(event)}`);
             await eventsRepository.createEvent(event);
-            redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
-            redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
-            redis.deleteRedis(`events|category:${event.categoryId}`);
-            redis.deleteRedis(`events|opened|category:${event.categoryId}`);
-            redis.deleteRedis(`events|closed|category:${event.categoryId}`);
-            redis.deleteRedis(`events|closed`);
+            await redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
+            await redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
+            await redis.deleteRedis(`events|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|opened|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|closed|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|closed`);
         } catch (error) {
             logger.error(`eventsService :: createEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -25,12 +25,12 @@ export const eventsService = {
         try {
             logger.info(`eventsService :: updateEvent :: ${JSON.stringify(event)}`);
             await eventsRepository.updateEvent(event);
-            redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
-            redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
-            redis.deleteRedis(`events|category:${event.categoryId}`);
-            redis.deleteRedis(`events|opened|category:${event.categoryId}`);
-            redis.deleteRedis(`events|closed|category:${event.categoryId}`);
-            redis.deleteRedis(`events|closed`);
+            await redis.deleteRedis(`events|created_by:${event.createdBy}|page:0|limit:50`);
+            await redis.deleteRedis(`events|created_by:${event.createdBy}|count`);
+            await redis.deleteRedis(`events|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|opened|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|closed|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|closed`);
         } catch (error) {
             logger.error(`eventsService :: updateEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -103,12 +103,12 @@ export const eventsService = {
             logger.info(`eventsService :: updateEventStatus :: ${eventId} :: ${status}`);
             const event = await eventsService.getEvent(eventId);
             await eventsRepository.updateEventStatus(eventId, status);
-            redis.deleteRedis(`events|created_by:${createdBy}|page:0|limit:50`);
-            redis.deleteRedis(`events|created_by:${createdBy}|count`);
-            redis.deleteRedis(`events|category:${event.categoryId}`);
-            redis.deleteRedis(`events|opened|category:${event.categoryId}`);
-            redis.deleteRedis(`events|closed|category:${event.categoryId}`);
-            redis.deleteRedis(`events|closed`);
+            await redis.deleteRedis(`events|created_by:${createdBy}|page:0|limit:50`);
+            await redis.deleteRedis(`events|created_by:${createdBy}|count`);
+            await redis.deleteRedis(`events|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|opened|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|closed|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|closed`);
         } catch (error) {
             logger.error(`eventsService :: updateEventStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

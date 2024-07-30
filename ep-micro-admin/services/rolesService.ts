@@ -95,10 +95,10 @@ export const rolesService = {
         }
       }
 
-      redis.deleteRedis(`roles`);
-      redis.deleteRedis(`roles|active`);
-      redis.deleteRedis(`roles|limit:50`);
-      redis.deleteRedis(`roles|count`);
+      await redis.deleteRedis(`roles`);
+      await redis.deleteRedis(`roles|active`);
+      await redis.deleteRedis(`roles|limit:50`);
+      await redis.deleteRedis(`roles|count`);
     } catch (error) {
       logger.error(`rolesService :: addRole :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -115,11 +115,11 @@ export const rolesService = {
         }
       }
 
-      redis.deleteRedis(`role:${role.role_id}`);
-      redis.deleteRedis(`roles`);
-      redis.deleteRedis(`roles|active`);
-      redis.deleteRedis(`roles|limit:50`);
-      redis.deleteRedis(`access_list|role:${role.role_id}`);
+      await redis.deleteRedis(`role:${role.role_id}`);
+      await redis.deleteRedis(`roles`);
+      await redis.deleteRedis(`roles|active`);
+      await redis.deleteRedis(`roles|limit:50`);
+      await redis.deleteRedis(`access_list|role:${role.role_id}`);
     } catch (error) {
       logger.error(`rolesService :: updateRole :: ${error.message} :: ${error}`)
       throw new Error(error.message);
@@ -146,10 +146,10 @@ export const rolesService = {
     try {
       await rolesRepository.updateRoleStatus(roleId, status, updatedBy);
 
-      redis.deleteRedis(`role:${roleId}`);
-      redis.deleteRedis(`roles`);
-      redis.deleteRedis(`roles|active`);
-      redis.deleteRedis(`roles|limit:50`);
+      await redis.deleteRedis(`role:${roleId}`);
+      await redis.deleteRedis(`roles`);
+      await redis.deleteRedis(`roles|active`);
+      await redis.deleteRedis(`roles|limit:50`);
     } catch (error) {
       logger.error(`rolesService :: updateRoleStatus :: ${error.message} :: ${error}`)
       throw new Error(error.message);

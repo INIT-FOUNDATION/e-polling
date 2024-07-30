@@ -37,8 +37,8 @@ export const supportRequestsService = {
         try {
             await supportRequestsRepository.updateSupportRequestStatus(supportRequestId, status, resolvedBy);
             for (const status of Object.values(SupportRequestStatus)) {
-                redis.deleteRedis(`support_requests|period_type:${status}|page:0|limit:50`);
-                redis.deleteRedis(`support_requests|period_type:${status}|count`);
+                await redis.deleteRedis(`support_requests|period_type:${status}|page:0|limit:50`);
+                await redis.deleteRedis(`support_requests|period_type:${status}|count`);
             }
         } catch (error) {
             logger.error(`supportRequestsService :: updateSupportRequestStatus :: ${error.message} :: ${error}`)
