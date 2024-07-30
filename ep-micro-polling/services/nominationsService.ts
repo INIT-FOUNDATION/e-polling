@@ -81,12 +81,12 @@ export const nominationsService = {
             }
 
             for (const status of Object.values(NominationStatus)) {
-                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|page:0|limit:50`);
-                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|count`);
-                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
-                redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
-                redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
-                redis.deleteRedis(`nominations|approved|event_id:${nomination.eventId}`)
+                await redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|page:0|limit:50`);
+                await redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|count`);
+                await redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
+                await redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
+                await redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
+                await redis.deleteRedis(`nominations|approved|event_id:${nomination.eventId}`)
             }
         } catch (error) {
             logger.error(`nominationsService :: createNomination :: ${error.message} :: ${error}`);

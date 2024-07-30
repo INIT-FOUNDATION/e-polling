@@ -15,8 +15,8 @@ export const supportRequestsService = {
             await supportRequestsRepository.createSupportRequest(supportRequest);
 
             for (const status of Object.values(SupportRequestStatus)) {
-                redis.deleteRedis(`support_requests|period_type:${status}|page:0|limit:50`);
-                redis.deleteRedis(`support_requests|period_type:${status}|count`);
+                await redis.deleteRedis(`support_requests|period_type:${status}|page:0|limit:50`);
+                await redis.deleteRedis(`support_requests|period_type:${status}|count`);
             }
 
             await notificationsService.createNotification(NotificationTypes.SUPPORT_REQUEST, `Support request raised from ${supportRequest.requesterName}`, 1);

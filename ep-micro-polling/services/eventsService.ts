@@ -26,9 +26,9 @@ export const eventsService = {
             logger.info(`eventsService :: updateEventStatus :: ${eventId} :: ${status}`);
             const event = await eventsService.getEvent(eventId);
             await eventsRepository.updateEventStatus(eventId, status);
-            redis.deleteRedis(`events|created_by:${createdBy}|page:0|limit:50`);
-            redis.deleteRedis(`events|created_by:${createdBy}|count`);
-            redis.deleteRedis(`event|category:${event.categoryId}`);
+            await redis.deleteRedis(`events|created_by:${createdBy}|page:0|limit:50`);
+            await redis.deleteRedis(`events|created_by:${createdBy}|count`);
+            await redis.deleteRedis(`event|category:${event.categoryId}`);
         } catch (error) {
             logger.error(`eventsService :: updateEventStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

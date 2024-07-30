@@ -115,11 +115,11 @@ export const adminController = {
             const userName = req.plainToken.user_name;
             const user_id = req.plainToken.user_id;
             await adminService.updateUserLoginStatus(UserStatus.LOGGED_OUT, userName);
-            redis.deleteRedis(userName);
-            redis.deleteRedis(`user_permissions|username:${userName}`);
-            redis.deleteRedis(`loggedin_user_info:${user_id}`);
-            redis.deleteRedis(`user|username:${userName}`);
-            redis.deleteRedis(`combined_access_list|user::${userName}`);
+            await redis.deleteRedis(userName);
+            await redis.deleteRedis(`user_permissions|username:${userName}`);
+            await redis.deleteRedis(`loggedin_user_info:${user_id}`);
+            await redis.deleteRedis(`user|username:${userName}`);
+            await redis.deleteRedis(`combined_access_list|user::${userName}`);
             return res.status(STATUS.OK).send({
                 data: null,
                 message: "User Logged out Successfully"

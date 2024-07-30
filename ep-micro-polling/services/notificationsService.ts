@@ -19,9 +19,9 @@ export const notificationsService = {
             }
 
             await notificationsRepository.createNotification(notification);
-            redis.deleteRedis(`notifications|notified_to:${notification.notifiedTo}|unread_count`);
-            redis.deleteRedis(`notifications|notified_to:${notification.notifiedTo}|page:0|limit:10`);
-            redis.deleteRedis(`notifications|notified_to:${notification.notifiedTo}|count`);
+            await redis.deleteRedis(`notifications|notified_to:${notification.notifiedTo}|unread_count`);
+            await redis.deleteRedis(`notifications|notified_to:${notification.notifiedTo}|page:0|limit:10`);
+            await redis.deleteRedis(`notifications|notified_to:${notification.notifiedTo}|count`);
         } catch (error) {
             logger.error(`notificationsService :: createNotification :: ${error.message} :: ${error}`);
             throw new Error(error.message);

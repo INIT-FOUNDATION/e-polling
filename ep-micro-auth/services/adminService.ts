@@ -33,8 +33,8 @@ export const adminService = {
     setUserInActive: async (userName: string) => {
         try {
             await adminRepository.setUserInActive(userName);
-            redis.deleteRedis(`users|offset:0|limit:50`);
-            redis.deleteRedis(`users_count`);
+            await redis.deleteRedis(`users|offset:0|limit:50`);
+            await redis.deleteRedis(`users_count`);
         } catch (error) {
             logger.error(`adminService :: setUserInActive :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -62,7 +62,7 @@ export const adminService = {
     updateUserLoginStatus: async (loginStatus: number, userName: string) => {
         try {
             await adminRepository.updateUserLoginStatus(loginStatus, userName);
-            redis.deleteRedis(`user|username:${userName}`);
+            await redis.deleteRedis(`user|username:${userName}`);
         } catch (error) {
             logger.error(`adminService :: updateUserLoginStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

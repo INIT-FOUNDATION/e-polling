@@ -50,7 +50,7 @@ export const votesService = {
             const decrytedOtp = encDecHelper.decryptPayload(otp);
             if  (decrytedOtp !== otpDetails.otp) return false;
 
-            redis.deleteRedis(`votes|txn_id:${txnId}`);
+            await redis.deleteRedis(`votes|txn_id:${txnId}`);
             return true;
         } catch (error) {
             logger.error(`votesService :: verifyMobileOtp :: ${error.message} :: ${error}`);
@@ -67,14 +67,14 @@ export const votesService = {
             
             logger.info(`votesService :: publishVote :: vote :: ${JSON.stringify(vote)}`);
             await votesRepository.publishVote(vote);
-            redis.deleteRedis(`votes|page:0|limit:50`);
-            redis.deleteRedis(`votes|count`);
-            redis.deleteRedis(`votes|event:${nomination.eventId}|page:0|limit:50`);
-            redis.deleteRedis(`votes|event:${nomination.eventId}|count`);
-            redis.deleteRedis(`votes|event:${nomination.eventId}|page:0|limit:50`);
-            redis.deleteRedis(`votes_result|event:${nomination.eventId}|count`);
-            redis.deleteRedis(`votes_result|event:${nomination.eventId}|page:0|limit:50`);
-            redis.deleteRedis(`votes_result|event:${nomination.eventId}|count`);
+            await redis.deleteRedis(`votes|page:0|limit:50`);
+            await redis.deleteRedis(`votes|count`);
+            await redis.deleteRedis(`votes|event:${nomination.eventId}|page:0|limit:50`);
+            await redis.deleteRedis(`votes|event:${nomination.eventId}|count`);
+            await redis.deleteRedis(`votes|event:${nomination.eventId}|page:0|limit:50`);
+            await redis.deleteRedis(`votes_result|event:${nomination.eventId}|count`);
+            await redis.deleteRedis(`votes_result|event:${nomination.eventId}|page:0|limit:50`);
+            await redis.deleteRedis(`votes_result|event:${nomination.eventId}|count`);
         } catch (error) {
             logger.error(`votesService :: publishVote :: ${error.message} :: ${error}`);
             throw new Error(error.message);

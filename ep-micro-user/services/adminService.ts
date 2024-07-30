@@ -42,7 +42,7 @@ export const adminService = {
             const objectStoragePath = `profile-pictures/users/profile_picture_${userId}.${profilePicture.mimetype.split("/")[1]}`;
             await objectStorageUtility.putObject(OBJECT_STORAGE_BUCKET, objectStoragePath, profilePicture.data);
             await adminRepository.updateProfilePic(objectStoragePath, userId);
-            redis.deleteRedis(key);
+            await redis.deleteRedis(key);
         } catch (error) {
             logger.error(`adminService :: updateProfilePic :: ${error.message} :: ${error}`)
             throw new Error(error.message);
@@ -52,7 +52,7 @@ export const adminService = {
         try {
             const key = `loggedin_user_info:${userId}`;
             await adminRepository.updateUser(user, userId);
-            redis.deleteRedis(key);
+            await redis.deleteRedis(key);
         } catch (error) {
             logger.error(`adminService :: updateProfile :: ${error.message} :: ${error}`)
             throw new Error(error.message);
