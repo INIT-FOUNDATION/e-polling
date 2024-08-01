@@ -2,30 +2,43 @@ import React, { useEffect } from "react";
 import { homeService } from "./homeService";
 import { useLoader, useLogger, useToast } from "../../../hooks";
 import Footer from "../../common/Footer/Footer";
+import ContactUs from "../../common/ContactUs/ContactUs";
+import LastYearWinner from "../Home/Components/LastYearWinner/LastYearWinner";
+import Dates from "../Home/Components/Dates/Dates";
+import Categories from "../Categories/Categories";
+import WhoCanEnter from "./Components/WhoCanEnter/WhoCanEnter";
+import StarInfluenceAwards from "./Components/StarInfluencerAwards/StarInfluencerAwards";
+import HeroSection from "./Components/HeroSection/HeroSection";
 
 const Home: React.FC = () => {
 
-    const { log } = useLogger();
-    const { showToast } = useToast();
-    const { showLoader } = useLoader();
+    // const { log } = useLogger();
+    // const { showToast } = useToast();
+    // const { showLoader } = useLoader();
 
-    useEffect(() => {
-        try {
-            // const response = homeService.getHealthCheck();
-            // log('info', 'Home', response);
-            showToast('Success', 'Success', 'success');
-            showLoader();
-        } catch (error) {
-            log('error', 'Home', error);
-        }
+    // useEffect(() => {
+    //     try {
+    //         // const response = homeService.getHealthCheck();
+    //         // log('info', 'Home', response);
+    //         showToast('Success', 'Success', 'success');
+    //         showLoader();
+    //     } catch (error) {
+    //         log('error', 'Home', error);
+    //     }
 
-    }, []);
+    // }, []);
 
     return (
-        <h1>
-            Hello world!
+        <div>
+            <HeroSection />
+            <StarInfluenceAwards />
+            <Categories />
+            <WhoCanEnter />
+            <Dates />
+            <LastYearWinner />
+            <ContactUs />
             <Footer/>
-        </h1>
+            </div>
     );
 }
 
