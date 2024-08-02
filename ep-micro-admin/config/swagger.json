@@ -2098,19 +2098,23 @@
         "description": "Endpoint to Update Support Request Status",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
             "name": "body",
             "in": "body",
-            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "supportRequestId": {
-                  "type": "number",
-                  "example": 1
+                  "example": "any"
                 },
                 "status": {
-                  "type": "number",
-                  "example": 1
+                  "example": "any"
                 }
               }
             }
@@ -2132,39 +2136,24 @@
         "description": "Endpoint to List Support Requests with pagination and filtering by period",
         "parameters": [
           {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "pageSize": {
-                  "type": "number",
-                  "example": 10
-                },
-                "currentPage": {
-                  "type": "number",
-                  "example": 1
-                },
-                "periodType": {
-                  "type": "number",
-                  "example": 1
-                }
-              }
-            }
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
           },
           {
-            "name": "in",
+            "name": "pageSize",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "required",
+            "name": "currentPage",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "schema",
+            "name": "periodType",
             "in": "query",
             "type": "string"
           }

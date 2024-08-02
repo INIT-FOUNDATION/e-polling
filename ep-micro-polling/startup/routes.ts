@@ -5,6 +5,8 @@ import { categoriesRouter } from '../routes/categoriesRouter';
 import { eventsRouter } from '../routes/eventsRouter';
 import { nominationsRouter } from '../routes/nominationsRouter';
 import { judgesRouter } from '../routes/judgesRouter';
+import { supportRequestsRouter } from '../routes/supportRequestsRouter';
+import { votesRouter } from '../routes/votesRouter';
 
 export default function (app: Express): void {
   app.use(express.json());
@@ -34,6 +36,7 @@ export default function (app: Express): void {
   app.use('/api/v1/polling/events', eventsRouter);
   app.use('/api/v1/polling/nominations', nominationsRouter);
   app.use('/api/v1/polling/judges', judgesRouter);
-  app.use('/api/v1/polling/votes', pollingRouter);
+  app.use('/api/v1/polling/votes', votesRouter);
+  app.use('/api/v1/polling/supportRequests', supportRequestsRouter);
   app.use('/api/v1/polling', pollingRouter);
 }

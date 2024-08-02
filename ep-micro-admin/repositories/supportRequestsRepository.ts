@@ -12,7 +12,7 @@ export const supportRequestsRepository = {
             return await mongoDBRead.findWithLimit(
                 MongoCollections.SUPPORT_REQUESTS,
                 query,
-                { _id: 0 },
+                { _id: 0, requesterDeviceDetails: 0, dateCreated: 0, dateUpdated: 0, resolvedBy: 0 },
                 pageSize,
                 { dateCreated: -1 },
                 currentPage

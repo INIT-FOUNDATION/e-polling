@@ -22,7 +22,7 @@ export const supportRequestsService = {
             await notificationsService.createNotification(NotificationTypes.SUPPORT_REQUEST, `Support request raised from ${supportRequest.requesterName}`, 1);
             const user = await usersService.getUserById(1);
 
-            await emailService.sendEmail('E-POLLING | SUPPORT REQUEST', 'views/supportRequestEmailTemplate.ejs', user.email_id, {
+            await emailService.sendEmail('E-POLLING | SUPPORT REQUEST', 'views/supportRequestTemplate.ejs', user.email_id, {
                 name: user.display_name,
                 requesterEmail: supportRequest.requesterEmail,
                 websiteUrl: WEBSITE_URL,

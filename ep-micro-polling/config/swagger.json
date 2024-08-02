@@ -209,13 +209,165 @@
         }
       }
     },
-    "/api/v1/polling/votes/health": {
-      "get": {
+    "/api/v1/polling/votes/mobile/publish": {
+      "post": {
         "tags": [
-          "Admin"
+          "Votes"
         ],
-        "summary": "Health Check API",
-        "description": "Endpoint to health check Admin Service",
+        "summary": "Publish Vote",
+        "description": "Endpoint to List Votes with pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nomineeId": {
+                  "type": "string",
+                  "example": "N1"
+                },
+                "voterName": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "voterMobile": {
+                  "type": "number",
+                  "example": 1234567890
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/polling/votes/mobile/verifyPublish": {
+      "post": {
+        "tags": [
+          "Votes"
+        ],
+        "summary": "Verify Vote",
+        "description": "Endpoint to List Votes with pagination",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "txnId": {
+                  "type": "string",
+                  "example": "N1"
+                },
+                "otp": {
+                  "type": "string",
+                  "example": "encryptedOtp"
+                }
+              }
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "in": {
+                  "example": "any"
+                },
+                "required": {
+                  "example": "any"
+                },
+                "schema": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/polling/votes/email/publish": {
+      "post": {
+        "tags": [
+          "Votes"
+        ],
+        "summary": "Publish Vote",
+        "description": "Endpoint to List Votes with pagination",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nomineeId": {
+                  "type": "string",
+                  "example": "N1"
+                },
+                "voterName": {
+                  "type": "string",
+                  "example": "John Doe"
+                },
+                "voterEmail": {
+                  "type": "string",
+                  "example": "yN9Ji@example.com"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/v1/polling/supportRequests/create": {
+      "post": {
+        "tags": [
+          "Support Requests"
+        ],
+        "summary": "Create Support Request",
+        "description": "Endpoint to Create Support Request",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "requesterName": {
+                  "type": "string",
+                  "example": "Narsima Chilkuri"
+                },
+                "requesterEmail": {
+                  "type": "string",
+                  "example": "narsimachilkuri237@gmail.com"
+                },
+                "requesterMessage": {
+                  "type": "string",
+                  "example": "hello"
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "default": {
             "description": ""

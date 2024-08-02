@@ -15,16 +15,14 @@ export const supportRequestsController = {
                 #swagger.tags = ['Support Requests']
                 #swagger.summary = 'List Support Requests'
                 #swagger.description = 'Endpoint to List Support Requests with pagination and filtering by period'
-                #swagger.parameters['query'] = {
-                    in: 'query',
-                    required: false,
-                    schema: {
-                        pageSize: 10,
-                        currentPage: 1,
-                        periodType: 1
-                    }
-                }    
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
             */
+           
             const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE, periodType = SupportRequestsPeriodTypes.TODAY } = req.query;
 
             if (periodType && !Object.values(SupportRequestsPeriodTypes).includes(Number(periodType))) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.SUPPORTREQUESTS.SUPPORTREQUESTS000);
@@ -33,7 +31,7 @@ export const supportRequestsController = {
             const supportRequestsCount = await supportRequestsService.getSupportRequestsCount(Number(periodType));
 
             return res.status(STATUS.OK).send({
-                data: { supportRequests, supportRequestsCount },
+                data: { supportRequests: supportRequests || [], supportRequestsCount },
                 message: "Support Requests Fetched Successfully!"
             });
         } catch (error) {
@@ -47,15 +45,14 @@ export const supportRequestsController = {
                 #swagger.tags = ['Support Requests']
                 #swagger.summary = 'Update Support Request Status'
                 #swagger.description = 'Endpoint to Update Support Request Status'
-                #swagger.parameters['body'] = {
-                    in: 'body',
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
                     required: true,
-                    schema: {
-                        supportRequestId: 1,
-                        status: 1
-                    }
-                }    
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
             */
+
             const { error } = supportRequestsModel.validateUpdateSupportRequestStatus(req.body);
             if (error) {
                 if (error.details != null) {

@@ -5,6 +5,7 @@ import { ERRORCODE } from "../constants";
 import { ISupportRequest } from "../types/custom";
 import { SupportRequest } from "../models/supportRequestsModel";
 import { supportRequestsModel } from "../models";
+import { requestModifierHelper } from "../helpers";
 
 export const supportRequestsController = {
     createSupportRequest: async (req: Request, res: Response) => {
@@ -24,6 +25,7 @@ export const supportRequestsController = {
                 } 
             */
             const supportRequest: ISupportRequest = new SupportRequest(req.body);
+            supportRequest.requesterDeviceDetails = requestModifierHelper.appendClientDetailsInRequest(req);
 
             const { error } = supportRequestsModel.validateCreateSupportRequest(supportRequest);
             if (error) {
