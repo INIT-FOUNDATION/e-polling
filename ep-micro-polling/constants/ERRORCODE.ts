@@ -252,6 +252,14 @@ export const NOMINATIONS = {
     errorCode: "NOMINATIONS006",
     errorMessage: "Nominee Profile Picture Required!",
   },
+  NOMINATIONS007: {
+    errorCode: "NOMINATIONS007",
+    errorMessage: "Invalid Profile Picture type, must use JPEG or PNG!",
+  },
+  NOMINATIONS008: {
+    errorCode: "NOMINATIONS008",
+    errorMessage: "Maximum Upload Size Limit Exceeded for Profile Picture, Please upload it of size less than equal to 5MB!",
+  },
 }
 
 export const VOTES = {
