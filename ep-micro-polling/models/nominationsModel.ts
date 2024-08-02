@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { NominationStatus } from "../enums";
 import { IDeviceDetails, INomination, IPlatformLinks } from "../types/custom";
+import { v4 as uuidv4 } from "uuid";
 
 class Nomination implements INomination {
   nomineeId: string;
@@ -19,7 +20,7 @@ class Nomination implements INomination {
   nomineeDeviceDetails: IDeviceDetails;
 
   constructor(nomination: INomination) {
-    this.nomineeId = nomination.nomineeId;
+    this.nomineeId = nomination.nomineeId || uuidv4();
     this.nomineeName = nomination.nomineeName;
     this.selfNominee = nomination.selfNominee || false;
     this.requesterName = nomination.selfNominee ? nomination.nomineeName : nomination.requesterName;
@@ -66,7 +67,7 @@ const validateCreateNomination = (nomination: INomination): Joi.ValidationResult
     eventId: Joi.string().required(),
     dateCreated: Joi.string().isoDate().allow("", null),
     dateUpdated: Joi.string().isoDate().allow("", null),
-    createdBy: Joi.number().required(),
+    createdBy: Joi.number().allow("", null),
     updatedBy: Joi.number().allow("", null),
     status: Joi.string().valid(...Object.values(NominationStatus)).required(),
     nomineeDeviceDetails: Joi.object().required()

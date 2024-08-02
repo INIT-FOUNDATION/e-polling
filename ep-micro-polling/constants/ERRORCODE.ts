@@ -260,6 +260,14 @@ export const NOMINATIONS = {
     errorCode: "NOMINATIONS008",
     errorMessage: "Maximum Upload Size Limit Exceeded for Profile Picture, Please upload it of size less than equal to 5MB!",
   },
+  NOMINATIONS009: {
+    errorCode: "NOMINATIONS009",
+    errorMessage: "Requested Event does not exists!",
+  },
+  NOMINATIONS010: {
+    errorCode: "NOMINATIONS010",
+    errorMessage: "Requested Event is closed!",
+  },
 }
 
 export const VOTES = {

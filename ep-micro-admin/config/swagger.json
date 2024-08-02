@@ -2183,6 +2183,15 @@
         ],
         "summary": "Get Notifications",
         "description": "Endpoint to get Notifications",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
         "responses": {
           "default": {
             "description": ""
@@ -2197,6 +2206,15 @@
         ],
         "summary": "Get Unread Notifications Count",
         "description": "Endpoint to get Unread Notifications Count",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          }
+        ],
         "responses": {
           "default": {
             "description": ""

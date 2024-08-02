@@ -11,13 +11,6 @@ export const eventsController = {
                 #swagger.tags = ['Events']
                 #swagger.summary = 'Get Event By Category Id'
                 #swagger.description = 'Endpoint to Get Event By Category Id'
-                #swagger.parameters['params'] = {
-                    in: 'params',
-                    required: true,
-                    schema: {
-                        categoryId: 1
-                    }
-                }    
             */
             const { categoryId } = req.params;
             if (!categoryId) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES002);

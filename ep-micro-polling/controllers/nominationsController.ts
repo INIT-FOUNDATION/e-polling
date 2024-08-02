@@ -2,10 +2,11 @@ import { Response, Request } from "express";
 import { logger, STATUS } from "ep-micro-common";
 import { ERRORCODE } from "../constants";
 import { eventsRepository } from "../repositories";
-import { nominationsService } from "../services";
+import { eventsService, nominationsService } from "../services";
 import { UploadedFile } from "express-fileupload";
 import { requestModifierHelper } from "../helpers";
 import { nominationsModel } from "../models";
+import { EventStatus } from "../enums";
 
 export const nominationsController = {
     getNominationsByEvent: async (req: Request, res: Response) => {
@@ -138,6 +139,10 @@ export const nominationsController = {
                     errorMessage: error.details ? error.details[0].message : error.message 
                 });
             }
+
+            const event = await eventsService.getEvent(nomination.eventId);
+            if (event.status in [EventStatus.INACTIVE, EventStatus.DELETED]) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS009);
+            if (event.status === EventStatus.CLOSED) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS010);
 
             await nominationsService.createNomination(nomination, file);
 

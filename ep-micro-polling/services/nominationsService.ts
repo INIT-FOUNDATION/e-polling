@@ -74,9 +74,10 @@ export const nominationsService = {
 
             if (nomination.requesterEmail) {
                 await emailService.sendEmail('E-POLLING | THANK YOU FOR NOMINATION', 'views/nominationRequestAcknowledgmentTemplate.ejs', nomination.requesterEmail, {
-                    name: nomination.selfNominee ? nomination.nomineeName : nomination.requesterName,
+                    name: nomination.selfNominee ? nomination.requesterName : nomination.nomineeName,
                     websiteUrl: WEBSITE_URL,
-                    year: moment().year()
+                    year: moment().year(),
+                    eventName: event.eventName
                 });
             }
 

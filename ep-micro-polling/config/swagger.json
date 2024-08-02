@@ -38,20 +38,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "params",
-            "in": "params",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "categoryId": {
-                  "type": "number",
-                  "example": 1
-                }
-              }
-            }
           }
         ],
         "responses": {
@@ -91,94 +77,85 @@
         "description": "Endpoint to Create Nomination",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "nomineeName",
+            "in": "formData",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "nomineeId": {
-                  "type": "string",
-                  "example": "N1"
-                },
-                "nomineeName": {
-                  "type": "string",
-                  "example": "Jane Doe"
-                },
-                "selfNominee": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "requesterName": {
-                  "type": "string",
-                  "example": "John Smith"
-                },
-                "requesterEmail": {
-                  "type": "string",
-                  "example": "john.smith@example.com"
-                },
-                "profilePictureUrl": {
-                  "type": "string",
-                  "example": "http://example.com/profile.jpg"
-                },
-                "nomineePlatformLinks": {
-                  "type": "object",
-                  "properties": {
-                    "instagram": {
-                      "type": "string",
-                      "example": "http://instagram.com/example"
-                    },
-                    "tiktok": {
-                      "type": "string",
-                      "example": "http://tiktok.com/example"
-                    },
-                    "twitch": {
-                      "type": "string",
-                      "example": "http://twitch.com/example"
-                    },
-                    "youtube": {
-                      "type": "string",
-                      "example": "http://youtube.com/example"
-                    },
-                    "other": {
-                      "type": "string",
-                      "example": "http://other.com/example"
-                    }
-                  }
-                },
-                "eventId": {
-                  "type": "string",
-                  "example": "E1"
-                },
-                "dateCreated": {
-                  "type": "string",
-                  "example": "2024-07-25T12:00:00Z"
-                },
-                "dateUpdated": {
-                  "type": "string",
-                  "example": "2024-07-25T12:00:00Z"
-                },
-                "createdBy": {
-                  "type": "number",
-                  "example": 123
-                },
-                "updatedBy": {
-                  "type": "number",
-                  "example": 123
-                },
-                "status": {
-                  "type": "string",
-                  "example": "PENDING"
-                }
+            "type": "string",
+            "description": "Name of the nominee",
+            "example": "Jane Doe"
+          },
+          {
+            "name": "selfNominee",
+            "in": "formData",
+            "required": true,
+            "type": "boolean",
+            "description": "Whether the nomination is self-nomination",
+            "example": false
+          },
+          {
+            "name": "requesterName",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Name of the requester",
+            "example": "John Smith"
+          },
+          {
+            "name": "requesterEmail",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Email of the requester",
+            "example": "john.smith@example.com"
+          },
+          {
+            "name": "nomineePlatformLinks",
+            "in": "formData",
+            "required": false,
+            "type": "object",
+            "description": "Platform links for the nominee",
+            "properties": {
+              "instagram": {
+                "type": "string",
+                "description": "Instagram profile link",
+                "example": "http://instagram.com/example"
+              },
+              "tiktok": {
+                "type": "string",
+                "description": "TikTok profile link",
+                "example": "http://tiktok.com/example"
+              },
+              "twitch": {
+                "type": "string",
+                "description": "Twitch profile link",
+                "example": "http://twitch.com/example"
+              },
+              "youtube": {
+                "type": "string",
+                "description": "YouTube profile link",
+                "example": "http://youtube.com/example"
+              },
+              "other": {
+                "type": "string",
+                "description": "Other platform link",
+                "example": "http://other.com/example"
               }
             }
+          },
+          {
+            "name": "eventId",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "ID of the event",
+            "example": "E1"
           },
           {
             "name": "file",
             "in": "formData",
             "required": true,
             "type": "file",
-            "description": "Supporting document for the nomination"
+            "description": "Profile Picture for the nomination"
           }
         ],
         "responses": {

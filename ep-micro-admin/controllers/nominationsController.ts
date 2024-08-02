@@ -4,9 +4,9 @@ import { logger, STATUS } from "ep-micro-common";
 import { nominationsModel } from "../models";
 import { ERRORCODE } from "../constants";
 import { nominationsRepository } from "../repositories";
-import { nominationsService } from "../services";
+import { eventsService, nominationsService } from "../services";
 import { UploadedFile } from "express-fileupload";
-import { GridDefaultOptions, NominationStatus } from "../enums";
+import { EventStatus, GridDefaultOptions, NominationStatus } from "../enums";
 import { requestModifierHelper } from "../helpers";
 
 export const nominationsController = {
@@ -117,6 +117,10 @@ export const nominationsController = {
                     errorMessage: error.details ? error.details[0].message : error.message 
                 });
             }
+
+            const event = await eventsService.getEvent(nomination.eventId);
+            if (event.status in [EventStatus.INACTIVE, EventStatus.DELETED]) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS009);
+            if (event.status === EventStatus.CLOSED) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS010);
 
             nomination.createdBy = userId;
             nomination.updatedBy = userId;
