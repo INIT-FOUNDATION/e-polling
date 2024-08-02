@@ -93,12 +93,6 @@ export const judgesController = {
                     type: 'string',
                     description: 'Bearer token for authentication'
                 }
-                #swagger.parameters['Authorization'] = {
-                    in: 'header',
-                    required: true,
-                    type: 'string',
-                    description: 'Bearer token for authentication'
-                }
                 #swagger.parameters['judgeId'] = {
                     in: 'formData',
                     required: true,

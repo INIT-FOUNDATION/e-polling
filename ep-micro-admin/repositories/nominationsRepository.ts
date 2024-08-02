@@ -14,8 +14,20 @@ export const nominationsRepository = {
     },
     updateNomination: async (nomination: INomination) => {
         try {
+            const updateQuery = {
+                nomineeName: nomination.selfNominee ? nomination.requesterName : nomination.nomineeName,
+                selfNominee: nomination.selfNominee,
+                requesterName: nomination.requesterName,
+                requesterEmail: nomination.requesterEmail,
+                nomineePlatformLinks: nomination.nomineePlatformLinks,
+                eventId: nomination.eventId,
+                dateUpdated: new Date().toISOString(),
+                updatedBy: nomination.updatedBy,
+            }
+            if (nomination.profilePictureUrl) updateQuery["profilePictureUrl"] = nomination.profilePictureUrl;
+
             logger.info(`nominationsRepository :: updateNomination :: ${JSON.stringify(nomination)}`);
-            await mongoDB.updateOne(MongoCollections.NOMINATIONS, { nomineeId: nomination.nomineeId }, nomination);
+            await mongoDB.updateOne(MongoCollections.NOMINATIONS, { nomineeId: nomination.nomineeId }, updateQuery);
         } catch (error) {
             logger.error(`nominationsRepository :: updateNomination :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -61,12 +73,12 @@ export const nominationsRepository = {
         }
     },
 
-    updateNominationStatus: async (nomineeId: string, status: NominationStatus) => {
+    updateNominationStatus: async (nomineeId: string, status: NominationStatus, updatedBy: number) => {
         try {
-            logger.info(`nominationsRepository :: updateNominationStatus :: ${nomineeId} :: ${status}`);
-            await mongoDB.updateOne(MongoCollections.NOMINATIONS, { nomineeId }, { status, dateUpdated: new Date().toISOString() });
+            logger.info(`nominationsRepository :: updateNominationStatus :: nomineeId :: ${nomineeId} :: status :: ${status} :: updatedBy :: ${updatedBy}`);
+            await mongoDB.updateOne(MongoCollections.NOMINATIONS, { nomineeId }, { status, dateUpdated: new Date().toISOString(), updatedBy });
         } catch (error) {
-            logger.error(`nominationsRepository :: updateNominationStatus :: ${error.message} :: ${error}`);
+            logger.error(`nominationsRepository :: updateNominationStatus :: nomineeId :: ${nomineeId} :: status :: ${status} :: updatedBy :: ${updatedBy} :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },

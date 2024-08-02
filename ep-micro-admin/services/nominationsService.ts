@@ -45,10 +45,10 @@ export const nominationsService = {
 
             await nominationsRepository.updateNomination(nomination);
             for (const status of Object.values(NominationStatus)) {
-                await redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|page:0|limit:50`);
-                await redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|count`);
-                await redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
-                await redis.deleteRedis(`nominations|created_by:${nomination.createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
+                await redis.deleteRedis(`nominations|created_by:${nomination.updatedBy}|status:${status}|page:0|limit:50`);
+                await redis.deleteRedis(`nominations|created_by:${nomination.updatedBy}|status:${status}|count`);
+                await redis.deleteRedis(`nominations|created_by:${nomination.updatedBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
+                await redis.deleteRedis(`nominations|created_by:${nomination.updatedBy}|status:${status}|event_id:${nomination.eventId}|count`);
                 await redis.deleteRedis(`nominee:${nomination.nomineeId}`);
                 await redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
                 await redis.deleteRedis(`nominations|approved|event_id:${nomination.eventId}`)
@@ -133,17 +133,17 @@ export const nominationsService = {
             throw new Error(error.message);
         }
     },
-    updateNominationStatus: async (nomineeId: string, status: NominationStatus, createdBy: number) => {
+    updateNominationStatus: async (nomineeId: string, status: NominationStatus, updatedBy: number) => {
         try {
             logger.info(`nominationsService :: updateNominationStatus :: ${nomineeId} :: ${status}`);
-            await nominationsRepository.updateNominationStatus(nomineeId, status);
+            await nominationsRepository.updateNominationStatus(nomineeId, status, updatedBy);
             const nomination = await nominationsService.getNomination(nomineeId);
 
             for (const status of Object.values(NominationStatus)) {
-                await redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|page:0|limit:50`);
-                await redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|count`);
-                await redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
-                await redis.deleteRedis(`nominations|created_by:${createdBy}|status:${status}|event_id:${nomination.eventId}|count`);
+                await redis.deleteRedis(`nominations|created_by:${updatedBy}|status:${status}|page:0|limit:50`);
+                await redis.deleteRedis(`nominations|created_by:${updatedBy}|status:${status}|count`);
+                await redis.deleteRedis(`nominations|created_by:${updatedBy}|status:${status}|event_id:${nomination.eventId}|page:0|limit:50`);
+                await redis.deleteRedis(`nominations|created_by:${updatedBy}|status:${status}|event_id:${nomination.eventId}|count`);
                 await redis.deleteRedis(`nominee:${nomineeId}`);
                 await redis.deleteRedis(`nominations|event_id:${nomination.eventId}`);
                 await redis.deleteRedis(`nominations|approved|event_id:${nomination.eventId}`)

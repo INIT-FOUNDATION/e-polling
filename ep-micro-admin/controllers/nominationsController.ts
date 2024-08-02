@@ -16,36 +16,85 @@ export const nominationsController = {
             #swagger.tags = ['Nominations']
             #swagger.summary = 'Create Nomination'
             #swagger.description = 'Endpoint to Create Nomination'
-            #swagger.parameters['body'] = {
-                in: 'body',
+            #swagger.parameters['Authorization'] = {
+                in: 'header',
                 required: true,
-                schema: {
-                    nomineeId: 'N1',
-                    nomineeName: 'Jane Doe',
-                    selfNominee: false,
-                    requesterName: 'John Smith',
-                    requesterEmail: 'john.smith@example.com',
-                    profilePictureUrl: 'http://example.com/profile.jpg',
-                    nomineePlatformLinks: {
-                        instagram: 'http://instagram.com/example',
-                        tiktok: 'http://tiktok.com/example',
-                        twitch: 'http://twitch.com/example',
-                        youtube: 'http://youtube.com/example',
-                        other: 'http://other.com/example'
+                type: 'string',
+                description: 'Bearer token for authentication'
+            }
+            #swagger.parameters['nomineeName'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'Name of the nominee',
+                example: 'Jane Doe'
+            }
+            #swagger.parameters['selfNominee'] = {
+                in: 'formData',
+                required: true,
+                type: 'boolean',
+                description: 'Whether the nomination is self-nomination',
+                example: false
+            }
+            #swagger.parameters['requesterName'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'Name of the requester',
+                example: 'John Smith'
+            }
+            #swagger.parameters['requesterEmail'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'Email of the requester',
+                example: 'john.smith@example.com'
+            }
+            #swagger.parameters['nomineePlatformLinks'] = {
+                in: 'formData',
+                required: false,
+                type: 'object',
+                description: 'Platform links for the nominee',
+                properties: {
+                    instagram: {
+                        type: 'string',
+                        description: 'Instagram profile link',
+                        example: 'http://instagram.com/example'
                     },
-                    eventId: 'E1',
-                    dateCreated: '2024-07-25T12:00:00Z',
-                    dateUpdated: '2024-07-25T12:00:00Z',
-                    createdBy: 123,
-                    updatedBy: 123,
-                    status: 'PENDING'
+                    tiktok: {
+                        type: 'string',
+                        description: 'TikTok profile link',
+                        example: 'http://tiktok.com/example'
+                    },
+                    twitch: {
+                        type: 'string',
+                        description: 'Twitch profile link',
+                        example: 'http://twitch.com/example'
+                    },
+                    youtube: {
+                        type: 'string',
+                        description: 'YouTube profile link',
+                        example: 'http://youtube.com/example'
+                    },
+                    other: {
+                        type: 'string',
+                        description: 'Other platform link',
+                        example: 'http://other.com/example'
+                    }
                 }
+            }
+            #swagger.parameters['eventId'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'ID of the event',
+                example: 'E1'
             }
             #swagger.parameters['file'] = {
                 in: 'formData',
                 required: true,
                 type: 'file',
-                description: 'Supporting document for the nomination'
+                description: 'Profile Picture for the nomination'
             }
             */
             const nomination = new nominationsModel.Nomination(req.body);
@@ -54,6 +103,12 @@ export const nominationsController = {
             const file = req.files.file as UploadedFile;
 
             if (!file) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS006);
+
+            if (["image/jpeg", "image/png", "image/jpg"].indexOf(file.mimetype) === -1) 
+                return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS007);
+
+            if (file.size > 5 * 1024 * 1024) 
+                return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS008);
 
             const { error } = nominationsModel.validateCreateNomination(nomination);
             if (error) {
@@ -83,42 +138,104 @@ export const nominationsController = {
             #swagger.tags = ['Nominations']
             #swagger.summary = 'Update Nomination'
             #swagger.description = 'Endpoint to Update Nomination'
-            #swagger.parameters['body'] = {
-                in: 'body',
+            #swagger.parameters['Authorization'] = {
+                in: 'header',
                 required: true,
-                schema: {
-                    nomineeId: 'N1',
-                    nomineeName: 'Jane Doe',
-                    selfNominee: false,
-                    requesterName: 'John Smith',
-                    requesterEmail: 'john.smith@example.com',
-                    profilePictureUrl: 'http://example.com/profile.jpg',
-                    nomineePlatformLinks: {
-                        instagram: 'http://instagram.com/example',
-                        tiktok: 'http://tiktok.com/example',
-                        twitch: 'http://twitch.com/example',
-                        youtube: 'http://youtube.com/example',
-                        other: 'http://other.com/example'
+                type: 'string',
+                description: 'Bearer token for authentication'
+            }
+            #swagger.parameters['nomineeId'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'Id of the nominee',
+                example: 'N1'
+            }
+            #swagger.parameters['nomineeName'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'Name of the nominee',
+                example: 'Jane Doe'
+            }
+            #swagger.parameters['selfNominee'] = {
+                in: 'formData',
+                required: true,
+                type: 'boolean',
+                description: 'Whether the nomination is self-nomination',
+                example: false
+            }
+            #swagger.parameters['requesterName'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'Name of the requester',
+                example: 'John Smith'
+            }
+            #swagger.parameters['requesterEmail'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'Email of the requester',
+                example: 'john.smith@example.com'
+            }
+            #swagger.parameters['nomineePlatformLinks'] = {
+                in: 'formData',
+                required: false,
+                type: 'object',
+                description: 'Platform links for the nominee',
+                properties: {
+                    instagram: {
+                        type: 'string',
+                        description: 'Instagram profile link',
+                        example: 'http://instagram.com/example'
                     },
-                    eventId: 'E1',
-                    dateCreated: '2024-07-25T12:00:00Z',
-                    dateUpdated: '2024-07-25T12:00:00Z',
-                    createdBy: 123,
-                    updatedBy: 123,
-                    status: 'PENDING'
+                    tiktok: {
+                        type: 'string',
+                        description: 'TikTok profile link',
+                        example: 'http://tiktok.com/example'
+                    },
+                    twitch: {
+                        type: 'string',
+                        description: 'Twitch profile link',
+                        example: 'http://twitch.com/example'
+                    },
+                    youtube: {
+                        type: 'string',
+                        description: 'YouTube profile link',
+                        example: 'http://youtube.com/example'
+                    },
+                    other: {
+                        type: 'string',
+                        description: 'Other platform link',
+                        example: 'http://other.com/example'
+                    }
                 }
+            }
+            #swagger.parameters['eventId'] = {
+                in: 'formData',
+                required: true,
+                type: 'string',
+                description: 'ID of the event',
+                example: 'E1'
             }
             #swagger.parameters['file'] = {
                 in: 'formData',
                 required: false,
                 type: 'file',
-                description: 'Supporting document for the nomination (optional)'
+                description: 'Profile Picture for the nomination'
             }
             */
             const nomination = new nominationsModel.Nomination(req.body);
             nomination.nomineeDeviceDetails = requestModifierHelper.appendClientDetailsInRequest(req);
             const userId = req.plainToken.user_id;
-            const file = req.files.file as UploadedFile;
+            const file = req.files && req.files.file ? req.files.file as UploadedFile : null;
+
+            if (file && ["image/jpeg", "image/png", "image/jpg"].indexOf(file.mimetype) === -1) 
+                return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS007);
+
+            if (file && file.size > 5 * 1024 * 1024) 
+                return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS008);
 
             const { error } = nominationsModel.validateUpdateNomination(nomination);
             if (error) {
@@ -150,24 +267,20 @@ export const nominationsController = {
             #swagger.tags = ['Nominations']
             #swagger.summary = 'List Nominations'
             #swagger.description = 'Endpoint to List Nominations with pagination'
-            #swagger.parameters['query'] = {
-                in: 'query',
-                required: false,
-                schema: {
-                    pageSize: 10,
-                    currentPage: 1,
-                    status: 1,
-                    eventId: 'E1'
-                }
+            #swagger.parameters['Authorization'] = {
+                in: 'header',
+                required: true,
+                type: 'string',
+                description: 'Bearer token for authentication'
             }
             */
             const userId = req.plainToken.user_id;
-            const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE, status = NominationStatus.APPROVED, eventId } = req.query;
-            const nominations = await nominationsService.listNominations(Number(pageSize), Number(currentPage), userId, Number(status), String(eventId));
+            const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE, status = NominationStatus.PENDING, eventId = "" } = req.query;
+            const nominations = await nominationsService.listNominations(Number(currentPage), Number(pageSize), userId, Number(status), String(eventId));
             const nominationsCount = await nominationsService.getNominationsCount(userId, Number(status), String(eventId));
 
             return res.status(STATUS.OK).send({
-                data: { nominations, nominationsCount },
+                data: { nominations: nominations || [], nominationsCount },
                 message: "Nominations Fetched Successfully!"
             });
         } catch (error) {
@@ -181,12 +294,11 @@ export const nominationsController = {
             #swagger.tags = ['Nominations']
             #swagger.summary = 'Get Nomination'
             #swagger.description = 'Endpoint to Get a Nomination'
-            #swagger.parameters['params'] = {
-                in: 'params',
+            #swagger.parameters['Authorization'] = {
+                in: 'header',
                 required: true,
-                schema: {
-                    nomineeId: 'N1'
-                }
+                type: 'string',
+                description: 'Bearer token for authentication'
             }
             */
             const { nomineeId } = req.params;
@@ -211,12 +323,18 @@ export const nominationsController = {
             #swagger.tags = ['Nominations']
             #swagger.summary = 'Update Nomination Status'
             #swagger.description = 'Endpoint to Update Nomination Status'
+            #swagger.parameters['Authorization'] = {
+                in: 'header',
+                required: true,
+                type: 'string',
+                description: 'Bearer token for authentication'
+            }
             #swagger.parameters['body'] = {
                 in: 'body',
                 required: true,
                 schema: {
                     nomineeId: 'N1',
-                    status: 'APPROVED'
+                    status: 1
                 }
             }
             */

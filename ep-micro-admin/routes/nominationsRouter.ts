@@ -11,4 +11,4 @@ nominationsRouter.post("/updateStatus", nominationsController.updateNominationSt
 
 nominationsRouter.get("/list", nominationsController.getNominations);
 
-nominationsRouter.get("/:nominationId", nominationsController.getNomination);
+nominationsRouter.get("/:nomineeId", nominationsController.getNomination);
