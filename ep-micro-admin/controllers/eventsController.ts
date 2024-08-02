@@ -135,7 +135,7 @@ export const eventsController = {
             const eventsCount = await eventsService.getEventsCount(userId);
 
             return res.status(STATUS.OK).send({
-                data: { events, eventsCount },
+                data: { events: events || [], eventsCount },
                 message: "Events Fetched Successfully!"
             });
         } catch (error) {
@@ -237,7 +237,7 @@ export const eventsController = {
 
             const events = await eventsService.listEventsByCategory(parseInt(categoryId));
             return res.status(STATUS.OK).send({
-                data: events,
+                data: events || [],
                 message: "Events Fetched Successfully!"
             });
         } catch (error) {

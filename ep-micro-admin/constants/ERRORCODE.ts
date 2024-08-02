@@ -225,6 +225,14 @@ export const JUDGES = {
     errorCode: "JUDGES006",
     errorMessage: "Judge Profile Picture Required!",
   },
+  JUDGES007: {
+    errorCode: "JUDGES007",
+    errorMessage: "Invalid Profile Picture type, must use JPEG or PNG!",
+  },
+  JUDGES008: {
+    errorCode: "JUDGES008",
+    errorMessage: "Maximum Upload Size Limit Exceeded for Profile Picture, Please upload it of size less than equal to 5MB!",
+  },
 }
 
 export const NOMINATIONS = {

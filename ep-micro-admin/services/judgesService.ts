@@ -41,11 +41,12 @@ export const judgesService = {
             }
 
             await judgesRepository.updateJudge(judge);
-            await redis.deleteRedis(`judges|created_by:${judge.createdBy}|page:0|limit:50`);
-            await redis.deleteRedis(`judges|created_by:${judge.createdBy}|count`);
-            await redis.deleteRedis(`judges|created_by:${judge.createdBy}|event_id:${judge.eventId}|page:0|limit:50`);
-            await redis.deleteRedis(`judges|created_by:${judge.createdBy}|event_id:${judge.eventId}|count`);
+            await redis.deleteRedis(`judges|created_by:${judge.updatedBy}|page:0|limit:50`);
+            await redis.deleteRedis(`judges|created_by:${judge.updatedBy}|count`);
+            await redis.deleteRedis(`judges|created_by:${judge.updatedBy}|event_id:${judge.eventId}|page:0|limit:50`);
+            await redis.deleteRedis(`judges|created_by:${judge.updatedBy}|event_id:${judge.eventId}|count`);
             await redis.deleteRedis(`judges|active|event_id:${judge.eventId}`);
+            await redis.deleteRedis(`judge:${judge.judgeId}`);
         } catch (error) {
             logger.error(`judgesService :: updateJudge :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -128,17 +129,18 @@ export const judgesService = {
             throw new Error(error.message);
         }
     },
-    updateJudgeStatus: async (judgeId: string, status: JudgeStatus, createdBy: number) => {
+    updateJudgeStatus: async (judgeId: string, status: JudgeStatus, updatedBy: number) => {
         try {
             logger.info(`judgesService :: updateJudgeStatus :: ${judgeId} :: ${status}`);
-            await judgesRepository.updateJudgeStatus(judgeId, status);
+            await judgesRepository.updateJudgeStatus(judgeId, status, updatedBy);
             const judge = await judgesService.getJudge(judgeId);
 
-            await redis.deleteRedis(`judges|created_by:${createdBy}|page:0|limit:50`);
-            await redis.deleteRedis(`judges|created_by:${createdBy}|count`);
-            await redis.deleteRedis(`judges|created_by:${createdBy}|event_id:${judge.eventId}|page:0|limit:50`);
-            await redis.deleteRedis(`judges|created_by:${createdBy}|event_id:${judge.eventId}|count`);
+            await redis.deleteRedis(`judges|created_by:${updatedBy}|page:0|limit:50`);
+            await redis.deleteRedis(`judges|created_by:${updatedBy}|count`);
+            await redis.deleteRedis(`judges|created_by:${updatedBy}|event_id:${judge.eventId}|page:0|limit:50`);
+            await redis.deleteRedis(`judges|created_by:${updatedBy}|event_id:${judge.eventId}|count`);
             await redis.deleteRedis(`judges|active|event_id:${judge.eventId}`);
+            await redis.deleteRedis(`judge:${judge.judgeId}`);
         } catch (error) {
             logger.error(`judgesService :: updateJudgeStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);

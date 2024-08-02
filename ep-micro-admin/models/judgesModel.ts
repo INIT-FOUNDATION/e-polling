@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { JudgeStatus } from "../enums";
 import { IJudge } from "../types/custom";
+import { v4 as uuidv4 } from "uuid";
 
 class Judge implements IJudge {
   judgeId: string;
@@ -15,7 +16,7 @@ class Judge implements IJudge {
   status: JudgeStatus;
 
   constructor(judge: IJudge) {
-    this.judgeId = judge.judgeId;
+    this.judgeId = judge.judgeId || uuidv4();
     this.judgeName = judge.judgeName;
     this.profilePictureUrl = judge.profilePictureUrl || "";
     this.designation = judge.designation;
@@ -37,7 +38,7 @@ const validateCreateJudge = (judge: IJudge): Joi.ValidationResult => {
     eventId: Joi.string().required(),
     dateCreated: Joi.string().isoDate().allow("", null),
     dateUpdated: Joi.string().isoDate().allow("", null),
-    createdBy: Joi.number().required(),
+    createdBy: Joi.number().allow("", null),
     updatedBy: Joi.number().allow("", null),
     status: Joi.string().valid(...Object.values(JudgeStatus)).required()
   });
@@ -53,8 +54,8 @@ const validateUpdateJudge = (judge: IJudge): Joi.ValidationResult => {
     eventId: Joi.string().required(),
     dateCreated: Joi.string().isoDate().allow("", null),
     dateUpdated: Joi.string().isoDate().allow("", null),
-    createdBy: Joi.number().required(),
-    updatedBy: Joi.number().required(),
+    createdBy: Joi.number().allow("", null),
+    updatedBy: Joi.number().allow("", null),
     status: Joi.string().valid(...Object.values(JudgeStatus)).required()
   });
   return judgeSchema.validate(judge);

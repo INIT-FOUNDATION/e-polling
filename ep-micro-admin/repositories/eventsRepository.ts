@@ -71,10 +71,10 @@ export const eventsRepository = {
     },
     updateEventStatus: async (eventId: string, status: EventStatus, updatedBy: number) => {
         try {
-            logger.info(`eventsRepository.updateEventStatus: ${eventId} :: ${status}`);
+            logger.info(`eventsRepository :: updateEventStatus :: eventId :: ${eventId} :: status :: ${status} :: updatedBy :: ${updatedBy}`);
             await mongoDB.updateOne(MongoCollections.EVENTS, { eventId }, { status, dateUpdated: new Date().toISOString(), updatedBy });
         } catch (error) {
-            logger.error(`eventsRepository.updateEventStatus: ${error.message} :: ${error}`);
+            logger.error(`eventsRepository :: updateEventStatus :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },

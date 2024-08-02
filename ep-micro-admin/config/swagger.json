@@ -1446,26 +1446,32 @@
         "description": "Endpoint to Create Judge",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "Authorization",
+            "in": "header",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "judgeName": {
-                  "type": "string",
-                  "example": "John Doe"
-                },
-                "designation": {
-                  "type": "string",
-                  "example": "Judge"
-                },
-                "eventId": {
-                  "type": "string",
-                  "example": "E1"
-                }
-              }
-            }
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "judgeName",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Name of the judge"
+          },
+          {
+            "name": "eventId",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Event Id of the judge"
+          },
+          {
+            "name": "designation",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Designation of the judge"
           },
           {
             "name": "file",
@@ -1487,39 +1493,48 @@
         "tags": [
           "Judges"
         ],
-        "summary": "Create Judge",
-        "description": "Endpoint to Create Judge",
+        "summary": "Update Judge",
+        "description": "Endpoint to Update Judge",
         "parameters": [
           {
-            "name": "body",
-            "in": "body",
+            "name": "Authorization",
+            "in": "header",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "judgeId": {
-                  "type": "string",
-                  "example": "J1"
-                },
-                "judgeName": {
-                  "type": "string",
-                  "example": "John Doe"
-                },
-                "designation": {
-                  "type": "string",
-                  "example": "Judge"
-                },
-                "eventId": {
-                  "type": "string",
-                  "example": "E1"
-                }
-              }
-            }
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
+            "name": "judgeId",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Id of the judge"
+          },
+          {
+            "name": "judgeName",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Name of the judge"
+          },
+          {
+            "name": "eventId",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Event Id of the judge"
+          },
+          {
+            "name": "designation",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": "Designation of the judge"
           },
           {
             "name": "file",
             "in": "formData",
-            "required": true,
+            "required": false,
             "type": "file",
             "description": "Profile picture of the judge"
           }
@@ -1539,6 +1554,13 @@
         "summary": "Update Judge Status",
         "description": "Endpoint to Update Judge Status",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
           {
             "name": "body",
             "in": "body",
@@ -1574,39 +1596,24 @@
         "description": "Endpoint to List Judges with pagination",
         "parameters": [
           {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "pageSize": {
-                  "type": "number",
-                  "example": 10
-                },
-                "currentPage": {
-                  "type": "number",
-                  "example": 1
-                },
-                "eventId": {
-                  "type": "string",
-                  "example": "E1"
-                }
-              }
-            }
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
           },
           {
-            "name": "in",
+            "name": "pageSize",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "required",
+            "name": "currentPage",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "schema",
+            "name": "eventId",
             "in": "query",
             "type": "string"
           }
@@ -1633,18 +1640,11 @@
             "type": "string"
           },
           {
-            "name": "params",
-            "in": "params",
+            "name": "Authorization",
+            "in": "header",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "judgeId": {
-                  "type": "string",
-                  "example": "J1"
-                }
-              }
-            }
+            "type": "string",
+            "description": "Bearer token for authentication"
           }
         ],
         "responses": {

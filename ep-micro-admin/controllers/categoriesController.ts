@@ -124,7 +124,7 @@ export const categoriesController = {
             const categoriesCount = await categoriesService.getCategoriesCount(userId);
 
             return res.status(STATUS.OK).send({
-                data: { categories, categoriesCount },
+                data: { categories: categories || [], categoriesCount },
                 message: "Categories Fetched Successfully!"
             });
         } catch (error) {
