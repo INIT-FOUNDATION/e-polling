@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { EventStatus } from "../enums";
 import { IEvent } from "../types/custom";
+import { v4 as uuidv4 } from 'uuid';
 
 class Event implements IEvent {
   eventId: string;
@@ -16,7 +17,7 @@ class Event implements IEvent {
   updatedBy: number;
 
   constructor(event: IEvent) {
-    this.eventId = event.eventId;
+    this.eventId = event.eventId || uuidv4();
     this.eventName = event.eventName;
     this.eventDescription = event.eventDescription;
     this.startTime = event.startTime;
@@ -41,7 +42,7 @@ const validateCreateEvent = (event: IEvent): Joi.ValidationResult => {
     categoryId: Joi.number().required(),
     dateCreated: Joi.string().isoDate().allow("", null),
     dateUpdated: Joi.string().isoDate().allow("", null),
-    createdBy: Joi.number().required(),
+    createdBy: Joi.number().allow("", null),
     updatedBy: Joi.number().allow("", null)
   });
   return eventSchema.validate(event);
@@ -52,14 +53,14 @@ const validateUpdateEvent = (event: IEvent): Joi.ValidationResult => {
     eventId: Joi.string().required(),
     eventName: Joi.string().min(3).max(50).required(),
     eventDescription: Joi.string().allow("", null),
-    startDate: Joi.string().isoDate().required(),
-    endDate: Joi.string().isoDate().required(),
+    startTime: Joi.string().isoDate().required(),
+    endTime: Joi.string().isoDate().required(),
     status: Joi.string().valid(...Object.values(EventStatus)).required(),
     categoryId: Joi.number().required(),
     dateCreated: Joi.string().isoDate().allow("", null),
     dateUpdated: Joi.string().isoDate().allow("", null),
-    createdBy: Joi.number().required(),
-    updatedBy: Joi.number().required()
+    createdBy: Joi.number().allow("", null),
+    updatedBy: Joi.number().allow("", null)
   });
   return eventSchema.validate(event);
 };

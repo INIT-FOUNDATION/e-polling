@@ -190,6 +190,10 @@ export const EVENTS = {
     errorCode: "EVENTS005",
     errorMessage: "Requested Event name already exists!",
   },
+  EVENTS006: {
+    errorCode: "EVENTS006",
+    errorMessage: "Start time should be less than end time!",
+  },
 }
 
 export const JUDGES = {

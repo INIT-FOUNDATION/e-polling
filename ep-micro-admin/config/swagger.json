@@ -903,7 +903,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "categoryId": {
+                "category_id": {
                   "type": "number",
                   "example": 2
                 },
@@ -1204,6 +1204,13 @@
         "description": "Endpoint to Create Event",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -1249,6 +1256,13 @@
         "summary": "Update Event",
         "description": "Endpoint to Update Event",
         "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
           {
             "name": "body",
             "in": "body",
@@ -1300,6 +1314,13 @@
         "description": "Endpoint to Update Event Status",
         "parameters": [
           {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
+          },
+          {
             "name": "body",
             "in": "body",
             "required": true,
@@ -1334,35 +1355,19 @@
         "description": "Endpoint to List Events with pagination",
         "parameters": [
           {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "pageSize": {
-                  "type": "number",
-                  "example": 10
-                },
-                "currentPage": {
-                  "type": "number",
-                  "example": 1
-                }
-              }
-            }
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
           },
           {
-            "name": "in",
+            "name": "pageSize",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "required",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "schema",
+            "name": "currentPage",
             "in": "query",
             "type": "string"
           }
@@ -1389,18 +1394,11 @@
             "type": "string"
           },
           {
-            "name": "params",
-            "in": "params",
+            "name": "Authorization",
+            "in": "header",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "categoryId": {
-                  "type": "number",
-                  "example": 1
-                }
-              }
-            }
+            "type": "string",
+            "description": "Bearer token for authentication"
           }
         ],
         "responses": {
@@ -1425,18 +1423,11 @@
             "type": "string"
           },
           {
-            "name": "params",
-            "in": "params",
+            "name": "Authorization",
+            "in": "header",
             "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "eventId": {
-                  "type": "string",
-                  "example": "E1"
-                }
-              }
-            }
+            "type": "string",
+            "description": "Bearer token for authentication"
           }
         ],
         "responses": {

@@ -16,7 +16,15 @@ export const eventsRepository = {
     updateEvent: async (event: IEvent) => {
         try {
             logger.info(`eventsRepository :: updateEvent :: ${JSON.stringify(event)}`);
-            await mongoDB.updateOne(MongoCollections.EVENTS, { eventId: event.eventId }, event);
+            await mongoDB.updateOne(MongoCollections.EVENTS, { eventId: event.eventId }, {
+                eventName: event.eventName,
+                eventDescription: event.eventDescription,
+                startTime: event.startTime,
+                endTime: event.endTime,
+                categoryId: event.categoryId,
+                dateUpdated: new Date().toISOString(),
+                updatedBy: event.updatedBy
+            });
         } catch (error) {
             logger.error(`eventsRepository :: updateEvent :: ${error.message} :: ${error}`);
             throw new Error(error.message);
@@ -36,7 +44,7 @@ export const eventsRepository = {
     getEvents: async (currentPage: number, pageSize: number, createdBy: number): Promise<IEvent[]> => {
         try {
             logger.info(`eventsRepository :: getEvents :: currentPage :: ${currentPage} :: pageSize :: ${pageSize}`);
-            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, { createdBy,status: { $ne: EventStatus.DELETED } }, {
+            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, { createdBy, status: { $ne: EventStatus.DELETED } }, {
                 _id: 0
             },
             pageSize,
@@ -61,10 +69,10 @@ export const eventsRepository = {
             throw new Error(error.message);
         }
     },
-    updateEventStatus: async (eventId: string, status: EventStatus) => {
+    updateEventStatus: async (eventId: string, status: EventStatus, updatedBy: number) => {
         try {
             logger.info(`eventsRepository.updateEventStatus: ${eventId} :: ${status}`);
-            await mongoDB.updateOne(MongoCollections.EVENTS, { eventId }, { status, dateUpdated: new Date().toISOString() });
+            await mongoDB.updateOne(MongoCollections.EVENTS, { eventId }, { status, dateUpdated: new Date().toISOString(), updatedBy });
         } catch (error) {
             logger.error(`eventsRepository.updateEventStatus: ${error.message} :: ${error}`);
             throw new Error(error.message);

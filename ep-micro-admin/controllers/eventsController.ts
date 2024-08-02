@@ -6,6 +6,7 @@ import { ERRORCODE } from "../constants";
 import { eventsService } from "../services";
 import { categoriesRepository, eventsRepository } from "../repositories";
 import { GridDefaultOptions } from "../enums";
+import moment from "moment";
 
 export const eventsController = {
     createEvent: async (req: Request, res: Response) => {
@@ -14,6 +15,12 @@ export const eventsController = {
                 #swagger.tags = ['Events']
                 #swagger.summary = 'Create Event'
                 #swagger.description = 'Endpoint to Create Event'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,
@@ -39,6 +46,8 @@ export const eventsController = {
             const categoryIdExists = await categoriesRepository.existsByCategoryId(event.categoryId);
             if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
 
+            if (moment(event.startTime).isAfter(event.endTime)) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.EVENTS.EVENTS006);
+
             event.createdBy = userId;
             event.updatedBy = userId;
 
@@ -58,6 +67,12 @@ export const eventsController = {
                 #swagger.tags = ['Events']
                 #swagger.summary = 'Update Event'
                 #swagger.description = 'Endpoint to Update Event'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,
@@ -87,6 +102,8 @@ export const eventsController = {
             const categoryIdExists = await categoriesRepository.existsByCategoryId(event.categoryId);
             if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
 
+            if (moment(event.startTime).isAfter(event.endTime)) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.EVENTS.EVENTS006);
+
             event.updatedBy = userId;
 
             await eventsService.updateEvent(event);
@@ -105,18 +122,16 @@ export const eventsController = {
                 #swagger.tags = ['Events']
                 #swagger.summary = 'List Events'
                 #swagger.description = 'Endpoint to List Events with pagination'
-                #swagger.parameters['query'] = {
-                    in: 'query',
-                    required: false,
-                    schema: {
-                        pageSize: 10,
-                        currentPage: 1
-                    }
-                }    
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }   
             */
             const userId = req.plainToken.user_id;
             const { pageSize = GridDefaultOptions.PAGE_SIZE, currentPage = GridDefaultOptions.CURRENT_PAGE } = req.query;
-            const events = await eventsService.listEvents(Number(pageSize), Number(currentPage), userId);
+            const events = await eventsService.listEvents(Number(currentPage), Number(pageSize), userId);
             const eventsCount = await eventsService.getEventsCount(userId);
 
             return res.status(STATUS.OK).send({
@@ -134,13 +149,12 @@ export const eventsController = {
                 #swagger.tags = ['Events']
                 #swagger.summary = 'Get Event'
                 #swagger.description = 'Endpoint to Get Event'
-                #swagger.parameters['params'] = {
-                    in: 'params',
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
                     required: true,
-                    schema: {
-                        eventId: 'E1'
-                    }
-                }    
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
             */
             const { eventId } = req.params;
             if (!eventId) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.EVENTS.EVENTS002);
@@ -164,6 +178,12 @@ export const eventsController = {
                 #swagger.tags = ['Events']
                 #swagger.summary = 'Update Event Status'
                 #swagger.description = 'Endpoint to Update Event Status'
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
+                    required: true,
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
                 #swagger.parameters['body'] = {
                     in: 'body',
                     required: true,
@@ -202,13 +222,12 @@ export const eventsController = {
                 #swagger.tags = ['Events']
                 #swagger.summary = 'Get Event By Category Id'
                 #swagger.description = 'Endpoint to Get Event By Category Id'
-                #swagger.parameters['params'] = {
-                    in: 'params',
+                #swagger.parameters['Authorization'] = {
+                    in: 'header',
                     required: true,
-                    schema: {
-                        categoryId: 1
-                    }
-                }    
+                    type: 'string',
+                    description: 'Bearer token for authentication'
+                }
             */
             const { categoryId } = req.params;
             if (!categoryId) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES002);
