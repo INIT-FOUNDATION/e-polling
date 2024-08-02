@@ -1992,39 +1992,24 @@
         "description": "Endpoint to List Votes with pagination",
         "parameters": [
           {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "pageSize": {
-                  "type": "number",
-                  "example": 10
-                },
-                "currentPage": {
-                  "type": "number",
-                  "example": 1
-                },
-                "eventId": {
-                  "type": "string",
-                  "example": "E1"
-                }
-              }
-            }
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
           },
           {
-            "name": "in",
+            "name": "pageSize",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "required",
+            "name": "currentPage",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "schema",
+            "name": "eventId",
             "in": "query",
             "type": "string"
           }
@@ -2045,39 +2030,24 @@
         "description": "Endpoint to Get Nomination Votes with pagination",
         "parameters": [
           {
-            "name": "query",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "pageSize": {
-                  "type": "number",
-                  "example": 10
-                },
-                "currentPage": {
-                  "type": "number",
-                  "example": 1
-                },
-                "eventId": {
-                  "type": "string",
-                  "example": "N1"
-                }
-              }
-            }
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "Bearer token for authentication"
           },
           {
-            "name": "in",
+            "name": "pageSize",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "required",
+            "name": "currentPage",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "schema",
+            "name": "eventId",
             "in": "query",
             "type": "string"
           }

@@ -142,7 +142,7 @@ export const votesRepository = {
                 }
             ];            
             const result = await mongoDBRead.findWithAggregation(MongoCollections.VOTES, aggregation);
-            return result.totalVotes ? result.totalVotes : 0;
+            return result.length > 0 && result[0].totalVotes ? result[0].totalVotes : 0;
         } catch (error) {
             logger.error(`votesRepository :: getNominationVotesCountByEventId :: ${error.message} :: ${error}`);
             throw new Error(error.message);
