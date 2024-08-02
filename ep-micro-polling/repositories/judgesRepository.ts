@@ -6,10 +6,10 @@ export const judgesRepository = {
     getJudges: async (eventId: string): Promise<IJudge[]> => {
         try {
             logger.info(`judgesRepository :: getJudges :: eventId :: ${eventId}`);
-            const query =  { status: { $ne: JudgeStatus.ACTIVE } }
+            const query =  { status: JudgeStatus.ACTIVE }
             if (eventId) query["eventId"] = eventId
 
-            const result = await mongoDBRead.filteredDocs(MongoCollections.EVENTS, query);
+            const result = await mongoDBRead.filteredDocs(MongoCollections.JUDGES, query);
             logger.debug(`judgesRepository :: getJudges :: eventId :: ${eventId}  ${JSON.stringify(result)}`);
             return result;
         } catch (error) {
@@ -20,7 +20,7 @@ export const judgesRepository = {
     existsByJudgeId: async (judgeId: string): Promise<boolean> => {
         try {
             logger.info(`judgesRepository :: existsByJudgeId :: judgeId :: ${judgeId}`);
-            const exists = await mongoDBRead.isExist(MongoCollections.EVENTS, { judgeId, status: { $ne: JudgeStatus.DELETED } });
+            const exists = await mongoDBRead.isExist(MongoCollections.JUDGES, { judgeId, status: { $ne: JudgeStatus.DELETED } });
             logger.debug(`judgesRepository :: existsByJudgeId :: judgeId :: ${judgeId} :: exists :: ${exists}`);
             return exists;
         } catch (error) {

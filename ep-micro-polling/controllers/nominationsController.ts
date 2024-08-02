@@ -14,14 +14,7 @@ export const nominationsController = {
             /*  
             #swagger.tags = ['Nominations']
             #swagger.summary = 'List Nominations By Event'
-            #swagger.description = 'Endpoint to List Nominations By Event'
-            #swagger.parameters['params'] = {
-                    in: 'params',
-                    required: true,
-                    schema: {
-                        eventId: 'E1',
-                    }
-                }   
+            #swagger.description = 'Endpoint to List Nominations By Event' 
             */
             const { eventId } = req.params;
 

@@ -11,13 +11,6 @@ export const judgesController = {
             #swagger.tags = ['Judges']
             #swagger.summary = 'List Judges By Event'
             #swagger.description = 'Endpoint to List Judges By Event'
-            #swagger.parameters['params'] = {
-                    in: 'params',
-                    required: true,
-                    schema: {
-                        eventId: 'E1',
-                    }
-            }   
             */
             const { eventId } = req.params;
             const eventExists = await eventsRepository.existsByEventId(eventId);
