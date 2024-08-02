@@ -14,8 +14,8 @@ export const votesController = {
                 #swagger.tags = ['Votes']
                 #swagger.summary = 'Publish Vote'
                 #swagger.description = 'Endpoint to List Votes with pagination'
-                #swagger.parameters['query'] = {
-                    in: 'query',
+                #swagger.parameters['body'] = {
+                    in: 'body',
                     required: false,
                     schema: {
                         nomineeId: 'N1',
@@ -27,7 +27,7 @@ export const votesController = {
             const vote = new Vote(req.body);
             vote.voterDeviceDetails = requestModifierHelper.appendClientDetailsInRequest(req);
 
-            const { error } = votesModel.validateCreateVote(req.body);
+            const { error } = votesModel.validateCreateVote(vote);
             if (error) {
                 if (error.details != null)
                     return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.VOTES.VOTES000.errorCode, errorMessage: error.details[0].message });
@@ -57,8 +57,8 @@ export const votesController = {
                 #swagger.tags = ['Votes']
                 #swagger.summary = 'Verify Vote'
                 #swagger.description = 'Endpoint to List Votes with pagination'
-                #swagger.parameters['query'] = {
-                    in: 'query',
+                #swagger.parameters['body'] = {
+                    in: 'body',
                     required: false,
                     schema: {
                         txnId: 'N1',
@@ -83,7 +83,7 @@ export const votesController = {
 
             await votesService.publishVote(otpDetails.vote);
             return res.status(STATUS.OK).send({
-                data: {},
+                data: null,
                 message: "Vote Published Successfully!"
             });
         } catch (error) {
@@ -110,7 +110,7 @@ export const votesController = {
             const vote = new Vote(req.body);
             vote.voterDeviceDetails = requestModifierHelper.appendClientDetailsInRequest(req);
 
-            const { error } = votesModel.validateCreateVote(req.body);
+            const { error } = votesModel.validateCreateVote(vote);
             if (error) {
                 if (error.details != null)
                     return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.VOTES.VOTES000.errorCode, errorMessage: error.details[0].message });
@@ -121,12 +121,12 @@ export const votesController = {
             if (!nomineeExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.NOMINATIONS.NOMINATIONS001);
 
             const voteExists = await votesRepository.existsVoteByNomineeIdAndEmail(vote.nomineeId, vote.voterEmail);
-            if (voteExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.VOTES.VOTES001);
+            if (voteExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.VOTES.VOTES004);
 
             await votesService.publishVote(vote);
 
             return res.status(STATUS.OK).send({
-                data: {},
+                data: null,
                 message: "Vote Published Successfully!"
             });
         } catch (error) {

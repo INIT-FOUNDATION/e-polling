@@ -218,8 +218,8 @@
         "description": "Endpoint to List Votes with pagination",
         "parameters": [
           {
-            "name": "query",
-            "in": "query",
+            "name": "body",
+            "in": "body",
             "required": false,
             "schema": {
               "type": "object",
@@ -256,8 +256,8 @@
         "description": "Endpoint to List Votes with pagination",
         "parameters": [
           {
-            "name": "query",
-            "in": "query",
+            "name": "body",
+            "in": "body",
             "required": false,
             "schema": {
               "type": "object",
@@ -267,26 +267,8 @@
                   "example": "N1"
                 },
                 "otp": {
-                  "type": "string",
-                  "example": "encryptedOtp"
-                }
-              }
-            }
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "in": {
-                  "example": "any"
-                },
-                "required": {
-                  "example": "any"
-                },
-                "schema": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 123456
                 }
               }
             }

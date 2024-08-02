@@ -73,10 +73,9 @@
       "INIT_COMMON_NODEMAILER_HOST": "smtppro.zoho.in",
       "INIT_COMMON_NODEMAILER_SERVICE": "ZOHO PRO",
       "INIT_COMMON_NODEMAILER_PORT": 465,
-      "INIT_COMMON_COMMUNICATION_ENDPOINT": "http://localhost:8081/api/v1/communication",
+      "INIT_COMMON_COMMUNICATION_ENDPOINT": "https://apicommunication.dev.orrizonte.in/api/v1/communication",
       "INIT_COMMON_COMMUNICATION_CLIENT_ID": "OLL_Workflow_Automation_93304",
-      "INIT_COMMON_COMMUNICATION_CLIENT_SECRET": "88feae55-c108-4c10-8d89-da5a22ee08b1",
-      "EP_WORKFLOW_ADMIN_MODULE_URL": "https://flowautomation.orrizonte.in"
+      "INIT_COMMON_COMMUNICATION_CLIENT_SECRET": "88feae55-c108-4c10-8d89-da5a22ee08b1"
     }
   }
 }

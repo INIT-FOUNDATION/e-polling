@@ -8,7 +8,8 @@ import { encDecHelper } from "../helpers";
 import { eventsService } from "./eventsService";
 import { commonCommunication } from "ep-micro-common";
 import moment from "moment";
-import { COMMUNICATION } from "../constants";
+import { COMMUNICATION, WEBSITE_URL } from "../constants";
+import { emailService } from "./emailService";
 
 export const votesService = {
     getMobileOtpForVote: async (vote: IVote): Promise<string> => {
@@ -75,6 +76,16 @@ export const votesService = {
             await redis.deleteRedis(`votes_result|event:${nomination.eventId}|count`);
             await redis.deleteRedis(`votes_result|event:${nomination.eventId}|page:0|limit:50`);
             await redis.deleteRedis(`votes_result|event:${nomination.eventId}|count`);
+
+            if (vote.voterEmail) {
+                await emailService.sendEmail('E-POLLING | THANK YOU FOR VOTE', 'views/successfulVoteTemplate.ejs', vote.voterEmail, {
+                    name: vote.voterName,
+                    websiteUrl: WEBSITE_URL,
+                    year: moment().year(),
+                    eventName: event.eventName,
+                    nomineeName: nomination.nomineeName
+                });
+            }
         } catch (error) {
             logger.error(`votesService :: publishVote :: ${error.message} :: ${error}`);
             throw new Error(error.message);

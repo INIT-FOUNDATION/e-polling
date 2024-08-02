@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { VoteStatus } from "../enums";
 import { IDeviceDetails, IVote } from "../types/custom";
+import { v4 as uuidv4 } from "uuid";
 
 class Vote implements IVote {
   voteId: string;
@@ -14,7 +15,7 @@ class Vote implements IVote {
   status: VoteStatus;
 
   constructor(vote: IVote) {
-    this.voteId = vote.voteId;
+    this.voteId = vote.voteId || uuidv4();
     this.nomineeId = vote.nomineeId;
     this.voterName = vote.voterName;
     this.voterMobile = vote.voterMobile;
