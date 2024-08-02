@@ -51,6 +51,14 @@ export const supportRequestsController = {
                     type: 'string',
                     description: 'Bearer token for authentication'
                 }
+                #swagger.parameters['body'] = {
+                    in: 'body',
+                    required: true,
+                    schema: {
+                        supportRequestId: 'S1',
+                        status: 1
+                    }
+                }
             */
 
             const { error } = supportRequestsModel.validateUpdateSupportRequestStatus(req.body);

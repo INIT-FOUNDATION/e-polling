@@ -2107,14 +2107,17 @@
           {
             "name": "body",
             "in": "body",
+            "required": true,
             "schema": {
               "type": "object",
               "properties": {
                 "supportRequestId": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "S1"
                 },
                 "status": {
-                  "example": "any"
+                  "type": "number",
+                  "example": 1
                 }
               }
             }

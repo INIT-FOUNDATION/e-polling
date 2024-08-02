@@ -63,7 +63,7 @@ export const supportRequestsRepository = {
     updateSupportRequestStatus: async (supportRequestId: string, status: SupportRequestStatus, resolvedBy: number) => {
         try {
             logger.info(`supportRequestsRepository :: updateSupportRequestStatus :: supportRequestId :: ${supportRequestId} :: status :: ${status} :: resolvedBy :: ${resolvedBy}`);
-            await mongoDB.update(MongoCollections.SUPPORT_REQUESTS, { supportRequestId }, { status, dateUpdated: new Date().toISOString(), resolvedBy });
+            await mongoDB.updateOne(MongoCollections.SUPPORT_REQUESTS, { supportRequestId }, { status, dateUpdated: new Date().toISOString(), resolvedBy });
         } catch (error) {
             logger.error(`supportRequestsRepository :: updateSupportRequestStatus :: supportRequestId :: ${supportRequestId} :: status :: ${status} :: resolvedBy :: ${resolvedBy} :: ${error.message} :: ${error}`);
             throw new Error(error.message);
