@@ -37,12 +37,12 @@ export const eventsRepository = {
             throw new Error(error.message);
         }
     },
-    updateEventStatus: async (eventId: string, status: EventStatus) => {
+    updateEventStatus: async (eventId: string, status: EventStatus, updatedBy: number) => {
         try {
-            logger.info(`eventsRepository.updateEventStatus: ${eventId} :: ${status}`);
-            await mongoDB.updateOne(MongoCollections.EVENTS, { eventId }, { status, dateUpdated: new Date().toISOString() });
+            logger.info(`eventsRepository :: updateEventStatus :: event Id :: ${eventId} :: status :: ${status} :: updatedBy :: ${updatedBy}`);
+            await mongoDB.updateOne(MongoCollections.EVENTS, { eventId }, { status, dateUpdated: new Date().toISOString(), updatedBy });
         } catch (error) {
-            logger.error(`eventsRepository.updateEventStatus: ${error.message} :: ${error}`);
+            logger.error(`eventsRepository :: updateEventStatus :: event Id :: ${eventId} :: status :: ${status} :: updatedBy :: ${updatedBy} :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     },
@@ -67,6 +67,27 @@ export const eventsRepository = {
             return result;
         } catch (error) {
             logger.error(`eventsRepository :: pastClosedEvents :: limit :: ${limit} :: ${error.message} :: ${error}`);
+            throw new Error(error.message);
+        }
+    },
+    getEventsFeed: async (limit: number): Promise<IEvent[]> => {
+        try {
+            logger.info(`eventsRepository :: getEventsFeed`);
+            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, { status: { $in: [EventStatus.ACTIVE, EventStatus.OPENED, EventStatus.CLOSED] } }, {
+                _id: 0,
+                eventId: 1,
+                eventName: 1,
+                dateCreated: 1,
+                status: 1,
+                startTime: 1,
+                endTime: 1,
+            }, limit, {
+                dateCreated: -1,
+            }, 0);
+            logger.debug(`eventsRepository :: getEventsFeed :: ${JSON.stringify(result)}`);
+            return result;
+        } catch (error) {
+            logger.error(`eventsRepository :: getEventsFeed :: ${error.message} :: ${error}`);
             throw new Error(error.message);
         }
     }

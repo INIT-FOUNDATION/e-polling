@@ -52,5 +52,23 @@ export const eventsController = {
             logger.error(`eventsController :: getPastClosedEvents :: ${error.message} :: ${error}`);
             res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.EVENTS.EVENTS000);
         }
+    },
+    getEventsFeed: async (req: Request, res: Response) => {
+        try {
+            /*  
+                #swagger.tags = ['Events']
+                #swagger.summary = 'Get Events Feed'
+                #swagger.description = 'Endpoint to Get Events Feed'
+            */
+            const limit = 10;
+            const events = await eventsService.getEventsFeed(limit);
+            return res.status(STATUS.OK).send({
+                data: events,
+                message: "Events Feed Fetched Successfully!"
+            });
+        } catch (error) {
+            logger.error(`eventsController :: getEventsFeed :: ${error.message} :: ${error}`);
+            res.status(STATUS.INTERNAL_SERVER_ERROR).send(ERRORCODE.EVENTS.EVENTS000);
+        }
     }
 };

@@ -68,6 +68,20 @@
         }
       }
     },
+    "/api/v1/polling/events/eventsFeed": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Get Events Feed",
+        "description": "Endpoint to Get Events Feed",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/v1/polling/nominations/add": {
       "post": {
         "tags": [
