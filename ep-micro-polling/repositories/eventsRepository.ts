@@ -52,7 +52,7 @@ export const eventsRepository = {
             if (categoryId && categoryId > 0) query['categoryId'] = categoryId;
 
             logger.info(`eventsRepository :: pastClosedEvents :: limit :: ${limit}`);
-            const result = await mongoDBRead.findWithLimit(MongoCollections.EVENTS, { query }, {
+            const result = await mongoDBRead.filteredDocs(MongoCollections.EVENTS, query, {
                 _id: 0,
                 eventId: 1,
                 eventName: 1,

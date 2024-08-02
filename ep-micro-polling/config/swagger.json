@@ -267,8 +267,8 @@
                   "example": "N1"
                 },
                 "otp": {
-                  "type": "number",
-                  "example": 123456
+                  "type": "string",
+                  "example": "encryptedOtp"
                 }
               }
             }
