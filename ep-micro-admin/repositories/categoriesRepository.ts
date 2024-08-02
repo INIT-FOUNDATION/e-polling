@@ -23,7 +23,7 @@ export const categoriesRepository = {
         try {
             const _query = {
                 text: QUERY.CATEGORIES.updateCategory,
-                values: [category.category_id, category.category_name, category.category_description, category.status, category.created_by, category.updated_by]
+                values: [category.category_id, category.category_name, category.category_description, category.updated_by]
             };
             logger.debug(`categoryRepository :: updateCategory :: query :: ${JSON.stringify(_query)}`);
 
@@ -120,11 +120,11 @@ export const categoriesRepository = {
             throw new Error(error.message);
         }
     },
-    updateCategoryStatus: async (categoryId: number, status: CategoryStatus) => {
+    updateCategoryStatus: async (categoryId: number, status: CategoryStatus, updatedBy: number) => {
         try {
             const _query = {
                 text: QUERY.CATEGORIES.updateCategoryStatus,
-                values: [status, categoryId]
+                values: [categoryId, status, updatedBy]
             };
             logger.debug(`categoryRepository :: updateCategoryStatus :: query :: ${JSON.stringify(_query)}`);
 

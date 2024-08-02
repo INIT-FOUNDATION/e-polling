@@ -177,12 +177,12 @@ export const categoriesController = {
                     in: 'body',
                     required: true,
                     schema: {
-                        categoryId: 2,
+                        category_id: 2,
                         status: 1
                     }
                 }    
             */
-            const { categoryId, status } = req.body;
+            const { category_id, status } = req.body;
             const userId = req.plainToken.user_id;
 
             const { error } = categoriesModel.validateUpdateCategoryStatus(req.body);
@@ -192,10 +192,10 @@ export const categoriesController = {
                 else return res.status(STATUS.BAD_REQUEST).send({ errorCode: ERRORCODE.CATEGORIES.CATEGORIES000.errorCode, errorMessage: error.message });
             }
 
-            const categoryIdExists = await categoriesRepository.existsByCategoryId(parseInt(categoryId));
+            const categoryIdExists = await categoriesRepository.existsByCategoryId(parseInt(category_id));
             if (!categoryIdExists) return res.status(STATUS.BAD_REQUEST).send(ERRORCODE.CATEGORIES.CATEGORIES001);
 
-            await categoriesService.updateCategoryStatus(parseInt(categoryId), status, userId);
+            await categoriesService.updateCategoryStatus(parseInt(category_id), status, userId);
             return res.status(STATUS.OK).send({
                 data: null,
                 message: "Category Status Updated Successfully!"
